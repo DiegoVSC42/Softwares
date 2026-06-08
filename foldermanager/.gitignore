@@ -1,0 +1,12 @@
+# Artefatos de build do PyInstaller — NÃO precisam ir para o repositório.
+# O GitHub Actions gera os executáveis na nuvem a partir do código.
+build/
+dist/
+*.spec
+__pycache__/
+*.pyc
+
+# Relatórios gerados pelo app
+relatorio_comparacao_*.html
+relatorio_comparacao_*.csv
+relatorio_comparacao_*.pdf

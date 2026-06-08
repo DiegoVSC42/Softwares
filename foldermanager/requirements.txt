@@ -1,0 +1,10 @@
+# Dependências do Gerenciador de Pastas
+#
+# Tkinter NÃO entra aqui: já vem junto com o Python no Windows.
+#
+# reportlab é necessário apenas para gerar o relatório em PDF.
+# (CSV e HTML não precisam de nada além do Python.)
+reportlab>=4.0
+
+# Apenas para gerar o executável (.exe). Não é preciso para rodar pelo Python.
+pyinstaller>=6.0

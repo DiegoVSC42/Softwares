@@ -1,0 +1,93 @@
+name: Gerar executaveis (Windows e Mac)
+
+# O codigo de cada software fica numa subpasta do repositorio.
+# Este workflow builda o software que esta na pasta "foldermanager".
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  workflow_dispatch:
+
+jobs:
+  # ----------------------------------------------------------------- #
+  # WINDOWS -> FolderManagerWIN.exe
+  # ----------------------------------------------------------------- #
+  build-windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: foldermanager
+    steps:
+      - name: Baixar o codigo
+        uses: actions/checkout@v4
+
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar dependencias
+        run: python -m pip install reportlab pyinstaller
+
+      - name: Gerar o executavel do Windows
+        run: >
+          pyinstaller --noconfirm --onefile --windowed
+          --name "FolderManagerWIN"
+          --hidden-import reportlab
+          app.py
+
+      - name: Enviar o .exe como artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: FolderManagerWIN
+          path: foldermanager/dist/FolderManagerWIN.exe
+
+      - name: Publicar no Release (somente em tags v*)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: foldermanager/dist/FolderManagerWIN.exe
+
+  # ----------------------------------------------------------------- #
+  # MAC -> FolderManagerMAC.app  (compactado em .zip)
+  # ----------------------------------------------------------------- #
+  build-mac:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: foldermanager
+    steps:
+      - name: Baixar o codigo
+        uses: actions/checkout@v4
+
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar dependencias
+        run: python3 -m pip install reportlab pyinstaller
+
+      - name: Gerar o aplicativo do Mac
+        run: >
+          pyinstaller --noconfirm --onefile --windowed
+          --name "FolderManagerMAC"
+          --hidden-import reportlab
+          app.py
+
+      - name: Compactar o .app (preservando o bundle)
+        run: |
+          cd dist
+          ditto -c -k --sequesterRsrc --keepParent "FolderManagerMAC.app" "FolderManagerMAC-mac.zip"
+
+      - name: Enviar o .app (zip) como artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: FolderManagerMAC
+          path: foldermanager/dist/FolderManagerMAC-mac.zip
+
+      - name: Publicar no Release (somente em tags v*)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: foldermanager/dist/FolderManagerMAC-mac.zip
