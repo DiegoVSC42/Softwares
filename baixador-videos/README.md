@@ -41,7 +41,7 @@ executável com o PyInstaller:
 O executável **não é gerado no seu PC** — ele é compilado na nuvem (o `.app`
 do Mac só pode ser montado num Mac). Um único script faz tudo:
 
-**`publicar.bat`** — envia o código, aguarda o build na nuvem terminar e baixa
+**`baixador-videos.bat`** — envia o código, aguarda o build na nuvem terminar e baixa
 os executáveis prontos direto para as pastas de distribuição:
 - `D:\Softwares\Windows\BaixadorDeVideos.exe`
 - `D:\Softwares\Mac\BaixadorDeVideos-mac.zip`
@@ -56,6 +56,6 @@ baixador-videos/
 ├── baixador_videos.py        # app com a GUI
 ├── requirements.txt
 ├── README.md
-├── publicar.bat              # envia + builda na nuvem + baixa os executaveis
+├── baixador-videos.bat       # envia + builda na nuvem + baixa os executaveis
 └── .github/workflows/build.yml
 ```
