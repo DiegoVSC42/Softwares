@@ -1,0 +1,80 @@
+name: build
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: baixador-videos
+
+jobs:
+  # ----------------------------------------------------------------------
+  # Windows: gera o .exe com ffmpeg embutido
+  # ----------------------------------------------------------------------
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pyinstaller
+
+      - name: Baixar ffmpeg (Windows)
+        shell: pwsh
+        run: |
+          Invoke-WebRequest -Uri "https://github.com/GyanD/codexffmpeg/releases/download/7.1/ffmpeg-7.1-essentials_build.zip" -OutFile ffmpeg.zip
+          Expand-Archive ffmpeg.zip -DestinationPath ffmpeg_tmp
+          $exe = Get-ChildItem -Recurse ffmpeg_tmp -Filter ffmpeg.exe | Select-Object -First 1
+          Copy-Item $exe.FullName -Destination ffmpeg.exe
+
+      - name: Empacotar com PyInstaller
+        run: pyinstaller --onefile --windowed --name BaixadorDeVideos --add-binary "ffmpeg.exe;." baixador_videos.py
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BaixadorDeVideos-Windows
+          path: baixador-videos/dist/BaixadorDeVideos.exe
+
+  # ----------------------------------------------------------------------
+  # Mac: gera o .app, ffmpeg embutido, e compacta em .zip com ditto
+  # ----------------------------------------------------------------------
+  mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pyinstaller
+
+      - name: Baixar ffmpeg (Mac)
+        run: |
+          curl -L "https://evermeet.cx/ffmpeg/getrelease/zip" -o ffmpeg.zip
+          unzip -o ffmpeg.zip
+          chmod +x ffmpeg
+
+      - name: Empacotar com PyInstaller
+        run: pyinstaller --onefile --windowed --name BaixadorDeVideos --add-binary "ffmpeg:." baixador_videos.py
+
+      - name: Compactar .app com ditto
+        run: |
+          cd dist
+          ditto -c -k --sequesterRsrc --keepParent BaixadorDeVideos.app BaixadorDeVideos-mac.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BaixadorDeVideos-Mac
+          path: baixador-videos/dist/BaixadorDeVideos-mac.zip
