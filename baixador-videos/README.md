@@ -36,8 +36,18 @@ executável com o PyInstaller:
 - **Windows**: `BaixadorDeVideos.exe` (onefile, sem console).
 - **Mac**: `BaixadorDeVideos.app` compactado em `.zip` (`BaixadorDeVideos-mac.zip`).
 
-Para disparar: faça o push do projeto para o repositório no GitHub (use o
-`enviar-github.bat`). Ao final do workflow, baixe os artefatos da aba **Actions**.
+### Publicar (1 clique)
+
+O executável **não é gerado no seu PC** — ele é compilado na nuvem (o `.app`
+do Mac só pode ser montado num Mac). Um único script faz tudo:
+
+**`publicar.bat`** — envia o código, aguarda o build na nuvem terminar e baixa
+os executáveis prontos direto para as pastas de distribuição:
+- `D:\Softwares\Windows\BaixadorDeVideos.exe`
+- `D:\Softwares\Mac\BaixadorDeVideos-mac.zip`
+
+Requisitos (instalar uma vez): **Git** e **GitHub CLI** (`gh`). Após instalar o
+`gh`, rode `gh auth login` uma vez.
 
 ## Estrutura
 
@@ -46,6 +56,6 @@ baixador-videos/
 ├── baixador_videos.py        # app com a GUI
 ├── requirements.txt
 ├── README.md
-├── enviar-github.bat         # envio de um clique para o GitHub
+├── publicar.bat              # envia + builda na nuvem + baixa os executaveis
 └── .github/workflows/build.yml
 ```
