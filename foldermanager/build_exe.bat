@@ -1,7 +1,9 @@
 @echo off
 REM ===================================================================
-REM  Gera o executavel do Windows e salva na PASTA DE REDE.
-REM  Basta dar dois cliques neste arquivo.
+REM  Gera o executavel LEVE do Windows e salva na PASTA DE REDE.
+REM  (Sem PDF -> arquivo pequeno e abertura rapida. Relatorio em CSV e HTML.)
+REM
+REM  Para uma versao COM PDF, use o build_exe_com_pdf.bat.
 REM
 REM  Requisitos: Python 3.8+ instalado e no PATH.
 REM ===================================================================
@@ -15,25 +17,25 @@ cd /d "%~dp0"
 if not exist "%DESTINO%" mkdir "%DESTINO%"
 
 echo.
-echo [1/3] Instalando dependencias (reportlab, pyinstaller)...
+echo [1/3] Instalando o empacotador (pyinstaller)...
 python -m pip install --upgrade pip >nul 2>&1
-python -m pip install reportlab pyinstaller
+python -m pip install pyinstaller
 if errorlevel 1 (
     echo.
-    echo ERRO: nao foi possivel instalar as dependencias.
+    echo ERRO: nao foi possivel instalar o pyinstaller.
     echo Verifique se o Python esta instalado e no PATH.
     pause
     exit /b 1
 )
 
 echo.
-echo [2/3] Gerando o executavel direto em "%DESTINO%" (pode demorar 1-2 minutos)...
+echo [2/3] Gerando o executavel LEVE direto em "%DESTINO%"...
 python -m PyInstaller ^
     --noconfirm ^
     --onefile ^
     --windowed ^
     --name "FolderManagerWIN" ^
-    --hidden-import reportlab ^
+    --exclude-module reportlab ^
     --distpath "%DESTINO%" ^
     --workpath "%~dp0build" ^
     --specpath "%~dp0build" ^
@@ -49,9 +51,10 @@ if errorlevel 1 (
 echo.
 echo [3/3] Pronto!
 echo.
-echo O executavel foi salvo em:
+echo O executavel LEVE foi salvo em:
 echo     %DESTINO%\FolderManagerWIN.exe
 echo.
-echo As pessoas do escritorio ja podem abrir esse arquivo pela rede.
+echo Relatorios disponiveis nesta versao: CSV e HTML.
+echo (O HTML pode ser impresso como PDF pelo proprio navegador.)
 echo.
 pause

@@ -133,6 +133,96 @@ def build_plan(origem, destino, overwrite_diff=False, progress_cb=None,
     return acoes, ignorados
 
 
+def acoes_da_comparacao(dados, overwrite_diff=False):
+    """
+    Deriva a lista de cópia A PARTIR do resultado da comparação
+    (motor_comparacao.comparar), SEM varrer as pastas de novo.
+
+    A comparação já leu as duas árvores e sabe o tamanho de cada arquivo. Aqui
+    só decidimos, item a item, o que copiar:
+      - OK / DATA_DIFERENTE  -> já existe no destino com mesmo tamanho: pula.
+      - EXTRA / ERRO_LEITURA -> não é candidato (não existe na origem): pula.
+      - TAMANHO_DIFERENTE    -> existe nos dois com tamanhos diferentes:
+                                copia (sobrescreve) só se overwrite_diff; senão
+                                fica como ignorado.
+      - FALTANDO             -> existe na origem e não no destino: copia (novo).
+                                Quando o nome precisa ser saneado, faz um stat
+                                pontual no destino saneado para não duplicar.
+
+    Retorna (acoes, ignorados) no mesmo formato de build_plan.
+    """
+    destino = dados["destino"]
+    acoes, ignorados = [], []
+
+    for l in dados["linhas"]:
+        status = l["status"]
+        rel = l["caminho"]
+        src = l.get("abs_origem")
+
+        if status in ("OK", "DATA_DIFERENTE", "EXTRA", "ERRO_LEITURA"):
+            continue
+        if not src:
+            continue
+
+        try:
+            src_size = int(l["tam_origem"])
+        except (ValueError, TypeError):
+            src_size = _size(src)
+
+        if status == "TAMANHO_DIFERENTE":
+            # mesmo caminho relativo nos dois lados (nome legal)
+            dst = os.path.join(destino, rel)
+            try:
+                dst_size = int(l["tam_destino"])
+            except (ValueError, TypeError):
+                dst_size = _size(dst)
+            if overwrite_diff:
+                acoes.append({
+                    "src": src, "dst": dst, "rel": rel, "dst_rel": rel,
+                    "size": src_size,
+                    "motivo": f"tamanho difere (destino={dst_size}, origem={src_size}) -> sobrescrever",
+                })
+            else:
+                ignorados.append({
+                    "rel": rel,
+                    "motivo": f"existe no destino com tamanho diferente "
+                              f"(destino={dst_size}, origem={src_size}) -> NÃO copiado",
+                })
+            continue
+
+        # status == "FALTANDO"
+        dst_rel = sanitize_relpath(rel)
+        dst = os.path.join(destino, dst_rel)
+        saneado = (os.path.normpath(dst_rel) != os.path.normpath(rel))
+
+        if saneado and os.path.exists(long_path(dst)):
+            # o nome saneado pode já existir de uma cópia anterior
+            dst_size = _size(dst)
+            if dst_size == src_size:
+                continue
+            if overwrite_diff:
+                acoes.append({
+                    "src": src, "dst": dst, "rel": rel, "dst_rel": dst_rel,
+                    "size": src_size,
+                    "motivo": f"tamanho difere (destino={dst_size}, origem={src_size}) -> sobrescrever",
+                })
+            else:
+                ignorados.append({
+                    "rel": rel,
+                    "motivo": f"existe no destino (nome saneado) com tamanho diferente "
+                              f"(destino={dst_size}, origem={src_size}) -> NÃO copiado",
+                })
+            continue
+
+        motivo = "novo" if not saneado else f"novo (nome saneado -> {dst_rel})"
+        acoes.append({
+            "src": src, "dst": dst, "rel": rel, "dst_rel": dst_rel,
+            "size": src_size, "motivo": motivo,
+        })
+
+    return acoes, ignorados
+
+
 def copy_one(action):
     """Copia um arquivo preservando data/metadados. Lê a origem, nunca a altera."""
     dst = action["dst"]

@@ -29,24 +29,29 @@ cópia realizada.
    - **Sobrescrever divergentes** — ao copiar, regrava arquivos que existem no
      destino com tamanho diferente. Desligado por padrão (nada é sobrescrito).
 5. Clique nos botões conforme a necessidade:
-   - **1) Comparar** — faz a conferência e mostra o resumo no log.
-   - **Simular cópia** — mostra o que *seria* copiado, sem copiar nada.
-   - **2) Copiar faltantes** — copia de fato os arquivos que faltam.
-   - **Gerar relatório...** — (habilita após uma comparação) escolhe o formato e
-     salva o arquivo.
+   - **1) Analisar** — confere as duas pastas (somente leitura) e mostra o
+     resumo no log: o que falta, o que sobra, tamanhos diferentes etc. O número
+     de "faltando no destino" é exatamente o que seria copiado.
+   - **2) Copiar faltantes** — copia os arquivos que faltam. Ele **reaproveita a
+     análise** que você acabou de fazer, sem reler as pastas. Se você mudou a
+     origem, o destino ou as opções desde a última análise, ele refaz a leitura
+     automaticamente antes de copiar.
+   - **Gerar relatório...** — (habilita após uma análise) escolhe o formato e
+     salva o arquivo. Se você também copiou, o relatório inclui a cópia.
    - **Cancelar** — interrompe a operação em andamento com segurança.
 
-### Sobre os três formatos de relatório
+### Sobre os formatos de relatório
 
 | Formato | Quando usar |
 |---------|-------------|
-| **PDF**  | Para imprimir ou arquivar. Visual, organizado por prioridade. |
+| **HTML** | Para navegar muitos arquivos na tela: tem abas de filtro (só problemas, faltando, etc.) e botão de copiar caminho. Dá para imprimir como PDF pelo navegador. |
 | **CSV**  | Para abrir no Excel e tratar/filtrar os dados em planilha. |
-| **HTML** | Para navegar muitos arquivos na tela: tem abas de filtro (só problemas, faltando, etc.) e botão de copiar caminho. |
+| **PDF**  | Opcional. Visual, para imprimir/arquivar. Só funciona na versão completa (ver abaixo). |
 
-> Em pastas muito grandes, o PDF lista todos os **problemas**, mas pode omitir as
-> linhas "OK" para não ficar gigante (o total continua no resumo). Para a lista
-> completa item a item, use o CSV ou o HTML.
+> **PDF é opcional.** A versão padrão do app é **leve** (abre rápido e ocupa
+> pouco) e gera relatórios em **HTML e CSV**. Se precisar de PDF nativo, use a
+> versão completa `FolderManagerWIN-PDF` (gerada pelo `build_exe_com_pdf.bat`).
+> Na prática, o HTML já cobre quase tudo: abra e use Imprimir → Salvar como PDF.
 
 ---
 
@@ -54,14 +59,20 @@ cópia realizada.
 
 ```
 gerenciador-pastas/
-├── app.py                       # Interface (tela única) — ponto de entrada
-├── motor_comparacao.py          # Lógica de comparação (somente leitura)
-├── motor_copia.py               # Lógica de cópia dos faltantes
-├── relatorio.py                 # Gera os relatórios HTML / CSV / PDF
-├── requirements.txt             # Dependências (reportlab, pyinstaller)
-├── build_exe.bat                # Gera o executável do WINDOWS (.exe)
-├── build_app_mac.command        # Gera o aplicativo do MAC (.app)
-├── Gerenciador de Pastas.bat    # Abre pelo Python no Windows, sem terminal
+├── app.py                          # Interface (tela única) — ponto de entrada
+├── motor_comparacao.py             # Lógica de comparação (somente leitura)
+├── motor_copia.py                  # Lógica de cópia (reaproveita a análise)
+├── relatorio.py                    # Gera os relatórios HTML / CSV / PDF
+├── requirements.txt                # Dependências (reportlab, pyinstaller)
+├── build_exe.bat                   # Gera o .exe LEVE do WINDOWS (CSV/HTML)
+├── build_exe_com_pdf.bat           # Gera o .exe COMPLETO com PDF (opcional)
+├── build_app_mac.command           # Gera o .app LEVE do MAC (rodar num Mac)
+├── subir-foldermanager-no-github.bat # Sobe o projeto para o repo Softwares
+├── baixar-da-nuvem.bat             # Baixa os 2 executáveis da nuvem p/ a rede
+├── Gerenciador de Pastas.bat       # Abre pelo Python no Windows, sem terminal
+├── .github/workflows/build.yml     # Robô que gera .exe e .app na nuvem
+├── COMO-GERAR-NA-NUVEM.md          # Guia do GitHub Actions
+├── DISTRIBUICAO-REDE.md            # Como os executáveis chegam à pasta de rede
 └── README.md
 ```
 

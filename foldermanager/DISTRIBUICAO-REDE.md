@@ -15,17 +15,24 @@ Existem **duas coisas diferentes**, e é importante não misturá-las:
 ```
 D:\Softwares\              <- pasta compartilhada na rede (NÃO precisa ser git)
 ├── Windows\
-│   └── FolderManagerWIN.exe
+│   └── FolderManagerWIN.exe       (a pessoa do Windows abre direto)
 └── Mac\
-    └── FolderManagerMAC.app
+    └── FolderManagerMAC-mac.zip   (a pessoa do Mac copia e descompacta NO MAC)
 ```
+
+> **Por que o Mac fica como `.zip`?** No Mac, um aplicativo `.app` é na verdade
+> um "pacote" (uma pasta). Se ele for descompactado no Windows, perde as
+> permissões de execução e **não abre no Mac**. Por isso o app do Mac fica
+> guardado como `.zip`: a pessoa copia o `.zip` para o Mac dela e dá dois
+> cliques lá para descompactar — aí o `FolderManagerMAC.app` funciona. Na
+> primeira vez, ela abre com **botão direito → Abrir** para liberar o app.
 
 ## Como cada executável chega lá
 
 | Executável | Como é gerado | Como vai parar na pasta de rede |
 |------------|---------------|----------------------------------|
 | `FolderManagerWIN.exe` | `build_exe.bat` roda no seu PC Windows | O próprio `build_exe.bat` já salva direto em `D:\Softwares\Windows`. |
-| `FolderManagerMAC.app` | GitHub Actions monta na nuvem | Você roda `baixar-mac-da-nuvem.bat`, que baixa o `.app` da nuvem e salva em `D:\Softwares\Mac`. |
+| `FolderManagerMAC-mac.zip` | GitHub Actions monta na nuvem | Você roda `baixar-mac-da-nuvem.bat`, que baixa o `.zip` da nuvem e salva em `D:\Softwares\Mac`. A pessoa do Mac descompacta no Mac. |
 
 ### Por que o Mac é diferente
 

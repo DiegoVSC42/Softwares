@@ -24,6 +24,7 @@ import os
 import queue
 import sys
 import threading
+import time
 import webbrowser
 
 import tkinter as tk
@@ -51,6 +52,11 @@ class App(tk.Tk):
         # Resultados guardados para o relatório
         self.dados_comparacao = None   # dict devolvido por mcomp.comparar
         self.resumo_copia = None       # dict resumo da última cópia
+        self._copiar_apos_analise = False  # encadeia "analisar -> copiar"
+
+        # Progresso: rótulo da ação atual e instante de início (para o ETA)
+        self._rotulo_prog = "Processando"
+        self._t_inicio = None
 
         self._montar_interface()
         self.after(100, self._processar_fila)
@@ -64,9 +70,9 @@ class App(tk.Tk):
 
         ttk.Label(
             self,
-            text="Compare duas pastas (somente leitura) e copie os arquivos que "
-                 "faltam no destino.\nO relatório é opcional: gere quando quiser, "
-                 "em PDF, CSV ou HTML.",
+            text="1) Analise as duas pastas (somente leitura).  2) Copie os "
+                 "arquivos que faltam no destino.\nA cópia reaproveita a análise "
+                 "— não lê tudo de novo. O relatório (PDF, CSV ou HTML) é opcional.",
             justify="left",
         ).pack(anchor="w", **pad)
 
@@ -123,12 +129,10 @@ class App(tk.Tk):
         # --- Ações ---
         acoes = ttk.Frame(self)
         acoes.pack(fill="x", **pad)
-        self.btn_comparar = ttk.Button(acoes, text="1) Comparar", command=self._iniciar_comparar)
+        self.btn_comparar = ttk.Button(acoes, text="1) Analisar", command=self._iniciar_comparar)
         self.btn_comparar.pack(side="left")
-        self.btn_verificar = ttk.Button(acoes, text="Simular cópia", command=self._iniciar_simular)
-        self.btn_verificar.pack(side="left", padx=6)
         self.btn_copiar = ttk.Button(acoes, text="2) Copiar faltantes", command=self._iniciar_copiar)
-        self.btn_copiar.pack(side="left")
+        self.btn_copiar.pack(side="left", padx=6)
         self.btn_relatorio = ttk.Button(acoes, text="Gerar relatório...",
                                         command=self._gerar_relatorio, state="disabled")
         self.btn_relatorio.pack(side="left", padx=6)
@@ -151,7 +155,7 @@ class App(tk.Tk):
     # ------------------------------------------------------------------ #
     def _controles(self):
         return [self.e_origem, self.e_destino, self.b_origem, self.b_destino,
-                self.btn_comparar, self.btn_verificar, self.btn_copiar]
+                self.btn_comparar, self.btn_copiar]
 
     def _escolher(self, var):
         inicial = var.get() if os.path.isdir(var.get()) else None
@@ -222,11 +226,14 @@ class App(tk.Tk):
     # ------------------------------------------------------------------ #
     # Ação: COMPARAR
     # ------------------------------------------------------------------ #
-    def _iniciar_comparar(self):
-        v = self._validar_pastas(exigir_destino_existente=True)
+    def _iniciar_comparar(self, copiar_depois=False, exigir_destino=True):
+        v = self._validar_pastas(exigir_destino_existente=exigir_destino)
         if not v:
             return
         origem, destino = v
+        self._copiar_apos_analise = copiar_depois
+        self._rotulo_prog = "Comparando"
+        self._t_inicio = None
         self.evento_cancelar.clear()
         self._travar(True)
         self.barra.configure(mode="indeterminate", value=0)
@@ -267,10 +274,19 @@ class App(tk.Tk):
             self.fila.put(("erro", str(e)))
 
     # ------------------------------------------------------------------ #
-    # Ação: SIMULAR / COPIAR
+    # Ação: COPIAR (reaproveita a análise; reanalisa só se preciso)
     # ------------------------------------------------------------------ #
-    def _iniciar_simular(self):
-        self._iniciar_copia(dry_run=True)
+    def _cache_valido(self):
+        """True se a análise guardada corresponde às pastas/opções atuais."""
+        d = self.dados_comparacao
+        if d is None:
+            return False
+        origem = os.path.abspath(self.var_origem.get().strip().strip('"'))
+        destino = os.path.abspath(self.var_destino.get().strip().strip('"'))
+        return (d["origem"] == origem and d["destino"] == destino
+                and d["usar_hash"] == self.var_hash.get()
+                and d["considerar_data"] == self.var_data.get()
+                and d["tolerancia"] == self._tolerancia())
 
     def _iniciar_copiar(self):
         v = self._validar_pastas(exigir_destino_existente=False)
@@ -285,61 +301,50 @@ class App(tk.Tk):
                if sobrescrever else "Nada existente no destino será sobrescrito."),
         ):
             return
-        self._iniciar_copia(dry_run=False)
 
-    def _iniciar_copia(self, dry_run):
-        v = self._validar_pastas(exigir_destino_existente=False)
-        if not v:
-            return
-        origem, destino = v
+        if self._cache_valido():
+            self._log("\n(Reaproveitando a análise já feita — sem reler as pastas.)")
+            self._executar_copia()
+        else:
+            # Precisa analisar antes (pastas/opções mudaram ou nunca analisou).
+            self._log("\n(As pastas/opções mudaram — fazendo a análise antes de copiar.)")
+            self._iniciar_comparar(copiar_depois=True, exigir_destino=False)
+
+    def _executar_copia(self):
+        """Copia usando o resultado da análise guardada (sem nova varredura)."""
+        dados = self.dados_comparacao
+        overwrite = self.var_overwrite.get()
+        self._rotulo_prog = "Copiando"
+        self._t_inicio = None
         self.evento_cancelar.clear()
         self._travar(True)
         self.barra.configure(mode="indeterminate", value=0)
         self.barra.start(12)
-        self.var_status.set("Analisando a origem...")
+        self.var_status.set("Preparando a cópia...")
         self._log("\n" + "=" * 70)
-        self._log(f"{'SIMULAÇÃO DE CÓPIA' if dry_run else 'CÓPIA'}  |  {dt.datetime.now():%d/%m/%Y %H:%M:%S}")
-        self._log(f"Origem : {origem}")
-        self._log(f"Destino: {destino}")
-        self._log(f"Sobrescrever divergentes: {'SIM' if self.var_overwrite.get() else 'NÃO'}")
+        self._log(f"CÓPIA  |  {dt.datetime.now():%d/%m/%Y %H:%M:%S}")
+        self._log(f"Origem : {dados['origem']}")
+        self._log(f"Destino: {dados['destino']}")
+        self._log(f"Sobrescrever divergentes: {'SIM' if overwrite else 'NÃO'}")
 
         threading.Thread(
-            target=self._worker_copia,
-            args=(origem, destino, self.var_overwrite.get(), dry_run),
-            daemon=True,
+            target=self._worker_copia, args=(dados, overwrite), daemon=True,
         ).start()
 
-    def _worker_copia(self, origem, destino, overwrite, dry_run):
-        deve_cancelar = self.evento_cancelar.is_set
-        contador = {"n": 0}
-
-        def prog(rel):
-            contador["n"] += 1
-            if contador["n"] % 50 == 0:
-                self.fila.put(("status", f"Analisando... {contador['n']} arquivos lidos"))
-
+    def _worker_copia(self, dados, overwrite):
+        origem, destino = dados["origem"], dados["destino"]
         try:
             os.makedirs(destino, exist_ok=True)
-            acoes, ignorados = mcopia.build_plan(
-                origem, destino, overwrite, progress_cb=prog, deve_cancelar=deve_cancelar)
+            acoes, ignorados = mcopia.acoes_da_comparacao(dados, overwrite)
             total_bytes = sum(a["size"] or 0 for a in acoes)
 
-            self.fila.put(("log", f"\nArquivos analisados : {contador['n']}"))
-            self.fila.put(("log", f"A copiar            : {len(acoes)} ({mcopia.human(total_bytes)})"))
+            self.fila.put(("log", f"\nA copiar            : {len(acoes)} ({mcopia.human(total_bytes)})"))
             self.fila.put(("log", f"Ignorados           : {len(ignorados)}"))
 
             if ignorados:
                 self.fila.put(("log", "-- IGNORADOS ----------------------------------"))
                 for ig in ignorados:
                     self.fila.put(("log", f"  [x] {ig['rel']}  ->  {ig['motivo']}"))
-
-            if dry_run:
-                self.fila.put(("log", "-- SERIAM COPIADOS (simulação) ----------------"))
-                for a in acoes:
-                    self.fila.put(("log", f"  [+] {a['rel']}  ({mcopia.human(a['size'])})  | {a['motivo']}"))
-                self.fila.put(("log", "\n>> Simulação concluída. Nenhum arquivo foi copiado."))
-                self.fila.put(("fim_simular", len(acoes)))
-                return
 
             if not acoes:
                 self.fila.put(("log", ">> Nada a copiar. Destino já contém tudo da origem."))
@@ -355,8 +360,10 @@ class App(tk.Tk):
                 return
 
             # Cópia real
-            self.fila.put(("progresso", (0, len(acoes))))
+            n = len(acoes)
+            self.fila.put(("progresso", (0, n, 0, total_bytes)))
             ok, falhas, copiados = 0, [], []
+            bytes_proc = 0
             for i, a in enumerate(acoes, 1):
                 if self.evento_cancelar.is_set():
                     self.fila.put(("log", "\n>> CANCELADO pelo usuário."))
@@ -369,8 +376,8 @@ class App(tk.Tk):
                 except Exception as e:  # noqa: BLE001
                     falhas.append((a["rel"], str(e)))
                     self.fila.put(("log", f"  [FALHA] {a['rel']}  ->  {e}"))
-                self.fila.put(("progresso", (i, len(acoes))))
-                self.fila.put(("status", f"Copiando... {i}/{len(acoes)}"))
+                bytes_proc += a["size"] or 0
+                self.fila.put(("progresso", (i, n, bytes_proc, total_bytes)))
 
             bytes_ok = sum(c["size"] or 0 for c in copiados)
             resumo_copia = {
@@ -398,18 +405,19 @@ class App(tk.Tk):
     def _gerar_relatorio(self):
         if self.dados_comparacao is None:
             messagebox.showinfo(
-                "Relatório", "Faça uma comparação primeiro (botão \"Comparar\").")
+                "Relatório", "Faça a análise primeiro (botão \"Analisar\").")
             return
         formato = self._escolher_formato()
         if not formato:
             return
         if formato == "pdf" and not relatorio.pdf_disponivel():
-            messagebox.showerror(
-                "PDF indisponível",
-                "A biblioteca 'reportlab' não está instalada.\n\n"
-                "Use o executável (que já inclui o PDF) ou instale com:\n"
-                "    pip install reportlab\n\n"
-                "Você ainda pode gerar o relatório em CSV ou HTML.")
+            messagebox.showinfo(
+                "PDF é opcional",
+                "Esta é a versão leve do app, sem o gerador de PDF.\n\n"
+                "Você pode gerar o relatório em HTML e, na tela do navegador, "
+                "usar Imprimir → Salvar como PDF.\n\n"
+                "Se precisar do PDF nativo, use a versão completa "
+                "(FolderManagerWIN-PDF).")
             return
 
         ext = {"pdf": ".pdf", "csv": ".csv", "html": ".html"}[formato]
@@ -446,15 +454,20 @@ class App(tk.Tk):
 
         ttk.Label(dlg, text="Em qual formato deseja gerar o relatório?",
                   padding=12).pack()
-        var = tk.StringVar(value="pdf")
+        tem_pdf = relatorio.pdf_disponivel()
+        var = tk.StringVar(value="html")
         frm = ttk.Frame(dlg, padding=(16, 0))
         frm.pack(fill="x")
-        ttk.Radiobutton(frm, text="PDF — visual, para imprimir/arquivar",
-                        variable=var, value="pdf").pack(anchor="w", pady=2)
+        ttk.Radiobutton(frm, text="HTML — interativo; dá para imprimir como PDF pelo navegador",
+                        variable=var, value="html").pack(anchor="w", pady=2)
         ttk.Radiobutton(frm, text="CSV — abre no Excel, para tratar os dados",
                         variable=var, value="csv").pack(anchor="w", pady=2)
-        ttk.Radiobutton(frm, text="HTML — interativo, filtros e busca na tela",
-                        variable=var, value="html").pack(anchor="w", pady=2)
+        pdf_txt = ("PDF — visual, para imprimir/arquivar" if tem_pdf
+                   else "PDF — opcional (indisponível na versão leve)")
+        rb_pdf = ttk.Radiobutton(frm, text=pdf_txt, variable=var, value="pdf")
+        rb_pdf.pack(anchor="w", pady=2)
+        if not tem_pdf:
+            rb_pdf.configure(state="disabled")
 
         bar = ttk.Frame(dlg, padding=12)
         bar.pack(fill="x")
@@ -491,17 +504,14 @@ class App(tk.Tk):
                 elif tipo == "log":
                     self._log(conteudo)
                 elif tipo == "progresso":
-                    i, total = conteudo
-                    if str(self.barra["mode"]) == "indeterminate":
-                        self.barra.stop()
-                        self.barra.configure(mode="determinate")
-                    if total:
-                        self.barra.configure(maximum=total, value=i)
-                        self.var_status.set(f"Processando... {i} de {total}")
+                    if len(conteudo) == 4:
+                        i, total, bdone, btotal = conteudo
+                    else:
+                        i, total = conteudo
+                        bdone = btotal = None
+                    self._atualizar_progresso(i, total, bdone, btotal)
                 elif tipo == "fim_comparar":
                     self._finalizar_comparar(conteudo)
-                elif tipo == "fim_simular":
-                    self._finalizar_simples(f"Simulação: {conteudo} arquivo(s) seriam copiados.")
                 elif tipo == "fim_copiar":
                     self._finalizar_copiar(conteudo)
                 elif tipo == "cancelado":
@@ -518,25 +528,58 @@ class App(tk.Tk):
             pass
         self.after(100, self._processar_fila)
 
+    @staticmethod
+    def _fmt_tempo(seg):
+        """Formata segundos como '45s', '2min 05s' ou '1h 12min'."""
+        seg = int(max(0, seg))
+        if seg < 60:
+            return f"{seg}s"
+        m, s = divmod(seg, 60)
+        if m < 60:
+            return f"{m}min {s:02d}s"
+        h, m = divmod(m, 60)
+        return f"{h}h {m:02d}min"
+
+    def _atualizar_progresso(self, feito, total, bytes_feitos=None, bytes_total=None):
+        """Atualiza barra, porcentagem e tempo estimado a cada arquivo."""
+        agora = time.monotonic()
+        if str(self.barra["mode"]) == "indeterminate":
+            self.barra.stop()
+            self.barra.configure(mode="determinate")
+            self._t_inicio = agora  # começa a cronometrar o ETA aqui
+        if not total:
+            return
+        self.barra.configure(maximum=total, value=feito)
+        pct = (feito / total) * 100 if total else 0
+
+        eta_txt = ""
+        if self._t_inicio is not None and feito > 0:
+            decorrido = agora - self._t_inicio
+            # ETA por bytes (mais preciso na cópia); senão, por contagem.
+            if bytes_total and bytes_feitos and bytes_feitos > 0:
+                fracao = bytes_feitos / bytes_total
+            else:
+                fracao = feito / total
+            if fracao > 0:
+                restante = decorrido / fracao - decorrido
+                eta_txt = f" — restam ~{self._fmt_tempo(restante)}"
+
+        self.var_status.set(
+            f"{self._rotulo_prog} {feito}/{total} — {pct:.0f}%{eta_txt}")
+
     def _encerrar(self):
         if str(self.barra["mode"]) == "indeterminate":
             self.barra.stop()
             self.barra.configure(mode="determinate")
         self._travar(False)
 
-    def _finalizar_simples(self, msg):
-        self._encerrar()
-        self.var_status.set(msg)
-
     def _finalizar_comparar(self, dados):
         self.dados_comparacao = dados
         cont = mcomp.resumo(dados["linhas"])
         criticos = mcomp.contar_criticos(dados["linhas"])
         total = len(dados["linhas"])
-        self._encerrar()
-        self.barra.configure(maximum=max(total, 1), value=max(total, 1))
 
-        self._log("\n=== RESUMO DA COMPARAÇÃO ===")
+        self._log("\n=== RESUMO DA ANÁLISE ===")
         for st in ["OK", "FALTANDO", "TAMANHO_DIFERENTE", "HASH_DIFERENTE",
                    "EXTRA", "DATA_DIFERENTE", "ERRO_LEITURA"]:
             if st in cont:
@@ -544,12 +587,24 @@ class App(tk.Tk):
         self._log(f"\nArquivos na origem : {dados['qtd_origem']}")
         self._log(f"Arquivos no destino: {dados['qtd_destino']}")
         self._log(f"Problemas críticos : {criticos}")
+        faltando = cont.get("FALTANDO", 0)
+        self._log(f"Faltando no destino (seriam copiados): {faltando}")
 
+        # Encadeamento: se a análise foi disparada pelo botão "Copiar", segue
+        # direto para a cópia, reaproveitando esta leitura.
+        if self._copiar_apos_analise:
+            self._copiar_apos_analise = False
+            self._log("\n→ Reaproveitando esta análise para copiar...")
+            self._executar_copia()
+            return
+
+        self._encerrar()
+        self.barra.configure(maximum=max(total, 1), value=max(total, 1))
         if criticos == 0:
-            self.var_status.set("Comparação concluída: cópia íntegra. (Relatório disponível.)")
+            self.var_status.set("Análise concluída: cópia íntegra. (Relatório disponível.)")
             self._log("\n✔ Cópia íntegra: nenhum problema crítico encontrado.")
         else:
-            self.var_status.set(f"Comparação concluída: {criticos} problema(s) crítico(s). (Relatório disponível.)")
+            self.var_status.set(f"Análise concluída: {criticos} problema(s) crítico(s). (Relatório disponível.)")
             self._log(f"\n✖ Atenção: {criticos} problema(s) crítico(s). Gere o relatório para detalhes.")
         self.btn_relatorio.configure(state="normal")
 
@@ -565,7 +620,7 @@ class App(tk.Tk):
             self.btn_relatorio.configure(state="normal")
             self._log("  (O relatório agora inclui também esta cópia.)")
         else:
-            self._log("  Dica: rode \"Comparar\" para conferir e poder gerar o relatório completo.")
+            self._log("  Dica: rode \"Analisar\" para conferir e poder gerar o relatório completo.")
 
 
 def main():

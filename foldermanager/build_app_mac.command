@@ -13,9 +13,9 @@
 cd "$(dirname "$0")" || exit 1
 
 echo
-echo "[1/3] Instalando dependencias (reportlab, pyinstaller)..."
+echo "[1/3] Instalando o empacotador (pyinstaller)..."
 python3 -m pip install --upgrade pip >/dev/null 2>&1
-python3 -m pip install reportlab pyinstaller
+python3 -m pip install pyinstaller
 if [ $? -ne 0 ]; then
     echo
     echo "ERRO: nao foi possivel instalar as dependencias."
@@ -31,7 +31,7 @@ python3 -m PyInstaller \
     --onefile \
     --windowed \
     --name "FolderManagerMAC" \
-    --hidden-import reportlab \
+    --exclude-module reportlab \
     app.py
 
 if [ $? -ne 0 ]; then
