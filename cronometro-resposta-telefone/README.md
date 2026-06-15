@@ -23,6 +23,7 @@ O tempo entre o passo 3 e o passo 4 é o **tempo de resposta** da outra pessoa.
 | `Espaço` | Atendi a chamada (marca o início da chamada) |
 | `1`      | Terminei de falar (inicia a contagem) |
 | `2`      | Ouvi a outra pessoa (registra o tempo) |
+| `3`      | Cancela o `1` (descarta a contagem em andamento, útil em misclick) |
 | `Esc`    | Cancela a medição em andamento |
 
 As teclas funcionam tanto no teclado normal quanto no numérico.

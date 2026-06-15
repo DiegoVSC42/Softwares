@@ -63,7 +63,7 @@ class CronometroResposta:
         ).pack(pady=(16, 2))
         tk.Label(
             self.root,
-            text="Espaco = atendi a chamada   |   1 = terminei de falar   |   2 = ouvi a outra pessoa",
+            text="Espaco = atendi   |   1 = terminei de falar   |   2 = ouvi a pessoa   |   3 = cancelar o 1",
             bg=cor_fundo, fg="#9399b2", font=("Segoe UI", 9),
         ).pack(pady=(0, 6))
 
@@ -107,20 +107,28 @@ class CronometroResposta:
         frame_botoes.pack(pady=4)
 
         self.btn1 = tk.Button(
-            frame_botoes, text="1  Terminei de falar", width=20, height=2,
+            frame_botoes, text="1  Terminei de falar", width=15, height=2,
             bg="#89b4fa", fg="#11111b", activebackground="#74a0f0",
-            font=("Segoe UI", 11, "bold"), relief="flat", cursor="hand2",
+            font=("Segoe UI", 10, "bold"), relief="flat", cursor="hand2",
             takefocus=0, command=self.marcar_fim_da_fala,
         )
-        self.btn1.grid(row=0, column=0, padx=6)
+        self.btn1.grid(row=0, column=0, padx=4)
 
         self.btn2 = tk.Button(
-            frame_botoes, text="2  Ouvi a outra pessoa", width=20, height=2,
+            frame_botoes, text="2  Ouvi a pessoa", width=15, height=2,
             bg="#a6e3a1", fg="#11111b", activebackground="#92d68d",
-            font=("Segoe UI", 11, "bold"), relief="flat", cursor="hand2",
+            font=("Segoe UI", 10, "bold"), relief="flat", cursor="hand2",
             takefocus=0, command=self.marcar_resposta,
         )
-        self.btn2.grid(row=0, column=1, padx=6)
+        self.btn2.grid(row=0, column=1, padx=4)
+
+        self.btn3 = tk.Button(
+            frame_botoes, text="3  Cancelar o 1", width=15, height=2,
+            bg="#f38ba8", fg="#11111b", activebackground="#e87a98",
+            font=("Segoe UI", 10, "bold"), relief="flat", cursor="hand2",
+            takefocus=0, command=self.cancelar_medicao,
+        )
+        self.btn3.grid(row=0, column=2, padx=4)
 
         # Botoes secundarios
         frame_sec = tk.Frame(self.root, bg=cor_fundo)
@@ -178,6 +186,8 @@ class CronometroResposta:
         self.root.bind("<KP_1>", lambda e: self.marcar_fim_da_fala())
         self.root.bind("2", lambda e: self.marcar_resposta())
         self.root.bind("<KP_2>", lambda e: self.marcar_resposta())
+        self.root.bind("3", lambda e: self.cancelar_medicao())
+        self.root.bind("<KP_3>", lambda e: self.cancelar_medicao())
         self.root.bind("<space>", lambda e: self.marcar_atendimento())
         self.root.bind("<Escape>", lambda e: self.cancelar_medicao())
 
@@ -314,15 +324,17 @@ class CronometroResposta:
     # ------------------------------------------------------------ visuais
     def _atualizar_estado_visual(self):
         if self.estado == self.AGUARDANDO:
-            self.lbl_status.config(text="Aguardando a resposta...  (aperte 2)", fg="#f9e2af")
+            self.lbl_status.config(text="Aguardando a resposta...  (2 = ouvi  |  3 = cancelar)", fg="#f9e2af")
             self.lbl_cronometro.config(fg="#f9e2af")
             self.btn1.config(state="disabled")
             self.btn2.config(state="normal")
+            self.btn3.config(state="normal")
         else:
             self.lbl_status.config(text="Pronto.  Aperte 1 ao terminar de falar.", fg="#9399b2")
             self.lbl_cronometro.config(fg="#a6e3a1")
             self.btn1.config(state="normal")
             self.btn2.config(state="disabled")
+            self.btn3.config(state="disabled")
 
     def _atualizar_estatisticas(self):
         if not self.medicoes:
