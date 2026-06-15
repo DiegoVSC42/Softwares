@@ -1,0 +1,44 @@
+name: Build cronometro-resposta-telefone
+
+on:
+  push:
+    paths:
+      - 'cronometro-resposta-telefone/**'
+      - '.github/workflows/cronometro-resposta-telefone-build.yml'
+  workflow_dispatch:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: cronometro-resposta-telefone
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pyinstaller
+      - run: pyinstaller --onefile --windowed --name CronometroResposta cronometro_resposta_telefone.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: cronometro-resposta-telefone/dist/CronometroResposta.exe
+
+  mac:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: cronometro-resposta-telefone
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pyinstaller
+      - run: pyinstaller --onefile --windowed --name CronometroResposta cronometro_resposta_telefone.py
+      - run: ditto -c -k --sequesterRsrc --keepParent dist/CronometroResposta.app CronometroResposta-mac.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mac-build
+          path: cronometro-resposta-telefone/CronometroResposta-mac.zip
