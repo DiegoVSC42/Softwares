@@ -1,0 +1,44 @@
+name: Build separar-canais-wav
+
+on:
+  push:
+    paths:
+      - 'separar-canais-wav/**'
+      - '.github/workflows/separar-canais-wav-build.yml'
+  workflow_dispatch:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: separar-canais-wav
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pyinstaller numpy
+      - run: pyinstaller --onefile --windowed --name SepararCanaisWAV separar_canais_wav.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: separar-canais-wav/dist/SepararCanaisWAV.exe
+
+  mac:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: separar-canais-wav
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pyinstaller numpy
+      - run: pyinstaller --onefile --windowed --name SepararCanaisWAV separar_canais_wav.py
+      - run: ditto -c -k --sequesterRsrc --keepParent dist/SepararCanaisWAV.app SepararCanaisWAV-mac.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mac-build
+          path: separar-canais-wav/SepararCanaisWAV-mac.zip
