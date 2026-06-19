@@ -1,0 +1,3 @@
+# Este projeto nao tem dependencias Python externas.
+# A GUI usa apenas a biblioteca padrao (Tkinter).
+# O ffmpeg eh baixado e embutido no executavel pelo workflow do GitHub Actions.
