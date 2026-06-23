@@ -230,6 +230,43 @@ def copy_one(action):
     shutil.copy2(long_path(action["src"]), long_path(dst))
 
 
+def copy_one_progress(action, callback=None, deve_cancelar=None,
+                      bloco=4 * 1024 * 1024):
+    """
+    Copia UM arquivo em blocos, chamando callback(bytes_copiados_deste_arquivo)
+    a cada bloco — assim dá para mostrar progresso DENTRO de um arquivo grande.
+
+    Preserva data/metadados (como copy2). Lê a origem, nunca a altera.
+    Se deve_cancelar() virar True no meio, apaga o arquivo parcial e levanta
+    Cancelado.
+    """
+    src = long_path(action["src"])
+    dst = long_path(action["dst"])
+    os.makedirs(os.path.dirname(dst), exist_ok=True)
+    copiado = 0
+    try:
+        with open(src, "rb") as fi, open(dst, "wb") as fo:
+            while True:
+                if deve_cancelar is not None and deve_cancelar():
+                    raise Cancelado()
+                pedaco = fi.read(bloco)
+                if not pedaco:
+                    break
+                fo.write(pedaco)
+                copiado += len(pedaco)
+                if callback is not None:
+                    callback(copiado)
+    except BaseException:
+        # remove o arquivo parcial para nao deixar lixo no destino
+        try:
+            os.remove(dst)
+        except OSError:
+            pass
+        raise
+    # copia data de modificacao e permissoes, como o copy2 faz
+    shutil.copystat(src, dst)
+
+
 def human(n):
     if n is None:
         return "?"

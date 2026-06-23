@@ -363,21 +363,45 @@ class App(tk.Tk):
             n = len(acoes)
             self.fila.put(("progresso", (0, n, 0, total_bytes)))
             ok, falhas, copiados = 0, [], []
-            bytes_proc = 0
+            cancelado = False
+            # estado compartilhado com o callback de progresso por bloco
+            estado = {"base": 0, "i": 0, "t": 0.0}
+
+            def on_bloco(bytes_do_arquivo):
+                # atualiza no maximo ~7x por segundo para nao inundar a fila
+                agora = time.monotonic()
+                if agora - estado["t"] >= 0.15:
+                    estado["t"] = agora
+                    self.fila.put(("progresso",
+                                   (estado["i"], n, estado["base"] + bytes_do_arquivo,
+                                    total_bytes)))
+
             for i, a in enumerate(acoes, 1):
                 if self.evento_cancelar.is_set():
                     self.fila.put(("log", "\n>> CANCELADO pelo usuário."))
+                    cancelado = True
                     break
+                estado["i"] = i
                 try:
-                    mcopia.copy_one(a)
+                    mcopia.copy_one_progress(
+                        a, callback=on_bloco,
+                        deve_cancelar=self.evento_cancelar.is_set)
                     ok += 1
                     copiados.append({"rel": a["rel"], "size": a["size"], "motivo": a["motivo"]})
                     self.fila.put(("log", f"  [OK] {a['rel']}  ({mcopia.human(a['size'])})"))
+                except mcopia.Cancelado:
+                    self.fila.put(("log", "\n>> CANCELADO no meio de um arquivo (parcial removido)."))
+                    cancelado = True
+                    break
                 except Exception as e:  # noqa: BLE001
                     falhas.append((a["rel"], str(e)))
                     self.fila.put(("log", f"  [FALHA] {a['rel']}  ->  {e}"))
-                bytes_proc += a["size"] or 0
-                self.fila.put(("progresso", (i, n, bytes_proc, total_bytes)))
+                estado["base"] += a["size"] or 0
+                self.fila.put(("progresso", (i, n, estado["base"], total_bytes)))
+
+            if cancelado:
+                self.fila.put(("cancelado", None))
+                return
 
             bytes_ok = sum(c["size"] or 0 for c in copiados)
             resumo_copia = {
@@ -547,25 +571,35 @@ class App(tk.Tk):
             self.barra.stop()
             self.barra.configure(mode="determinate")
             self._t_inicio = agora  # começa a cronometrar o ETA aqui
-        if not total:
-            return
-        self.barra.configure(maximum=total, value=feito)
-        pct = (feito / total) * 100 if total else 0
+
+        usa_bytes = bool(bytes_total)
+        bf = bytes_feitos or 0
+
+        # A barra e a porcentagem seguem os BYTES na cópia (movem dentro de um
+        # arquivo grande) e a CONTAGEM na análise.
+        if usa_bytes:
+            self.barra.configure(maximum=max(bytes_total, 1), value=min(bf, bytes_total))
+            fracao = bf / bytes_total
+        else:
+            if not total:
+                return
+            self.barra.configure(maximum=max(total, 1), value=feito)
+            fracao = (feito / total) if total else 0
+        pct = fracao * 100
 
         eta_txt = ""
-        if self._t_inicio is not None and feito > 0:
+        if self._t_inicio is not None and fracao > 0:
             decorrido = agora - self._t_inicio
-            # ETA por bytes (mais preciso na cópia); senão, por contagem.
-            if bytes_total and bytes_feitos and bytes_feitos > 0:
-                fracao = bytes_feitos / bytes_total
-            else:
-                fracao = feito / total
-            if fracao > 0:
+            if decorrido > 0:
                 restante = decorrido / fracao - decorrido
                 eta_txt = f" — restam ~{self._fmt_tempo(restante)}"
 
+        bytes_txt = ""
+        if usa_bytes:
+            bytes_txt = f" — {mcopia.human(bf)} de {mcopia.human(bytes_total)}"
+
         self.var_status.set(
-            f"{self._rotulo_prog} {feito}/{total} — {pct:.0f}%{eta_txt}")
+            f"{self._rotulo_prog} {feito}/{total} — {pct:.0f}%{bytes_txt}{eta_txt}")
 
     def _encerrar(self):
         if str(self.barra["mode"]) == "indeterminate":
