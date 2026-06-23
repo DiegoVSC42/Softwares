@@ -40,7 +40,7 @@ if errorlevel 1 (
 
 REM Guarda o id do build anterior, para detectar o novo depois do envio.
 set "RUN_ANTES="
-for /f "delims=" %%i in ('gh run list -R "%REPO%" -L 1 --json databaseId --jq ".[0].databaseId" 2^>nul') do set "RUN_ANTES=%%i"
+for /f "delims=" %%i in ('gh run list -R "%REPO%" --workflow foldermanager-build.yml -L 1 --json databaseId --jq ".[0].databaseId" 2^>nul') do set "RUN_ANTES=%%i"
 
 echo.
 echo [1/4] Enviando o codigo para o GitHub...
@@ -60,7 +60,12 @@ copy /Y "%~dp0*.bat"            "%STAGE%\%SUBPASTA%\" >nul
 copy /Y "%~dp0*.command"        "%STAGE%\%SUBPASTA%\" >nul
 copy /Y "%~dp0.gitignore"       "%STAGE%\%SUBPASTA%\" >nul
 if not exist "%STAGE%\.github\workflows" mkdir "%STAGE%\.github\workflows"
-copy /Y "%~dp0.github\workflows\build.yml" "%STAGE%\.github\workflows\" >nul
+REM remove o workflow ANTIGO do FolderManager (build.yml), se for o nosso,
+REM para nao rodar duplicado. Nao mexe em workflows de outros softwares.
+if exist "%STAGE%\.github\workflows\build.yml" (
+    findstr /m "FolderManagerWIN" "%STAGE%\.github\workflows\build.yml" >nul 2>&1 && del /q "%STAGE%\.github\workflows\build.yml"
+)
+copy /Y "%~dp0.github\workflows\foldermanager-build.yml" "%STAGE%\.github\workflows\" >nul
 
 cd /d "%STAGE%"
 git add -A
@@ -79,7 +84,7 @@ echo [2/4] Aguardando o build comecar na nuvem...
 set "RUNID=%RUN_ANTES%"
 for /L %%n in (1,1,24) do (
     timeout /t 5 /nobreak >nul
-    for /f "delims=" %%i in ('gh run list -R "%REPO%" -L 1 --json databaseId --jq ".[0].databaseId" 2^>nul') do set "RUNID=%%i"
+    for /f "delims=" %%i in ('gh run list -R "%REPO%" --workflow foldermanager-build.yml -L 1 --json databaseId --jq ".[0].databaseId" 2^>nul') do set "RUNID=%%i"
     if not "!RUNID!"=="!RUN_ANTES!" goto :temrun
 )
 :temrun

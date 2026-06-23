@@ -1,10 +1,14 @@
-name: Gerar executaveis (Windows e Mac)
+name: FolderManager - Windows e Mac
 
-# Builda a versao LEVE (sem PDF) do software que esta na pasta "foldermanager".
-# Relatorios: CSV e HTML. Arquivo pequeno e abertura rapida.
+# Builda APENAS o FolderManager (pasta "foldermanager"), versao LEVE (sem PDF).
+# Nome de arquivo unico (foldermanager-build.yml) para nao se misturar com
+# workflows de outros softwares que existam no mesmo repositorio.
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'foldermanager/**'
+      - '.github/workflows/foldermanager-build.yml'
     tags: [ 'v*' ]
   workflow_dispatch:
 

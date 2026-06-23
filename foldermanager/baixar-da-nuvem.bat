@@ -31,6 +31,17 @@ if errorlevel 1 (
     goto :fim
 )
 
+REM Descobre o ULTIMO build do workflow do FolderManager (e nao de outro
+REM software que tambem rode no mesmo repositorio).
+set "RUNID="
+for /f "delims=" %%i in ('gh run list -R "%REPO%" --workflow foldermanager-build.yml -L 1 --json databaseId --jq ".[0].databaseId" 2^>nul') do set "RUNID=%%i"
+if "%RUNID%"=="" (
+    echo.
+    echo [X] Nao encontrei um build do FolderManager na nuvem.
+    echo     Rode o ATUALIZAR-TUDO.bat (ou envie o codigo) e espere o build.
+    goto :fim
+)
+
 echo.
 echo [1/2] Baixando o executavel do WINDOWS...
 call :baixar FolderManagerWIN "%DEST_WIN%" win
@@ -76,7 +87,7 @@ REM  %1 = nome do artefato | %2 = pasta destino | %3 = nome temp
 set "TMPD=%TEMP%\fm_dl_%~3"
 if exist "%TMPD%" rmdir /s /q "%TMPD%"
 mkdir "%TMPD%"
-call gh run download -R "%REPO%" -n %~1 -D "%TMPD%"
+call gh run download %RUNID% -R "%REPO%" -n %~1 -D "%TMPD%"
 if errorlevel 1 exit /b 1
 if not exist "%~2" mkdir "%~2"
 copy /Y "%TMPD%\*" "%~2\" >nul

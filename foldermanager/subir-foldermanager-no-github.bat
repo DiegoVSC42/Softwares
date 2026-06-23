@@ -51,7 +51,10 @@ copy /Y "%~dp0*.command"        "%STAGE%\%SUBPASTA%\" >nul
 copy /Y "%~dp0.gitignore"       "%STAGE%\%SUBPASTA%\" >nul
 
 if not exist "%STAGE%\.github\workflows" mkdir "%STAGE%\.github\workflows"
-copy /Y "%~dp0.github\workflows\build.yml" "%STAGE%\.github\workflows\" >nul
+if exist "%STAGE%\.github\workflows\build.yml" (
+    findstr /m "FolderManagerWIN" "%STAGE%\.github\workflows\build.yml" >nul 2>&1 && del /q "%STAGE%\.github\workflows\build.yml"
+)
+copy /Y "%~dp0.github\workflows\foldermanager-build.yml" "%STAGE%\.github\workflows\" >nul
 
 echo.
 echo [3/5] Registrando as mudancas...
