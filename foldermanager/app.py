@@ -660,6 +660,9 @@ class App(tk.Tk):
             self._executar_copia()
             return
 
+        # Lista os arquivos por categoria (com destaque para TAMANHO DIFERENTE).
+        self._log_detalhes(dados)
+
         self._encerrar()
         self.barra.configure(maximum=max(total, 1), value=max(total, 1))
         if criticos == 0:
@@ -667,8 +670,47 @@ class App(tk.Tk):
             self._log("\n✔ Cópia íntegra: nenhum problema crítico encontrado.")
         else:
             self.var_status.set(f"Análise concluída: {criticos} problema(s) crítico(s). (Relatório disponível.)")
-            self._log(f"\n✖ Atenção: {criticos} problema(s) crítico(s). Gere o relatório para detalhes.")
+            self._log(f"\n✖ Atenção: {criticos} problema(s) crítico(s). Veja a lista acima ou gere o relatório.")
         self.btn_relatorio.configure(state="normal")
+
+    def _log_detalhes(self, dados):
+        """Lista, no log, os arquivos de cada categoria relevante da análise.
+
+        Categorias 'críticas e geralmente poucas' (tamanho/conteúdo diferente,
+        erro de leitura) saem por inteiro. FALTANDO e SOBRANDO, que costumam ser
+        muitas, saem com um limite e um aviso de 'ver relatório'.
+        """
+        linhas = dados["linhas"]
+
+        def tam(v):
+            return mcomp.formatar_tamanho(v) if v != "" else "?"
+
+        def listar(status, titulo, limite=None):
+            itens = [l for l in linhas if l["status"] == status]
+            if not itens:
+                return
+            self._log(f"\n-- {titulo} ({len(itens)}) " + "-" * 10)
+            for l in (itens if limite is None else itens[:limite]):
+                if status == "TAMANHO_DIFERENTE":
+                    self._log(f"  • {l['caminho']}")
+                    self._log(f"      origem {tam(l['tam_origem'])}  x  destino {tam(l['tam_destino'])}")
+                elif status == "FALTANDO":
+                    self._log(f"  • {l['caminho']}  ({tam(l['tam_origem'])})")
+                elif status == "EXTRA":
+                    self._log(f"  • {l['caminho']}  ({tam(l['tam_destino'])})")
+                else:
+                    self._log(f"  • {l['caminho']}  — {l['detalhe']}")
+            if limite is not None and len(itens) > limite:
+                self._log(f"  ... e mais {len(itens) - limite} "
+                          f"(gere o relatório para a lista completa)")
+
+        # Primeiro os que mais importam e costumam ser poucos:
+        listar("TAMANHO_DIFERENTE", "ARQUIVOS COM TAMANHO DIFERENTE")
+        listar("HASH_DIFERENTE", "ARQUIVOS COM CONTEÚDO DIFERENTE (hash)")
+        listar("ERRO_LEITURA", "ARQUIVOS COM ERRO DE LEITURA")
+        # Estes podem ser muitos: limita para não encher o log.
+        listar("FALTANDO", "FALTANDO NO DESTINO", limite=100)
+        listar("EXTRA", "SOBRANDO NO DESTINO", limite=100)
 
     def _finalizar_copiar(self, resumo_copia):
         self.resumo_copia = resumo_copia
