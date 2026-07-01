@@ -257,14 +257,20 @@ def copy_one_progress(action, callback=None, deve_cancelar=None,
                 if callback is not None:
                     callback(copiado)
     except BaseException:
-        # remove o arquivo parcial para nao deixar lixo no destino
+        # erro/cancelamento DURANTE os dados: remove o parcial para nao deixar lixo
         try:
             os.remove(dst)
         except OSError:
             pass
         raise
-    # copia data de modificacao e permissoes, como o copy2 faz
-    shutil.copystat(src, dst)
+    # Os dados ja estao 100% copiados. Copiar data/permissoes e secundario:
+    # alguns destinos (NAS, exFAT, nomes com caracteres especiais) recusam o
+    # carimbo de data e levantam [Errno 22]. Nesse caso NAO falhamos o arquivo —
+    # ele ja foi copiado corretamente; so ignoramos os metadados.
+    try:
+        shutil.copystat(src, dst)
+    except OSError:
+        pass
 
 
 def human(n):

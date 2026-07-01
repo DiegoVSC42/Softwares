@@ -57,6 +57,9 @@ class App(tk.Tk):
         # Progresso: rótulo da ação atual e instante de início (para o ETA)
         self._rotulo_prog = "Processando"
         self._t_inicio = None
+        # Progresso do arquivo atual (barra secundária)
+        self._arq_rel = ""
+        self._arq_size = 0
 
         self._montar_interface()
         self.after(100, self._processar_fila)
@@ -136,17 +139,24 @@ class App(tk.Tk):
         self.btn_relatorio = ttk.Button(acoes, text="Gerar relatório...",
                                         command=self._gerar_relatorio, state="disabled")
         self.btn_relatorio.pack(side="left", padx=6)
-        self.btn_cancelar = ttk.Button(acoes, text="Cancelar", command=self._cancelar, state="disabled")
+        self.btn_cancelar = ttk.Button(acoes, text="Pausar", command=self._cancelar, state="disabled")
         self.btn_cancelar.pack(side="left")
         ttk.Button(acoes, text="Limpar log", command=self._limpar_log).pack(side="right")
 
-        # --- Status + progresso ---
+        # --- Status + progresso GERAL ---
         self.var_status = tk.StringVar(value="Pronto.")
         ttk.Label(self, textvariable=self.var_status).pack(anchor="w", padx=10)
         self.barra = ttk.Progressbar(self, mode="determinate")
         self.barra.pack(fill="x", **pad)
 
-        self.txt = tk.Text(self, height=14, wrap="word", state="disabled",
+        # --- Progresso do ARQUIVO ATUAL (só na cópia) ---
+        self.var_arquivo = tk.StringVar(value="")
+        ttk.Label(self, textvariable=self.var_arquivo, anchor="w",
+                  foreground="#57606a").pack(fill="x", padx=10)
+        self.barra_arquivo = ttk.Progressbar(self, mode="determinate")
+        self.barra_arquivo.pack(fill="x", padx=10, pady=(0, 4))
+
+        self.txt = tk.Text(self, height=12, wrap="word", state="disabled",
                            font=("Consolas", 10))
         self.txt.pack(fill="both", expand=True, **pad)
 
@@ -372,16 +382,18 @@ class App(tk.Tk):
                 agora = time.monotonic()
                 if agora - estado["t"] >= 0.15:
                     estado["t"] = agora
-                    self.fila.put(("progresso",
+                    self.fila.put(("copia_prog",
                                    (estado["i"], n, estado["base"] + bytes_do_arquivo,
-                                    total_bytes)))
+                                    total_bytes, bytes_do_arquivo)))
 
             for i, a in enumerate(acoes, 1):
                 if self.evento_cancelar.is_set():
-                    self.fila.put(("log", "\n>> CANCELADO pelo usuário."))
+                    self.fila.put(("log", "\n>> PAUSADO pelo usuário."))
                     cancelado = True
                     break
                 estado["i"] = i
+                # informa qual arquivo está sendo copiado agora (barra do arquivo)
+                self.fila.put(("arq_ini", (a["rel"], a["size"] or 0)))
                 try:
                     mcopia.copy_one_progress(
                         a, callback=on_bloco,
@@ -390,7 +402,8 @@ class App(tk.Tk):
                     copiados.append({"rel": a["rel"], "size": a["size"], "motivo": a["motivo"]})
                     self.fila.put(("log", f"  [OK] {a['rel']}  ({mcopia.human(a['size'])})"))
                 except mcopia.Cancelado:
-                    self.fila.put(("log", "\n>> CANCELADO no meio de um arquivo (parcial removido)."))
+                    self.fila.put(("log", "\n>> PAUSADO no meio de um arquivo (o parcial foi removido)."))
+                    self.fila.put(("log", "   Rode \"Copiar faltantes\" de novo para continuar de onde parou."))
                     cancelado = True
                     break
                 except Exception as e:  # noqa: BLE001
@@ -534,6 +547,18 @@ class App(tk.Tk):
                         i, total = conteudo
                         bdone = btotal = None
                     self._atualizar_progresso(i, total, bdone, btotal)
+                elif tipo == "arq_ini":
+                    rel, size = conteudo
+                    self._arq_rel = rel
+                    self._arq_size = size or 0
+                    self.var_arquivo.set(f"Arquivo atual: {rel}")
+                    self.barra_arquivo.configure(maximum=max(self._arq_size, 1), value=0)
+                elif tipo == "copia_prog":
+                    i, total, gdone, gtotal, fdone = conteudo
+                    self._atualizar_progresso(i, total, gdone, gtotal)
+                    self.barra_arquivo.configure(value=min(fdone, max(self._arq_size, 1)))
+                    fpct = (fdone / self._arq_size * 100) if self._arq_size else 100
+                    self.var_arquivo.set(f"Arquivo atual ({fpct:.0f}%): {self._arq_rel}")
                 elif tipo == "fim_comparar":
                     self._finalizar_comparar(conteudo)
                 elif tipo == "fim_copiar":
@@ -541,8 +566,8 @@ class App(tk.Tk):
                 elif tipo == "cancelado":
                     self._encerrar()
                     self.barra.configure(value=0)
-                    self.var_status.set("Cancelado pelo usuário. Nada foi alterado.")
-                    self._log("\n■ Operação cancelada.")
+                    self.var_status.set("Pausado. O que já foi copiado permanece; rode de novo para continuar.")
+                    self._log("\n■ Operação interrompida pelo usuário.")
                 elif tipo == "erro":
                     self._encerrar()
                     self.var_status.set("Erro durante a operação.")
@@ -605,6 +630,9 @@ class App(tk.Tk):
         if str(self.barra["mode"]) == "indeterminate":
             self.barra.stop()
             self.barra.configure(mode="determinate")
+        # limpa a barra do arquivo atual
+        self.var_arquivo.set("")
+        self.barra_arquivo.configure(value=0)
         self._travar(False)
 
     def _finalizar_comparar(self, dados):
