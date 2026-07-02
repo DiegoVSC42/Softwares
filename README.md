@@ -27,9 +27,11 @@ Baixa vídeos, playlists ou só o áudio a partir de um link.
 
 **Nota (como usar):**
 
-Abra o programa e cole o link no campo indicado. Escolha a qualidade do vídeo ou
-marque a opção de baixar só o áudio. Selecione a pasta onde quer salvar e clique
-em Baixar. A barra mostra o andamento e dá para cancelar a qualquer momento.
+1. Abra o programa.
+2. Cole o link do vídeo ou da playlist no campo indicado.
+3. Escolha a qualidade do vídeo, ou marque a opção de baixar só o áudio.
+4. Selecione a pasta onde quer salvar.
+5. Clique em Baixar e acompanhe pela barra (dá para cancelar a qualquer momento).
 
 ## Cronômetro de Tempo de Resposta
 
@@ -42,11 +44,11 @@ Mede o tempo que a outra pessoa leva para responder na ligação.
 
 **Nota (como usar):**
 
-Assim que atender a chamada, aperte a tecla Espaço para marcar o início. No
-momento em que você terminar de falar, aperte a tecla 1: é quando o cronômetro
-começa a contar. Quando ouvir a voz da outra pessoa, aperte a tecla 2 e o tempo
-fica registrado. O intervalo entre o 1 e o 2 é quanto a pessoa demorou para
-responder.
+1. Abra o programa.
+2. Ao atender a chamada, aperte a tecla Espaço para marcar o início.
+3. Quando você terminar de falar, aperte a tecla 1: o cronômetro começa a contar.
+4. Quando ouvir a voz da outra pessoa, aperte a tecla 2: o tempo fica registrado.
+5. O intervalo entre o 1 e o 2 é quanto a pessoa demorou para responder.
 
 ## Extrair Áudio de Vídeo
 
@@ -59,10 +61,11 @@ Extrai o áudio de vários vídeos de uma vez.
 
 **Nota (como usar):**
 
-Clique em Adicionar vídeos para escolher os arquivos, ou em Adicionar pasta para
-pegar todos de uma vez. Escolha o formato do áudio e a qualidade, selecione a
-pasta onde salvar e clique em Extrair. Ele processa todos os vídeos em sequência
-e mostra o progresso.
+1. Abra o programa.
+2. Clique em Adicionar vídeos para escolher os arquivos, ou em Adicionar pasta para pegar todos de uma vez.
+3. Escolha o formato do áudio e a qualidade.
+4. Selecione a pasta onde quer salvar.
+5. Clique em Extrair e acompanhe o progresso.
 
 ## Gerenciador de Pastas
 
@@ -75,10 +78,11 @@ Compara duas pastas e copia só os arquivos que faltam.
 
 **Nota (como usar):**
 
-Escolha a pasta de origem e a pasta de destino. Clique em Comparar para ver quais
-arquivos estão faltando no destino, sem alterar nada. Depois clique em Copiar
-faltantes para copiar só o que ainda não existe lá; a origem nunca é modificada.
-Se quiser um comprovante, clique em Gerar relatório e escolha o formato.
+1. Abra o programa.
+2. Escolha a pasta de origem e a pasta de destino.
+3. Clique em Comparar para ver quais arquivos estão faltando no destino (nada é alterado).
+4. Clique em Copiar faltantes para copiar só o que ainda não existe lá.
+5. Se quiser um comprovante, clique em Gerar relatório e escolha o formato.
 
 ## Renomeador de Vídeos por Data
 
@@ -91,10 +95,10 @@ Renomeia vários vídeos de uma vez e organiza por data.
 
 **Nota (como usar):**
 
-Clique em Selecionar pasta e escolha a pasta com os vídeos. O programa lê a data
-que está no nome de cada arquivo e monta a nova lista em ordem, do mais antigo
-para o mais novo. Confira a prévia dos novos nomes e, se estiver tudo certo,
-confirme para renomear. Dá para cancelar a qualquer momento.
+1. Abra o programa.
+2. Clique em Selecionar pasta e escolha a pasta com os vídeos.
+3. Confira a prévia dos novos nomes, já em ordem do mais antigo para o mais novo.
+4. Se estiver tudo certo, confirme para renomear (dá para cancelar a qualquer momento).
 
 ## Separar Canais de WAV
 
@@ -107,10 +111,11 @@ Separa uma gravação em duas vozes, uma de cada lado.
 
 **Nota (como usar):**
 
-Escolha um arquivo de gravação ou uma pasta inteira. Selecione como quer o
-resultado: só a voz isolada, ou a mesma voz tocando nos dois lados. Clique em
-Processar e o programa gera dois arquivos, um com a voz do lado esquerdo e outro
-com a voz do lado direito.
+1. Abra o programa.
+2. Escolha um arquivo de gravação ou uma pasta inteira.
+3. Selecione como quer o resultado: só a voz isolada, ou a mesma voz nos dois lados.
+4. Clique em Processar.
+5. O programa gera dois arquivos, um com a voz do lado esquerdo e outro com a do direito.
 
 ---
 
