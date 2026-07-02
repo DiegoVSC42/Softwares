@@ -78,3 +78,27 @@ jobs:
         with:
           name: ExtrairAudio-Mac
           path: extrair-audio/dist/ExtrairAudio-mac.zip
+
+  # ----------------------------------------------------------------------
+  # Release: publica o .exe (Windows) e o .zip (Mac) no GitHub, com link
+  # de download fixo em: releases/download/extrair-audio/<arquivo>
+  # ----------------------------------------------------------------------
+  release:
+    needs: [ windows, mac ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Baixar artefatos (exe e zip)
+        uses: actions/download-artifact@v4
+        with:
+          path: artefatos
+
+      - name: Publicar exe e zip no Release do GitHub
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: extrair-audio
+          name: "Extrair Audio"
+          files: |
+            artefatos/**/*.exe
+            artefatos/**/*.zip

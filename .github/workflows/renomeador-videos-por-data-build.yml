@@ -1,0 +1,110 @@
+name: Build Renomeador de Videos
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'renomeador-videos-por-data/**'
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: renomeador-videos-por-data
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install pyinstaller
+
+      - name: Build with PyInstaller
+        run: pyinstaller --onefile --windowed renomeador_videos.py
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-exe
+          path: renomeador-videos-por-data/dist/renomeador_videos.exe
+
+  build-mac:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: renomeador-videos-por-data
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install pyinstaller
+
+      - name: Build with PyInstaller
+        run: pyinstaller --onefile --windowed renomeador_videos.py
+
+      - name: Create .app bundle
+        run: |
+          mkdir -p build/Renomeador.app/Contents/MacOS
+          cp dist/renomeador_videos build/Renomeador.app/Contents/MacOS/renomeador_videos
+          chmod +x build/Renomeador.app/Contents/MacOS/renomeador_videos
+
+      - name: Create Info.plist
+        run: |
+          cat > build/Renomeador.app/Contents/Info.plist << 'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>CFBundleExecutable</key>
+            <string>renomeador_videos</string>
+            <key>CFBundleName</key>
+            <string>Renomeador de Videos</string>
+            <key>CFBundleVersion</key>
+            <string>1.0</string>
+            <key>CFBundlePackageType</key>
+            <string>APPL</string>
+          </dict>
+          </plist>
+          EOF
+
+      - name: Compress .app to .zip
+        run: ditto -c -k --sequesterRsrc --keepParent build/Renomeador.app Renomeador-mac.zip
+
+      - name: Upload Mac artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mac-zip
+          path: renomeador-videos-por-data/Renomeador-mac.zip
+
+  # ----------------------------------------------------------------------
+  # Release: publica o .exe (Windows) e o .zip (Mac) no GitHub, com link
+  # de download fixo em: releases/download/renomeador-videos-por-data/<arquivo>
+  # ----------------------------------------------------------------------
+  release:
+    needs: [ build-windows, build-mac ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Baixar artefatos (exe e zip)
+        uses: actions/download-artifact@v4
+        with:
+          path: artefatos
+
+      - name: Publicar exe e zip no Release do GitHub
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: renomeador-videos-por-data
+          name: "Renomeador de Videos por Data"
+          files: |
+            artefatos/**/*.exe
+            artefatos/**/*.zip

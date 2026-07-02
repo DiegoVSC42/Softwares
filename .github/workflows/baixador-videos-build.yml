@@ -78,3 +78,27 @@ jobs:
         with:
           name: BaixadorDeVideos-Mac
           path: baixador-videos/dist/BaixadorDeVideos-mac.zip
+
+  # ----------------------------------------------------------------------
+  # Release: publica o .exe (Windows) e o .zip (Mac) no GitHub, com link
+  # de download fixo em: releases/download/baixador-videos/<arquivo>
+  # ----------------------------------------------------------------------
+  release:
+    needs: [ windows, mac ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Baixar artefatos (exe e zip)
+        uses: actions/download-artifact@v4
+        with:
+          path: artefatos
+
+      - name: Publicar exe e zip no Release do GitHub
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: baixador-videos
+          name: "Baixador de Videos"
+          files: |
+            artefatos/**/*.exe
+            artefatos/**/*.zip

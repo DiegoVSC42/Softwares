@@ -46,12 +46,6 @@ jobs:
           name: FolderManagerWIN
           path: foldermanager/dist/FolderManagerWIN.exe
 
-      - name: Publicar no Release (somente em tags v*)
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v2
-        with:
-          files: foldermanager/dist/FolderManagerWIN.exe
-
   # ----------------------------------------------------------------- #
   # MAC -> FolderManagerMAC.app (leve, compactado em .zip)
   # ----------------------------------------------------------------- #
@@ -90,8 +84,26 @@ jobs:
           name: FolderManagerMAC
           path: foldermanager/dist/FolderManagerMAC-mac.zip
 
-      - name: Publicar no Release (somente em tags v*)
-        if: startsWith(github.ref, 'refs/tags/')
+  # ----------------------------------------------------------------------
+  # Release: publica o .exe (Windows) e o .zip (Mac) no GitHub, com link
+  # de download fixo em: releases/download/foldermanager/<arquivo>
+  # ----------------------------------------------------------------------
+  release:
+    needs: [ build-windows, build-mac ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Baixar artefatos (exe e zip)
+        uses: actions/download-artifact@v4
+        with:
+          path: artefatos
+
+      - name: Publicar exe e zip no Release do GitHub
         uses: softprops/action-gh-release@v2
         with:
-          files: foldermanager/dist/FolderManagerMAC-mac.zip
+          tag_name: foldermanager
+          name: "Folder Manager"
+          files: |
+            artefatos/**/*.exe
+            artefatos/**/*.zip

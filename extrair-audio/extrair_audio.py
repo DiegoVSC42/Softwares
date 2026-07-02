@@ -33,7 +33,7 @@ from tkinter import (
 
 
 APP_NAME = "Extrair Audio de Video"
-APP_VERSION = "1.0.0"
+APP_VERSION = "1.0.1"
 
 # Extensoes de video aceitas ao varrer uma pasta
 EXTENSOES_VIDEO = {
@@ -117,6 +117,7 @@ class ExtrairAudioGUI:
         self.processo: subprocess.Popen | None = None
         self.cancelar = False
         self.rodando = False
+        self.ultimo_destino: Path | None = None
 
         self.ffmpeg = find_ffmpeg()
 
@@ -186,6 +187,8 @@ class ExtrairAudioGUI:
         self.btn_cancelar = ttk.Button(frm_acao, text="Cancelar",
                                        command=self._cancelar, state=DISABLED)
         self.btn_cancelar.pack(side="left", padx=6)
+        ttk.Button(frm_acao, text="Abrir pasta de destino",
+                   command=self._abrir_pasta).pack(side="left", padx=6)
 
         # --- Progresso ---
         frm_prog = ttk.LabelFrame(self.root, text="Progresso")
@@ -286,6 +289,7 @@ class ExtrairAudioGUI:
             messagebox.showerror(APP_NAME, f"Nao foi possivel criar a pasta de destino:\n{e}")
             return
 
+        self.ultimo_destino = destino
         self.cancelar = False
         self.rodando = True
         self.btn_extrair.config(state=DISABLED)
@@ -298,6 +302,22 @@ class ExtrairAudioGUI:
                                    self.formato.get(), self.bitrate.get()),
                              daemon=True)
         t.start()
+
+    def _abrir_pasta(self) -> None:
+        """Abre a pasta de destino no explorador de arquivos do sistema."""
+        destino = self.ultimo_destino or Path(self.pasta_saida.get().strip() or ".")
+        if not destino.exists():
+            messagebox.showinfo(APP_NAME, "A pasta de destino ainda nao existe.")
+            return
+        try:
+            if os.name == "nt":
+                os.startfile(str(destino))  # type: ignore[attr-defined]
+            elif sys.platform == "darwin":
+                subprocess.Popen(["open", str(destino)])
+            else:
+                subprocess.Popen(["xdg-open", str(destino)])
+        except Exception as e:
+            messagebox.showwarning(APP_NAME, f"Nao foi possivel abrir a pasta:\n{e}")
 
     def _cancelar(self) -> None:
         self.cancelar = True
@@ -445,6 +465,8 @@ class ExtrairAudioGUI:
             self.prog_arquivo.config(value=100)
             self.prog_lote.config(value=100)
             self._logar(f"Concluido. Sucesso: {ok}, falhas: {falhas}.")
+            if ok > 0:
+                self._abrir_pasta()
             messagebox.showinfo(APP_NAME,
                                 f"Extracao concluida.\nSucesso: {ok}\nFalhas: {falhas}")
 
