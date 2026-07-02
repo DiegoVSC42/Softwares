@@ -551,14 +551,17 @@ class App(tk.Tk):
                     rel, size = conteudo
                     self._arq_rel = rel
                     self._arq_size = size or 0
-                    self.var_arquivo.set(f"Arquivo atual: {rel}")
+                    self.var_arquivo.set(
+                        f"Arquivo atual (0% — 0 B de {mcopia.human(self._arq_size)}): {rel}")
                     self.barra_arquivo.configure(maximum=max(self._arq_size, 1), value=0)
                 elif tipo == "copia_prog":
                     i, total, gdone, gtotal, fdone = conteudo
                     self._atualizar_progresso(i, total, gdone, gtotal)
                     self.barra_arquivo.configure(value=min(fdone, max(self._arq_size, 1)))
                     fpct = (fdone / self._arq_size * 100) if self._arq_size else 100
-                    self.var_arquivo.set(f"Arquivo atual ({fpct:.0f}%): {self._arq_rel}")
+                    self.var_arquivo.set(
+                        f"Arquivo atual ({fpct:.0f}% — {mcopia.human(fdone)} de "
+                        f"{mcopia.human(self._arq_size)}): {self._arq_rel}")
                 elif tipo == "fim_comparar":
                     self._finalizar_comparar(conteudo)
                 elif tipo == "fim_copiar":
