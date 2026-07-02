@@ -18,54 +18,83 @@ tem um download direto abaixo — **não precisa instalar nada**, é só baixar 
 
 ## Baixador de Vídeos
 
-Cole o link de um vídeo (ou de uma playlist inteira) e baixe na qualidade que
-quiser — ou apenas o áudio em MP3. O yt-dlp e o ffmpeg já vêm embutidos.
+**Caso de uso:** cole o link de um vídeo (ou de uma playlist inteira) e baixe na
+qualidade que quiser — ou apenas o áudio em MP3. O yt-dlp e o ffmpeg já vêm
+embutidos.
 
 - **Windows:** <https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos.exe>
 - **Mac:** <https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos-mac.zip>
 
+**Nota (como usar):** abra o programa, cole o link do vídeo/playlist, escolha a
+qualidade (ou marque só áudio/MP3), escolha a pasta de destino e clique em
+**Baixar**. A barra mostra o progresso.
+
 ## Cronômetro de Tempo de Resposta
 
-Numa ligação, mede quanto tempo a outra pessoa leva para responder depois que
-você termina de falar — útil para avaliar atendimento e qualidade da conversa.
+**Caso de uso:** numa ligação, mede quanto tempo a outra pessoa leva para
+responder depois que você termina de falar — útil para avaliar atendimento e
+qualidade da conversa.
 
 - **Windows:** <https://github.com/DiegoVSC42/Softwares/releases/download/cronometro-resposta-telefone/CronometroResposta.exe>
 - **Mac:** <https://github.com/DiegoVSC42/Softwares/releases/download/cronometro-resposta-telefone/CronometroResposta-mac.zip>
 
+**Nota (como usar):** ao atender a chamada aperte **Espaço** (marca o início);
+quando você **terminar de falar** aperte **1** (começa a contar); quando **ouvir
+a outra pessoa** aperte **2** (registra o tempo). O intervalo entre o 1 e o 2 é
+o tempo de resposta.
+
 ## Extrair Áudio de Vídeo
 
-Selecione vários vídeos de uma vez e extraia só a faixa de áudio em MP3, WAV ou
-M4A/AAC, com bitrate ajustável. Ótimo para preparar gravações para transcrição.
+**Caso de uso:** selecione vários vídeos de uma vez e extraia só a faixa de áudio
+em MP3, WAV ou M4A/AAC, com bitrate ajustável. Ótimo para preparar gravações
+para transcrição.
 
 - **Windows:** <https://github.com/DiegoVSC42/Softwares/releases/download/extrair-audio/ExtrairAudio.exe>
 - **Mac:** <https://github.com/DiegoVSC42/Softwares/releases/download/extrair-audio/ExtrairAudio-mac.zip>
 
+**Nota (como usar):** abra o programa, clique em **Adicionar vídeos** (ou
+**Adicionar pasta**), escolha o **formato** (MP3, WAV ou M4A/AAC) e o bitrate,
+selecione a **pasta de destino** e clique em **Extrair**.
+
 ## Gerenciador de Pastas
 
-Compara duas pastas (ex.: um Drive de origem e um NAS de destino) para conferir
-se a cópia ficou completa e copia apenas os arquivos que faltam — sem alterar a
-origem. Relatório opcional em PDF, CSV ou HTML.
+**Caso de uso:** compara duas pastas (ex.: um Drive de origem e um NAS de
+destino) para conferir se a cópia ficou completa e copia apenas os arquivos que
+faltam — sem alterar a origem. Relatório opcional em PDF, CSV ou HTML.
 
 - **Windows:** <https://github.com/DiegoVSC42/Softwares/releases/download/foldermanager/FolderManagerWIN.exe>
 - **Mac:** <https://github.com/DiegoVSC42/Softwares/releases/download/foldermanager/FolderManagerMAC-mac.zip>
 
+**Nota (como usar):** escolha a **pasta de origem** e a **de destino**, clique em
+**Comparar** (só leitura, nada é alterado) para ver o que falta; depois clique em
+**Copiar faltantes** para copiar só o que ainda não existe no destino. Se quiser,
+clique em **Gerar relatório** e escolha PDF, CSV ou HTML.
+
 ## Renomeador de Vídeos por Data
 
-Renomeia vídeos em lote usando a data que está no nome do arquivo: adiciona
-prefixo `YYYYMMDD` e numeração sequencial para deixar tudo em ordem cronológica,
-com pré-visualização antes de aplicar.
+**Caso de uso:** renomeia vídeos em lote usando a data que está no nome do
+arquivo: adiciona prefixo `YYYYMMDD` e numeração sequencial para deixar tudo em
+ordem cronológica, com pré-visualização antes de aplicar.
 
 - **Windows:** <https://github.com/DiegoVSC42/Softwares/releases/download/renomeador-videos-por-data/renomeador_videos.exe>
 - **Mac:** <https://github.com/DiegoVSC42/Softwares/releases/download/renomeador-videos-por-data/Renomeador-mac.zip>
 
+**Nota (como usar):** clique em **Selecionar pasta** e escolha a pasta com os
+vídeos, confira o **preview** dos novos nomes e clique para **renomear**. Dá para
+cancelar operações longas a qualquer momento.
+
 ## Separar Canais de WAV
 
-Separa uma gravação WAV estéreo — em que cada lado tem uma trilha diferente
-(ex.: entrevistador à esquerda, entrevistado à direita) — em dois arquivos
-independentes, um por canal.
+**Caso de uso:** separa uma gravação WAV estéreo — em que cada lado tem uma
+trilha diferente (ex.: entrevistador à esquerda, entrevistado à direita) — em
+dois arquivos independentes, um por canal.
 
 - **Windows:** <https://github.com/DiegoVSC42/Softwares/releases/download/separar-canais-wav/SepararCanaisWAV.exe>
 - **Mac:** <https://github.com/DiegoVSC42/Softwares/releases/download/separar-canais-wav/SepararCanaisWAV-mac.zip>
+
+**Nota (como usar):** escolha um arquivo `.wav` (ou uma pasta inteira), selecione
+o formato de saída (**Mono** ou **Estéreo centralizado**) e clique em
+**Processar**. Gera `nome_esquerda.wav` e `nome_direita.wav`.
 
 ---
 
