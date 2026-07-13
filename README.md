@@ -9,6 +9,7 @@ direto abaixo. Não precisa instalar nada, é só baixar e abrir.
 | Cronômetro de Tempo de Resposta | Medir o tempo de resposta em ligações | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/cronometro-resposta-telefone/CronometroResposta.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/cronometro-resposta-telefone/CronometroResposta-mac.zip) |
 | Extrair Áudio de Vídeo | Tirar o áudio de vários vídeos de uma vez | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/extrair-audio/ExtrairAudio.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/extrair-audio/ExtrairAudio-mac.zip) |
 | Gerenciador de Pastas | Comparar pastas e copiar só o que falta | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/foldermanager/FolderManagerWIN.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/foldermanager/FolderManagerMAC-mac.zip) |
+| Instagram Coletor | Baixar posts do Instagram e gerar planilha com os dados | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/instagram-coletor/InstagramColetor.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/instagram-coletor/InstagramColetor-mac.zip) |
 | Renomeador de Vídeos por Data | Renomear vídeos em ordem de data | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/renomeador-videos-por-data/renomeador_videos.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/renomeador-videos-por-data/Renomeador-mac.zip) |
 | Separar Canais de WAV | Separar uma gravação em duas vozes | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/separar-canais-wav/SepararCanaisWAV.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/separar-canais-wav/SepararCanaisWAV-mac.zip) |
 
@@ -83,6 +84,26 @@ Compara duas pastas e copia só os arquivos que faltam.
 3. Clique em Comparar para ver quais arquivos estão faltando no destino (nada é alterado).
 4. Clique em Copiar faltantes para copiar só o que ainda não existe lá.
 5. Se quiser um comprovante, clique em Gerar relatório e escolha o formato.
+
+## Instagram Coletor
+
+**Caso de uso:**
+
+Baixa fotos, carrosséis, reels e stories do Instagram e monta uma planilha com os dados de cada publicação.
+
+- **Windows:** <https://github.com/DiegoVSC42/Softwares/releases/download/instagram-coletor/InstagramColetor.exe>
+- **Mac:** <https://github.com/DiegoVSC42/Softwares/releases/download/instagram-coletor/InstagramColetor-mac.zip>
+
+**Nota (como usar):**
+
+1. Abra o programa.
+2. Escolha a pasta onde quer salvar.
+3. Em Login, selecione o navegador em que você já está logado no Instagram (o Chrome, por exemplo). O Instagram exige conta logada.
+4. Clique em Testar login e confira se deu certo.
+5. Escolha a aba: Links, para colar o endereço de um post, carrossel ou reel, ou Perfil inteiro, para digitar o nome do perfil.
+6. Marque o que quer: baixar as fotos e vídeos, gerar a planilha, ou os dois.
+7. Clique em Coletar e acompanhe pela barra (dá para cancelar a qualquer momento).
+8. Ao terminar, clique em Abrir pasta para ver os arquivos e a planilha.
 
 ## Renomeador de Vídeos por Data
 
