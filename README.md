@@ -5,6 +5,7 @@ direto abaixo. Não precisa instalar nada, é só baixar e abrir.
 
 | Software | Para que serve | Windows | Mac |
 |---|---|---|---|
+| Atualizar Softwares | Manter atualizada, nesta máquina, a cópia de todos os softwares deste repositório | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/atualizar-repo-softwares/AtualizarSoftwares.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/atualizar-repo-softwares/AtualizarSoftwares-mac.zip) |
 | Baixador de Vídeos | Baixar vídeos e playlists (ou só o áudio) | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos-mac.zip) |
 | Cronômetro de Tempo de Resposta | Medir o tempo de resposta em ligações | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/cronometro-resposta-telefone/CronometroResposta.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/cronometro-resposta-telefone/CronometroResposta-mac.zip) |
 | Extrair Áudio de Vídeo | Tirar o áudio de vários vídeos de uma vez | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/extrair-audio/ExtrairAudio.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/extrair-audio/ExtrairAudio-mac.zip) |
@@ -16,6 +17,22 @@ direto abaixo. Não precisa instalar nada, é só baixar e abrir.
 > No Mac, baixe o `.zip`, descompacte e abra o programa que estiver dentro dele.
 
 ---
+
+## Atualizar Softwares
+
+**Caso de uso:**
+
+Mantém atualizada, nesta máquina, a cópia local de todos os softwares já publicados neste repositório.
+
+- **Windows:** <https://github.com/DiegoVSC42/Softwares/releases/download/atualizar-repo-softwares/AtualizarSoftwares.exe>
+- **Mac:** <https://github.com/DiegoVSC42/Softwares/releases/download/atualizar-repo-softwares/AtualizarSoftwares-mac.zip>
+
+**Nota (como usar):**
+
+1. Abra o programa.
+2. Na primeira vez, clique em Escolher pasta e escolha onde a cópia deve ficar salva.
+3. Clique em Atualizar agora e acompanhe pelo log (dá para cancelar a qualquer momento).
+4. Da próxima vez, o programa já lembra a pasta escolhida.
 
 ## Baixador de Vídeos
 

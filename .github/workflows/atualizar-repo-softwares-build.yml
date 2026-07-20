@@ -1,0 +1,68 @@
+name: Build atualizar-repo-softwares
+
+on:
+  push:
+    paths:
+      - 'atualizar-repo-softwares/**'
+      - '.github/workflows/atualizar-repo-softwares-build.yml'
+  workflow_dispatch:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: atualizar-repo-softwares
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pyinstaller
+      - run: pyinstaller --onefile --windowed --name AtualizarSoftwares atualizar_repo_softwares.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: atualizar-repo-softwares/dist/AtualizarSoftwares.exe
+
+  mac:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: atualizar-repo-softwares
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pyinstaller
+      - run: pyinstaller --onefile --windowed --name AtualizarSoftwares atualizar_repo_softwares.py
+      - run: ditto -c -k --sequesterRsrc --keepParent dist/AtualizarSoftwares.app AtualizarSoftwares-mac.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mac-build
+          path: atualizar-repo-softwares/AtualizarSoftwares-mac.zip
+
+  # ----------------------------------------------------------------------
+  # Release: publica o .exe (Windows) e o .zip (Mac) no GitHub, com link
+  # de download fixo em: releases/download/atualizar-repo-softwares/<arquivo>
+  # ----------------------------------------------------------------------
+  release:
+    needs: [ windows, mac ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Baixar artefatos (exe e zip)
+        uses: actions/download-artifact@v4
+        with:
+          path: artefatos
+
+      - name: Publicar exe e zip no Release do GitHub
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: atualizar-repo-softwares
+          name: "Atualizar Softwares"
+          files: |
+            artefatos/**/*.exe
+            artefatos/**/*.zip
