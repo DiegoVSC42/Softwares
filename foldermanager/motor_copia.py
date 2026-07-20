@@ -20,6 +20,7 @@ Garantias de segurança:
 
 import os
 import shutil
+import unicodedata
 
 
 ILLEGAL_CHARS = '<>:"/\\|?*'
@@ -32,13 +33,18 @@ RESERVED = {
 
 def sanitize_component(name):
     """Torna UM componente de caminho (pasta ou arquivo) válido no Windows/NAS."""
+    # Categorias Unicode invisiveis/problematicas: Cc=controle, Cf=formatacao
+    # (zero-width, BOM), Co=uso privado (icones de fonte colados sem querer),
+    # Cs=substituto isolado. Tudo isso passa despercebido ao olho mas quebra o
+    # Windows/NAS ao criar a pasta/arquivo (WinError 87 com caminho \\?\).
+    INVISIBLE_CATEGORIES = {"Cc", "Cf", "Co", "Cs"}
     chars = []
     for ch in name:
-        if ch in ILLEGAL_CHARS or ord(ch) < 32:
+        if ch in ILLEGAL_CHARS or unicodedata.category(ch) in INVISIBLE_CATEGORIES:
             chars.append("_")
         else:
             chars.append(ch)
-    safe = "".join(chars).rstrip(" .")  # Windows não aceita espaço/ponto no fim
+    safe = "".join(chars).strip(" .")  # Windows não aceita espaço/ponto no início/fim
     if not safe:
         safe = "_"
     stem = safe.split(".")[0].upper()

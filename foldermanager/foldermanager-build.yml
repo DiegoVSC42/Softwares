@@ -1,0 +1,109 @@
+name: FolderManager - Windows e Mac
+
+# Builda APENAS o FolderManager (pasta "foldermanager"), versao LEVE (sem PDF).
+# Nome de arquivo unico (foldermanager-build.yml) para nao se misturar com
+# workflows de outros softwares que existam no mesmo repositorio.
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'foldermanager/**'
+      - '.github/workflows/foldermanager-build.yml'
+    tags: [ 'v*' ]
+  workflow_dispatch:
+
+jobs:
+  # ----------------------------------------------------------------- #
+  # WINDOWS -> FolderManagerWIN.exe (leve)
+  # ----------------------------------------------------------------- #
+  build-windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: foldermanager
+    steps:
+      - name: Baixar o codigo
+        uses: actions/checkout@v4
+
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar o empacotador
+        run: python -m pip install pyinstaller
+
+      - name: Gerar o executavel LEVE do Windows
+        run: >
+          pyinstaller --noconfirm --onefile --windowed
+          --name "FolderManagerWIN"
+          --exclude-module reportlab
+          app.py
+
+      - name: Enviar o .exe como artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: FolderManagerWIN
+          path: foldermanager/dist/FolderManagerWIN.exe
+
+  # ----------------------------------------------------------------- #
+  # MAC -> FolderManagerMAC.app (leve, compactado em .zip)
+  # ----------------------------------------------------------------- #
+  build-mac:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: foldermanager
+    steps:
+      - name: Baixar o codigo
+        uses: actions/checkout@v4
+
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar o empacotador
+        run: python3 -m pip install pyinstaller
+
+      - name: Gerar o aplicativo LEVE do Mac
+        run: >
+          pyinstaller --noconfirm --onefile --windowed
+          --name "FolderManagerMAC"
+          --exclude-module reportlab
+          app.py
+
+      - name: Compactar o .app (preservando o bundle)
+        run: |
+          cd dist
+          ditto -c -k --sequesterRsrc --keepParent "FolderManagerMAC.app" "FolderManagerMAC-mac.zip"
+
+      - name: Enviar o .app (zip) como artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: FolderManagerMAC
+          path: foldermanager/dist/FolderManagerMAC-mac.zip
+
+  # ----------------------------------------------------------------------
+  # Release: publica o .exe (Windows) e o .zip (Mac) no GitHub, com link
+  # de download fixo em: releases/download/foldermanager/<arquivo>
+  # ----------------------------------------------------------------------
+  release:
+    needs: [ build-windows, build-mac ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Baixar artefatos (exe e zip)
+        uses: actions/download-artifact@v4
+        with:
+          path: artefatos
+
+      - name: Publicar exe e zip no Release do GitHub
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: foldermanager
+          name: "Folder Manager"
+          files: |
+            artefatos/**/*.exe
+            artefatos/**/*.zip
