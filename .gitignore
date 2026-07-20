@@ -1,0 +1,13 @@
+# Artefatos de build (ficam dentro da pasta de cada projeto, nunca versionados)
+__pycache__/
+*.pyc
+.venv/
+build/
+dist/
+*.spec
+
+# Pacotes gerados localmente (o Release do GitHub e a fonte oficial de download)
+*-mac.zip
+
+# Lixo do macOS Finder
+.DS_Store
