@@ -8,6 +8,7 @@ direto abaixo. Não precisa instalar nada, é só baixar e abrir.
 | Atualizar Softwares | Manter atualizada, nesta máquina, a cópia de todos os softwares deste repositório | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/atualizar-repo-softwares/AtualizarSoftwares.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/atualizar-repo-softwares/AtualizarSoftwares-mac.zip) |
 | Baixador de Vídeos | Baixar vídeos e playlists (ou só o áudio) | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos-mac.zip) |
 | Cronômetro de Tempo de Resposta | Medir o tempo de resposta em ligações | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/cronometro-resposta-telefone/CronometroResposta.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/cronometro-resposta-telefone/CronometroResposta-mac.zip) |
+| Dividir e Juntar Áudio | Quebrar um áudio longo em partes e juntar tudo depois | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/dividir-juntar-audio/DividirJuntarAudio.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/dividir-juntar-audio/DividirJuntarAudio-mac.zip) |
 | Extrair Áudio de Vídeo | Tirar o áudio de vários vídeos de uma vez | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/extrair-audio/ExtrairAudio.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/extrair-audio/ExtrairAudio-mac.zip) |
 | Gerenciador de Pastas | Comparar pastas e copiar só o que falta | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/foldermanager/FolderManagerWIN.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/foldermanager/FolderManagerMAC-mac.zip) |
 | Instagram Coletor | Baixar posts do Instagram e gerar planilha com os dados | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/instagram-coletor/InstagramColetor.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/instagram-coletor/InstagramColetor-mac.zip) |
@@ -67,6 +68,27 @@ Mede o tempo que a outra pessoa leva para responder na ligação.
 3. Quando você terminar de falar, aperte a tecla 1: o cronômetro começa a contar.
 4. Quando ouvir a voz da outra pessoa, aperte a tecla 2: o tempo fica registrado.
 5. O intervalo entre o 1 e o 2 é quanto a pessoa demorou para responder.
+
+## Dividir e Juntar Áudio
+
+**Caso de uso:**
+
+Quebra um áudio longo em partes menores e junta tudo de volta depois, sem perder pedaço nem trocar a ordem.
+
+- **Windows:** <https://github.com/DiegoVSC42/Softwares/releases/download/dividir-juntar-audio/DividirJuntarAudio.exe>
+- **Mac:** <https://github.com/DiegoVSC42/Softwares/releases/download/dividir-juntar-audio/DividirJuntarAudio-mac.zip>
+
+**Nota (como usar):**
+
+1. Abra o programa.
+2. Na aba Dividir, clique em Escolher áudio e selecione o arquivo.
+3. Diga em quantas partes quer dividir, ou de quantos minutos deve ser cada parte. A tela mostra na hora quantas partes vão sair.
+4. Escolha onde cortar: no tempo exato, ou procurando o silêncio mais próximo (assim nenhuma palavra fica partida no meio).
+5. Clique em Dividir. As partes saem numeradas (01, 02, 03...) numa pasta ao lado do arquivo original, junto com um arquivo de conferência.
+6. Leve as partes para o serviço que vai tratar o áudio e traga os arquivos tratados de volta para a mesma pasta.
+7. Na aba Juntar, clique em Carregar manifesto e aponte para o arquivo de conferência, depois para a pasta com as partes tratadas. O programa acha cada parte pelo número, mesmo que o serviço tenha mudado o nome.
+8. Leia os avisos na tela: ele diz se alguma parte voltou mais curta do que deveria.
+9. Clique em Juntar e salvar e escolha onde gravar o arquivo final.
 
 ## Extrair Áudio de Vídeo
 
