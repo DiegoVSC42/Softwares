@@ -7,6 +7,7 @@ direto abaixo. Não precisa instalar nada, é só baixar e abrir.
 |---|---|---|---|
 | Atualizar Softwares | Manter atualizada, nesta máquina, a cópia de todos os softwares deste repositório | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/atualizar-repo-softwares/AtualizarSoftwares.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/atualizar-repo-softwares/AtualizarSoftwares-mac.zip) |
 | Baixador de Vídeos | Baixar vídeos e playlists (ou só o áudio) | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos-mac.zip) |
+| Comparador de Planilhas | Comparar duas planilhas e gerar uma terceira (juntar, cruzar ou remover linhas) | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/comparador-planilhas/ComparadorPlanilhas.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/comparador-planilhas/ComparadorPlanilhas-mac.zip) |
 | Cronômetro de Tempo de Resposta | Medir o tempo de resposta em ligações | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/cronometro-resposta-telefone/CronometroResposta.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/cronometro-resposta-telefone/CronometroResposta-mac.zip) |
 | Dividir e Juntar Áudio | Quebrar um áudio longo em partes e juntar tudo depois | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/dividir-juntar-audio/DividirJuntarAudio.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/dividir-juntar-audio/DividirJuntarAudio-mac.zip) |
 | Extrair Áudio de Vídeo | Tirar o áudio de vários vídeos de uma vez | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/extrair-audio/ExtrairAudio.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/extrair-audio/ExtrairAudio-mac.zip) |
@@ -51,6 +52,24 @@ Baixa vídeos, playlists ou só o áudio a partir de um link.
 3. Escolha a qualidade do vídeo, ou marque a opção de baixar só o áudio.
 4. Selecione a pasta onde quer salvar.
 5. Clique em Baixar e acompanhe pela barra (dá para cancelar a qualquer momento).
+
+## Comparador de Planilhas
+
+**Caso de uso:**
+
+Compara duas planilhas (CSV ou Excel) e gera uma terceira: juntando tudo, pegando só o que está nas duas, ou removendo de uma o que está na outra.
+
+- **Windows:** <https://github.com/DiegoVSC42/Softwares/releases/download/comparador-planilhas/ComparadorPlanilhas.exe>
+- **Mac:** <https://github.com/DiegoVSC42/Softwares/releases/download/comparador-planilhas/ComparadorPlanilhas-mac.zip>
+
+**Nota (como usar):**
+
+1. Abra o programa.
+2. Clique em Procurar para escolher a Planilha A e a Planilha B.
+3. Clique em Carregar planilhas.
+4. Marque as colunas que quer usar para comparar, como e-mail ou CPF (ou deixe todas marcadas para comparar a linha inteira). Para colunas de telefone, escolha o tipo Telefone (Brasil): assim o programa reconhece o mesmo número mesmo que esteja escrito de formas diferentes nas duas planilhas.
+5. Escolha a operação: juntar as duas (União), pegar só o que está nas duas (Interseção), ou tirar de uma o que está na outra (Remoção).
+6. Clique em Processar e salvar resultado e escolha onde guardar o arquivo.
 
 ## Cronômetro de Tempo de Resposta
 
