@@ -25,6 +25,8 @@ import hashlib
 import os
 import sys
 
+import motor_copia as _mcopia
+
 
 # --------------------------------------------------------------------------- #
 # Coleta de arquivos
@@ -166,6 +168,20 @@ def comparar(origem, destino, usar_hash=False, tolerancia=2.0, progresso=None,
     arq_destino, erros_d = coletar_arquivos(
         destino, "destino", progresso_scan, deve_cancelar)
 
+    # Nomes de arquivo/pasta da origem com espaço ou ponto no início/fim (ex.:
+    # " Reunião.mov", "._ArquivoDoMac.mov") não são aceitos pelo Windows/NAS.
+    # Na hora de COPIAR, motor_copia.sanitize_relpath() remove esse espaço/ponto
+    # e grava com um nome "saneado". Se a COMPARAÇÃO não souber disso, ela
+    # acusa esse arquivo como "faltando no destino" para sempre — mesmo já
+    # tendo sido copiado, só que sob o nome saneado. O mapa abaixo liga o nome
+    # saneado de volta ao nome original da origem, para a comparação reconhecer
+    # o arquivo como já copiado.
+    saneado_para_original = {}
+    for rel_origem in arq_origem:
+        rel_saneado = _mcopia.sanitize_relpath(rel_origem).replace(os.sep, "/")
+        if rel_saneado != rel_origem:
+            saneado_para_original[rel_saneado] = rel_origem
+
     todos = sorted(set(arq_origem) | set(arq_destino))
     linhas = []
 
@@ -178,8 +194,23 @@ def comparar(origem, destino, usar_hash=False, tolerancia=2.0, progresso=None,
         if total > 200 and i % 200 == 0:
             print(f"  ... comparando {i}/{total}", file=sys.stderr)
 
+        # Este item é a versão saneada, no destino, de um arquivo da origem
+        # que já é tratado (sob o nome original) em outra volta deste laço —
+        # não é um arquivo "sobrando" de verdade, é o mesmo arquivo.
+        if rel in saneado_para_original and rel not in arq_origem:
+            continue
+
         o = arq_origem.get(rel)
         d = arq_destino.get(rel)
+
+        nome_saneado = None
+        if o and not d:
+            rel_saneado = _mcopia.sanitize_relpath(rel).replace(os.sep, "/")
+            if rel_saneado != rel:
+                d_saneado = arq_destino.get(rel_saneado)
+                if d_saneado:
+                    d = d_saneado
+                    nome_saneado = rel_saneado
 
         linha = {
             "caminho": rel,
@@ -226,6 +257,12 @@ def comparar(origem, destino, usar_hash=False, tolerancia=2.0, progresso=None,
                                           conferido_hash=True)
             else:
                 linha = _avaliar_data(linha, o, d, tolerancia, considerar_data)
+
+            if nome_saneado:
+                linha["detalhe"] += (
+                    f" (Salvo no destino sem espaço/ponto no início do nome: "
+                    f"'{nome_saneado}'.)"
+                )
 
         linhas.append(linha)
 
