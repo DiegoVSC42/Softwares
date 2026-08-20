@@ -6,6 +6,8 @@ remoção de todos os metadados do arquivo.
 ## O que ele faz
 
 - Baixa vídeo por link, com escolha de qualidade (melhor, 1080p, 720p, 480p, 360p).
+- Deixa escolher o nome do arquivo de saída (opcional). Vazio, usa o título do
+  vídeo. Em playlist, cada item sai numerado ("Nome - 1", "Nome - 2"…).
 - Baixa somente o áudio em MP3.
 - Baixa uma playlist inteira.
 - Remove **todos** os metadados do arquivo baixado: título, autor, canal,
@@ -44,7 +46,8 @@ Onde ele fica:
 3. Na primeira abertura o programa baixa o motor de download e o motor de
    JavaScript (2 a 4 minutos, uma vez só). O campo "Motor" mostra
    "yt-dlp <versão> · JS: deno" quando termina. Espere isso aparecer.
-4. Cole o link, escolha a qualidade, confira a caixa
+4. Cole o link, escolha a qualidade e, se quiser, digite o nome do arquivo no
+   campo "Nome do arquivo (opcional)". Confira a caixa
    "Remover TODOS os metadados" (já vem marcada) e clique em **Baixar**.
 5. O arquivo aparece na pasta escolhida em "Salvar em" (por padrão, Downloads).
 
@@ -88,6 +91,8 @@ https://github.com/DiegoVSC42/Softwares/releases/tag/baixador-videos
 
 ## Versão
 
+- v1.4.0 — campo opcional de nome do arquivo de saída (vazio = título do
+  vídeo; em playlist, numera cada item).
 - v1.3.0 — instala o motor de JavaScript (Deno) e pede o vídeo pelo cliente
   que o YouTube aceita. É a correção do erro 403.
 - v1.2.0 — motor de download atualizável (fim do erro 403 por motor velho),

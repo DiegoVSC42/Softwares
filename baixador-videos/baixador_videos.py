@@ -5,6 +5,7 @@ Baixador de Vídeos — interface gráfica (Tkinter) para baixar vídeos.
 
 Recursos:
   - Seleção de qualidade (melhor, 1080p, 720p, 480p, 360p)
+  - Nome do arquivo de saída personalizado (opcional; vazio = título do vídeo)
   - Download somente do áudio em MP3
   - Suporte a playlists (baixar todos os vídeos da lista)
   - Remoção de TODOS os metadados do arquivo final (título, autor, capa,
@@ -36,7 +37,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 
 APP_NAME = "Baixador de Vídeos"
-APP_VERSION = "1.3.0"
+APP_VERSION = "1.4.0"
 
 YTDLP_BASE = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/"
 DENO_BASE = "https://github.com/denoland/deno/releases/latest/download/"
@@ -332,6 +333,31 @@ QUALIDADES = {
 MARCA_PROG = "@@P@@"
 MARCA_ARQ = "@@F@@"
 
+# Extensões que o usuário pode digitar por engano no nome de saída;
+# a extensão certa é sempre decidida pelo download (mp4, mp3 etc.).
+EXT_CONHECIDAS = {
+    ".mp4", ".mp3", ".mkv", ".webm", ".m4a", ".mov", ".avi",
+    ".wav", ".flac", ".ogg", ".opus", ".aac",
+}
+
+
+def nome_saida_seguro(nome: str) -> str:
+    """Prepara o nome de arquivo digitado pelo usuário.
+
+    Remove caracteres proibidos em nome de arquivo, tira uma extensão
+    digitada por engano (a extensão certa vem do download) e devolve ""
+    se não sobrar nada utilizável.
+    """
+    nome = (nome or "").strip()
+    if not nome:
+        return ""
+    nome = re.sub(r'[\\/:*?"<>|]', "-", nome)
+    base, ext = os.path.splitext(nome)
+    if ext.lower() in EXT_CONHECIDAS:
+        nome = base
+    nome = nome.strip().strip(".")
+    return nome.strip()
+
 
 # ---------------------------------------------------------------------------
 # Aplicação
@@ -340,8 +366,8 @@ class App(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title(f"{APP_NAME} v{APP_VERSION}")
-        self.geometry("720x680")
-        self.minsize(660, 620)
+        self.geometry("720x710")
+        self.minsize(660, 650)
 
         self.fila = queue.Queue()
         self.cancelar_flag = threading.Event()
@@ -352,6 +378,7 @@ class App(tk.Tk):
             value=os.path.join(os.path.expanduser("~"), "Downloads")
         )
         self.qualidade = tk.StringVar(value="Melhor qualidade")
+        self.nome_saida = tk.StringVar(value="")
         self.somente_audio = tk.BooleanVar(value=False)
         self.baixar_playlist = tk.BooleanVar(value=False)
         self.remover_metadados = tk.BooleanVar(value=True)
@@ -406,13 +433,25 @@ class App(tk.Tk):
 
         # Pasta de destino
         linha2 = ttk.Frame(opc)
-        linha2.pack(fill="x", padx=10, pady=(0, 10))
+        linha2.pack(fill="x", padx=10, pady=(0, 4))
         ttk.Label(linha2, text="Salvar em:").pack(side="left")
         ttk.Entry(linha2, textvariable=self.pasta_destino).pack(
             side="left", fill="x", expand=True, padx=6
         )
         ttk.Button(linha2, text="Escolher…",
                    command=self._escolher_pasta).pack(side="left")
+
+        # Nome do arquivo de saída (opcional)
+        linha3 = ttk.Frame(opc)
+        linha3.pack(fill="x", padx=10, pady=(0, 10))
+        ttk.Label(linha3, text="Nome do arquivo (opcional):").pack(side="left")
+        ttk.Entry(linha3, textvariable=self.nome_saida).pack(
+            side="left", fill="x", expand=True, padx=6
+        )
+        ttk.Label(
+            linha3, text="vazio = título do vídeo",
+            foreground="#8b949e", font=("", 9),
+        ).pack(side="left")
 
         # ---------------- Privacidade (metadados) ----------------
         priv = ttk.LabelFrame(self, text="Privacidade  ·  metadados")
@@ -659,6 +698,7 @@ class App(tk.Tk):
         opcoes = {
             "url": url,
             "destino": destino,
+            "nome_saida": nome_saida_seguro(self.nome_saida.get()),
             "format": QUALIDADES.get(self.qualidade.get(), "bv*+ba/b"),
             "somente_audio": self.somente_audio.get(),
             "playlist": self.baixar_playlist.get(),
@@ -670,7 +710,17 @@ class App(tk.Tk):
         self.thread.start()
 
     def _montar_comando(self, opc):
-        destino = os.path.join(opc["destino"], "%(title)s.%(ext)s")
+        nome = opc.get("nome_saida") or ""
+        if nome:
+            # O yt-dlp trata % como código de modelo; %% vira % literal.
+            modelo = nome.replace("%", "%%")
+            if opc["playlist"]:
+                # Em playlist, um nome fixo sobrescreveria os arquivos;
+                # numera cada item: "Nome - 1.mp4", "Nome - 2.mp4"…
+                modelo += " - %(playlist_index)s"
+            destino = os.path.join(opc["destino"], modelo + ".%(ext)s")
+        else:
+            destino = os.path.join(opc["destino"], "%(title)s.%(ext)s")
         cmd = [
             caminho_motor(),
             "--ignore-config",
