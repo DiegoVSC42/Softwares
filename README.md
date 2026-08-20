@@ -6,7 +6,7 @@ direto abaixo. Não precisa instalar nada, é só baixar e abrir.
 | Software | Para que serve | Windows | Mac |
 |---|---|---|---|
 | Atualizar Softwares | Manter atualizada, nesta máquina, a cópia de todos os softwares deste repositório | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/atualizar-repo-softwares/AtualizarSoftwares.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/atualizar-repo-softwares/AtualizarSoftwares-mac.zip) |
-| Baixador de Vídeos | Baixar vídeos e playlists (ou só o áudio) | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos-mac.zip) |
+| Baixador de Vídeos | Baixar vídeos e playlists (ou só o áudio), sem metadados | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos-mac.zip) |
 | Comparador de Planilhas | Comparar duas planilhas e gerar uma terceira (juntar, cruzar ou remover linhas) | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/comparador-planilhas/ComparadorPlanilhas.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/comparador-planilhas/ComparadorPlanilhas-mac.zip) |
 | Cronômetro de Tempo de Resposta | Medir o tempo de resposta em ligações | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/cronometro-resposta-telefone/CronometroResposta.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/cronometro-resposta-telefone/CronometroResposta-mac.zip) |
 | Dividir e Juntar Áudio | Quebrar um áudio longo em partes e juntar tudo depois | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/dividir-juntar-audio/DividirJuntarAudio.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/dividir-juntar-audio/DividirJuntarAudio-mac.zip) |
@@ -40,7 +40,7 @@ Mantém atualizada, nesta máquina, a cópia local de todos os softwares já pub
 
 **Caso de uso:**
 
-Baixa vídeos, playlists ou só o áudio a partir de um link.
+Baixa vídeos, playlists ou só o áudio a partir de um link, com a opção de apagar todas as informações escondidas dentro do arquivo (título original, autor, canal, capa, data).
 
 - **Windows:** <https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos.exe>
 - **Mac:** <https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos-mac.zip>
@@ -50,8 +50,10 @@ Baixa vídeos, playlists ou só o áudio a partir de um link.
 1. Abra o programa.
 2. Cole o link do vídeo ou da playlist no campo indicado.
 3. Escolha a qualidade do vídeo, ou marque a opção de baixar só o áudio.
-4. Selecione a pasta onde quer salvar.
-5. Clique em Baixar e acompanhe pela barra (dá para cancelar a qualquer momento).
+4. Deixe marcada a opção de remover todos os metadados (ela já vem marcada) para o arquivo sair limpo, sem título original, autor, canal, capa nem data.
+5. Selecione a pasta onde quer salvar.
+6. Clique em Baixar e acompanhe pela barra (dá para cancelar a qualquer momento).
+7. Para limpar arquivos que já estão no seu computador, clique em Limpar arquivos existentes e escolha os arquivos.
 
 ## Comparador de Planilhas
 

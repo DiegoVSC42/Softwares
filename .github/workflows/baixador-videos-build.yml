@@ -1,4 +1,4 @@
-name: build
+name: baixador-videos-build
 
 on:
   push:
@@ -22,10 +22,10 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Instalar dependências
+      - name: Instalar dependencias
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt pyinstaller
+          pip install pyinstaller
 
       - name: Baixar ffmpeg (Windows)
         shell: pwsh
@@ -36,11 +36,11 @@ jobs:
           Copy-Item $exe.FullName -Destination ffmpeg.exe
 
       - name: Empacotar com PyInstaller
-        run: pyinstaller --onefile --windowed --name BaixadorDeVideos --add-binary "ffmpeg.exe;." baixador_videos.py
+        run: pyinstaller --onefile --windowed --noconfirm --name BaixadorDeVideos --add-binary "ffmpeg.exe;." baixador_videos.py
 
       - uses: actions/upload-artifact@v4
         with:
-          name: BaixadorDeVideos-Windows
+          name: windows-build
           path: baixador-videos/dist/BaixadorDeVideos.exe
 
   # ----------------------------------------------------------------------
@@ -55,10 +55,10 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Instalar dependências
+      - name: Instalar dependencias
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt pyinstaller
+          pip install pyinstaller
 
       - name: Baixar ffmpeg (Mac)
         run: |
@@ -67,7 +67,7 @@ jobs:
           chmod +x ffmpeg
 
       - name: Empacotar com PyInstaller
-        run: pyinstaller --onefile --windowed --name BaixadorDeVideos --add-binary "ffmpeg:." baixador_videos.py
+        run: pyinstaller --onefile --windowed --noconfirm --name BaixadorDeVideos --add-binary "ffmpeg:." baixador_videos.py
 
       - name: Compactar .app com ditto
         run: |
@@ -76,12 +76,12 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: BaixadorDeVideos-Mac
+          name: mac-build
           path: baixador-videos/dist/BaixadorDeVideos-mac.zip
 
   # ----------------------------------------------------------------------
-  # Release: publica o .exe (Windows) e o .zip (Mac) no GitHub, com link
-  # de download fixo em: releases/download/baixador-videos/<arquivo>
+  # Release: publica o .exe (Windows) e o .zip (Mac) com link fixo em
+  # releases/download/baixador-videos/<arquivo>
   # ----------------------------------------------------------------------
   release:
     needs: [ windows, mac ]

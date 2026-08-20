@@ -1,1 +1,4 @@
-yt-dlp>=2024.1.0
+# O programa nao tem dependencia de biblioteca Python.
+# O motor de download (yt-dlp) e um programa a parte, baixado e atualizado
+# pelo proprio Baixador de Videos, para nunca ficar velho e dar erro 403.
+# A interface usa Tkinter, que ja vem com o Python.
