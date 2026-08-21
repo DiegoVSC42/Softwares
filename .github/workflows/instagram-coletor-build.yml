@@ -25,7 +25,7 @@ jobs:
           pip install pyinstaller
       - name: Build Windows
         run: >
-          pyinstaller --onefile --windowed
+          pyinstaller --onefile --windowed --icon icon.ico
           --name "InstagramColetor"
           --collect-all gallery_dl
           instagram_coletor.py
@@ -51,7 +51,7 @@ jobs:
           pip install pyinstaller
       - name: Build Mac
         run: >
-          pyinstaller --onefile --windowed
+          pyinstaller --onefile --windowed --icon icon.icns
           --name "InstagramColetor"
           --collect-all gallery_dl
           instagram_coletor.py
@@ -70,13 +70,22 @@ jobs:
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v4
+
+      - name: Ler versao do programa
+        id: versao
+        run: |
+          V=$(grep -m1 -E '^(APP_)?VERSION' instagram-coletor/instagram_coletor.py | cut -d'"' -f2)
+          echo "v=${V:-0.0.0}" >> "$GITHUB_OUTPUT"
+
       - uses: actions/download-artifact@v4
         with:
           path: artefatos
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: instagram-coletor
-          name: Instagram Coletor
+          name: "Instagram Coletor v${{ steps.versao.outputs.v }}"
+          body: "Versao ${{ steps.versao.outputs.v }}. Os nomes dos arquivos e o link de download nao mudam."
           files: |
             artefatos/**/*.exe
             artefatos/**/*.zip

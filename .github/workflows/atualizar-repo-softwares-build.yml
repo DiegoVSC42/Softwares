@@ -19,7 +19,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install pyinstaller
-      - run: pyinstaller --onefile --windowed --name AtualizarSoftwares atualizar_repo_softwares.py
+      - run: pyinstaller --onefile --windowed --icon icon.ico --name AtualizarSoftwares atualizar_repo_softwares.py
       - uses: actions/upload-artifact@v4
         with:
           name: windows-build
@@ -36,7 +36,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install pyinstaller
-      - run: pyinstaller --onefile --windowed --name AtualizarSoftwares atualizar_repo_softwares.py
+      - run: pyinstaller --onefile --windowed --icon icon.icns --name AtualizarSoftwares atualizar_repo_softwares.py
       - run: ditto -c -k --sequesterRsrc --keepParent dist/AtualizarSoftwares.app AtualizarSoftwares-mac.zip
       - uses: actions/upload-artifact@v4
         with:
@@ -53,6 +53,14 @@ jobs:
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v4
+
+      - name: Ler versao do programa
+        id: versao
+        run: |
+          V=$(grep -m1 -E '^(APP_)?VERSION' atualizar-repo-softwares/atualizar_repo_softwares.py | cut -d'"' -f2)
+          echo "v=${V:-0.0.0}" >> "$GITHUB_OUTPUT"
+
       - name: Baixar artefatos (exe e zip)
         uses: actions/download-artifact@v4
         with:
@@ -62,7 +70,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: atualizar-repo-softwares
-          name: "Atualizar Softwares"
+          name: "Atualizar Softwares v${{ steps.versao.outputs.v }}"
+          body: "Versao ${{ steps.versao.outputs.v }}. Os nomes dos arquivos e o link de download nao mudam."
           files: |
             artefatos/**/*.exe
             artefatos/**/*.zip

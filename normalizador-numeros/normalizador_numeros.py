@@ -19,6 +19,8 @@ import threading
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
+APP_VERSION = "1.1.0"
+
 FORMATOS = {
     "WhatsApp (5562999998888)": "whatsapp",
     "Internacional (+55 62 99999-8888)": "internacional",
@@ -155,7 +157,14 @@ class App:
         root.geometry("820x640")
         self.cancelar = threading.Event()
 
-        topo = ttk.Frame(root, padding=10)
+        # Rodapé (empacotado primeiro, side="bottom", para garantir que
+        # fique no fundo de verdade, abaixo de tudo o mais).
+        ttk.Label(
+            root, text=f"Normalizador de Números • v{APP_VERSION}",
+            foreground="#8b949e", font=("Segoe UI", 8), anchor="e",
+        ).pack(side="bottom", fill="x", padx=10, pady=(0, 4))
+
+        topo = ttk.Frame(root, padding=(10, 10, 10, 0))
         topo.pack(fill="x")
 
         ttk.Button(topo, text="Carregar arquivo (TXT/CSV/XLSX)", command=self.carregar).pack(side="left")
@@ -165,14 +174,17 @@ class App:
         ttk.Label(topo, text="   Formato:").pack(side="left")
         self.fmt_var = tk.StringVar(value=list(FORMATOS)[0])
         ttk.Combobox(topo, textvariable=self.fmt_var, values=list(FORMATOS), state="readonly", width=34).pack(side="left")
+
+        opcoes = ttk.Frame(root, padding=(10, 4, 10, 0))
+        opcoes.pack(fill="x")
         self.dup_var = tk.BooleanVar(value=True)
-        ttk.Checkbutton(topo, text="Remover duplicados", variable=self.dup_var).pack(side="left", padx=8)
+        ttk.Checkbutton(opcoes, text="Remover duplicados", variable=self.dup_var).pack(side="left")
         self.manter_var = tk.BooleanVar(value=False)
         ttk.Checkbutton(
-            topo,
-            text="Manter inválidos (saída alinhada com a entrada)",
+            opcoes,
+            text="Manter números inválidos (saída alinhada linha a linha com a entrada, para colar na planilha)",
             variable=self.manter_var,
-        ).pack(side="left")
+        ).pack(side="left", padx=12)
 
         corpo = ttk.PanedWindow(root, orient="horizontal")
         corpo.pack(fill="both", expand=True, padx=10)

@@ -35,7 +35,7 @@ jobs:
 
       - name: Gerar o executavel LEVE do Windows
         run: >
-          pyinstaller --noconfirm --onefile --windowed
+          pyinstaller --noconfirm --onefile --windowed --icon icon.ico
           --name "FolderManagerWIN"
           --exclude-module reportlab
           app.py
@@ -68,7 +68,7 @@ jobs:
 
       - name: Gerar o aplicativo LEVE do Mac
         run: >
-          pyinstaller --noconfirm --onefile --windowed
+          pyinstaller --noconfirm --onefile --windowed --icon icon.icns
           --name "FolderManagerMAC"
           --exclude-module reportlab
           app.py
@@ -94,6 +94,14 @@ jobs:
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v4
+
+      - name: Ler versao do programa
+        id: versao
+        run: |
+          V=$(grep -m1 -E '^(APP_)?VERSION' foldermanager/app.py | cut -d'"' -f2)
+          echo "v=${V:-0.0.0}" >> "$GITHUB_OUTPUT"
+
       - name: Baixar artefatos (exe e zip)
         uses: actions/download-artifact@v4
         with:
@@ -103,7 +111,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: foldermanager
-          name: "Folder Manager"
+          name: "Folder Manager v${{ steps.versao.outputs.v }}"
+          body: "Versao ${{ steps.versao.outputs.v }}. Os nomes dos arquivos e o link de download nao mudam."
           files: |
             artefatos/**/*.exe
             artefatos/**/*.zip

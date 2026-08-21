@@ -1,0 +1,77 @@
+name: Build printshot
+
+on:
+  push:
+    paths:
+      - 'printshot/**'
+      - '.github/workflows/printshot-build.yml'
+  workflow_dispatch:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: printshot
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pyinstaller -r requirements.txt
+      - run: pyinstaller --onefile --windowed --icon icon.ico --noconfirm --name PrintShot printshot.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: printshot/dist/PrintShot.exe
+
+  mac:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: printshot
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pyinstaller -r requirements.txt
+      - run: pyinstaller --onefile --windowed --icon icon.icns --noconfirm --name PrintShot printshot.py
+      - run: ditto -c -k --sequesterRsrc --keepParent dist/PrintShot.app PrintShot-mac.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mac-build
+          path: printshot/PrintShot-mac.zip
+
+  # ----------------------------------------------------------------------
+  # Release: publica o .exe (Windows) e o .zip (Mac) no GitHub, com link
+  # de download fixo em: releases/download/printshot/<arquivo>
+  # ----------------------------------------------------------------------
+  release:
+    needs: [ windows, mac ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ler versao do programa
+        id: versao
+        run: |
+          V=$(grep -m1 -E '^(APP_)?VERSION' printshot/printshot.py | cut -d'"' -f2)
+          echo "v=${V:-0.0.0}" >> "$GITHUB_OUTPUT"
+
+      - name: Baixar artefatos (exe e zip)
+        uses: actions/download-artifact@v4
+        with:
+          path: artefatos
+
+      - name: Publicar exe e zip no Release do GitHub
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: printshot
+          name: "PrintShot v${{ steps.versao.outputs.v }}"
+          body: "Versao ${{ steps.versao.outputs.v }}. Os nomes dos arquivos e o link de download nao mudam."
+          files: |
+            artefatos/**/*.exe
+            artefatos/**/*.zip

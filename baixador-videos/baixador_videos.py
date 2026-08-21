@@ -7,18 +7,22 @@ Recursos:
   - Seleção de qualidade (melhor, 1080p, 720p, 480p, 360p)
   - Nome do arquivo de saída personalizado (opcional; vazio = título do vídeo)
   - Download somente do áudio em MP3
+  - Corte por tempo (início e/ou fim): baixa o vídeo completo e recorta o
+    trecho pedido logo em seguida, sem recodificar
   - Suporte a playlists (baixar todos os vídeos da lista)
   - Remoção de TODOS os metadados do arquivo final (título, autor, capa,
     capítulos, data de gravação, tag de codificador, data do arquivo)
   - Limpeza de metadados de arquivos que já estão no computador
   - Cookies do navegador (resolve "403 Forbidden" e verificação de robô)
-  - Motor de download (yt-dlp) atualizável pelo próprio programa
+  - Motor de download (yt-dlp) instalado e atualizado sozinho, em segundo
+    plano — o usuário não precisa ver nem mexer nisso
+  - Notificação ao final do download, com opção de abrir a pasta de destino
 
 Por que o motor fica fora do executável: os sites mudam com frequência e um
 yt-dlp velho começa a dar "HTTP Error 403: Forbidden". Aqui o yt-dlp é um
-programa à parte, guardado numa pasta do usuário, que pode ser atualizado com
-um botão — sem gerar um executável novo. Quando um download falha com 403, o
-programa atualiza o motor sozinho e tenta de novo.
+programa à parte, guardado numa pasta do usuário. Quando um download falha
+com 403, o programa atualiza o motor sozinho e tenta de novo, sem precisar
+de nenhuma ação da pessoa que está usando.
 
 O ffmpeg (junta vídeo+áudio, converte em MP3 e limpa metadados) é procurado
 embutido no executável e, depois, no sistema.
@@ -37,7 +41,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 
 APP_NAME = "Baixador de Vídeos"
-APP_VERSION = "1.4.0"
+APP_VERSION = "1.6.0"
 
 YTDLP_BASE = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/"
 DENO_BASE = "https://github.com/denoland/deno/releases/latest/download/"
@@ -319,6 +323,48 @@ def limpar_metadados(caminho: str, ffmpeg: str) -> str:
     return f"Metadados removidos: {os.path.basename(caminho)}"
 
 
+def cortar_video(caminho: str, ffmpeg: str, inicio: str, fim: str) -> str:
+    """Corta o arquivo já baixado para o trecho entre `inicio` e `fim`
+    (qualquer um dos dois pode vir vazio), sem recodificar.
+
+    Importante: o corte usa "-ss"/"-to" DEPOIS do "-i" (corte de saída, no
+    arquivo já em disco), não antes. Testado na prática: cortar direto na
+    URL remota (antes do "-i", ou pelo recurso nativo do yt-dlp de baixar só
+    o trecho) dá resultado ERRADO nos vídeos do YouTube — o arquivo final
+    sai maior do que devia, sem respeitar o início pedido. Cortar depois do
+    download, no arquivo local, é o único jeito confiável encontrado.
+    """
+    if not ffmpeg:
+        raise RuntimeError("ffmpeg não encontrado para cortar o vídeo.")
+    if not os.path.isfile(caminho):
+        raise RuntimeError(f"Arquivo não encontrado: {caminho}")
+
+    base, ext = os.path.splitext(caminho)
+    temp = base + ".corte" + ext
+
+    cmd = [ffmpeg, "-y", "-hide_banner", "-loglevel", "error", "-i", caminho]
+    if inicio:
+        cmd += ["-ss", inicio]
+    if fim:
+        cmd += ["-to", fim]
+    cmd += ["-c", "copy", temp]
+
+    proc = subprocess.run(
+        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, **_sem_janela()
+    )
+    if proc.returncode != 0 or not os.path.isfile(temp):
+        if os.path.isfile(temp):
+            try:
+                os.remove(temp)
+            except OSError:
+                pass
+        erro = proc.stderr.decode("utf-8", "replace").strip().splitlines()
+        raise RuntimeError(erro[-1] if erro else "ffmpeg falhou ao cortar.")
+
+    shutil.move(temp, caminho)
+    return f"Vídeo cortado: {os.path.basename(caminho)}"
+
+
 # ---------------------------------------------------------------------------
 # Qualidade -> seletor de formato do yt-dlp
 # ---------------------------------------------------------------------------
@@ -360,14 +406,28 @@ def nome_saida_seguro(nome: str) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Corte por tempo (início / fim)
+# ---------------------------------------------------------------------------
+# Aceita "SS", "MM:SS" ou "HH:MM:SS" (com ou sem casas decimais nos segundos).
+TEMPO_RE = re.compile(r"^\d{1,3}(:\d{1,2}){0,2}(\.\d+)?$")
+
+
+def tempo_valido(txt: str) -> bool:
+    """True se o campo estiver vazio (sem corte nesse lado) ou for um
+    tempo em formato hh:mm:ss / mm:ss / ss."""
+    txt = (txt or "").strip()
+    return txt == "" or bool(TEMPO_RE.match(txt))
+
+
+# ---------------------------------------------------------------------------
 # Aplicação
 # ---------------------------------------------------------------------------
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title(f"{APP_NAME} v{APP_VERSION}")
-        self.geometry("720x710")
-        self.minsize(660, 650)
+        self.geometry("720x660")
+        self.minsize(660, 600)
 
         self.fila = queue.Queue()
         self.cancelar_flag = threading.Event()
@@ -380,11 +440,12 @@ class App(tk.Tk):
         self.qualidade = tk.StringVar(value="Melhor qualidade")
         self.nome_saida = tk.StringVar(value="")
         self.somente_audio = tk.BooleanVar(value=False)
+        self.tempo_inicio = tk.StringVar(value="")
+        self.tempo_fim = tk.StringVar(value="")
         self.baixar_playlist = tk.BooleanVar(value=False)
         self.remover_metadados = tk.BooleanVar(value=True)
         self.usar_cookies = tk.BooleanVar(value=False)
         self.navegador = tk.StringVar(value="chrome")
-        self.txt_motor = tk.StringVar(value="Motor: verificando…")
 
         self._montar_ui()
         self._verificar_ffmpeg()
@@ -453,6 +514,28 @@ class App(tk.Tk):
             foreground="#8b949e", font=("", 9),
         ).pack(side="left")
 
+        # Corte por tempo (opcional)
+        linha4 = ttk.Frame(opc)
+        linha4.pack(fill="x", padx=10, pady=(0, 4))
+        ttk.Label(linha4, text="Cortar vídeo — início:").pack(side="left")
+        ttk.Entry(linha4, textvariable=self.tempo_inicio, width=10).pack(
+            side="left", padx=(6, 16)
+        )
+        ttk.Label(linha4, text="fim:").pack(side="left")
+        ttk.Entry(linha4, textvariable=self.tempo_fim, width=10).pack(
+            side="left", padx=(6, 0)
+        )
+
+        ttk.Label(
+            opc,
+            text="Opcional. Formato hh:mm:ss (ex.: 1:23:45 ou 90). Deixe um "
+                 "dos dois em branco para cortar só do início ou só até o "
+                 "fim; deixe os dois em branco para baixar o vídeo inteiro. "
+                 "O programa baixa o vídeo completo e corta em seguida (não "
+                 "dá para baixar só o trecho direto do site).",
+            foreground="#8b949e", font=("", 9), wraplength=660, justify="left",
+        ).pack(anchor="w", padx=10, pady=(0, 10))
+
         # ---------------- Privacidade (metadados) ----------------
         priv = ttk.LabelFrame(self, text="Privacidade  ·  metadados")
         priv.pack(fill="x", **pad)
@@ -477,40 +560,22 @@ class App(tk.Tk):
             foreground="#8b949e", font=("", 9), wraplength=660, justify="left",
         ).pack(anchor="w", padx=10, pady=(0, 8))
 
-        # ---------------- Motor / acesso ----------------
-        mot = ttk.LabelFrame(self, text="Motor de download e acesso")
-        mot.pack(fill="x", **pad)
-
-        linha_m = ttk.Frame(mot)
-        linha_m.pack(fill="x", padx=10, pady=(8, 4))
-        ttk.Label(linha_m, textvariable=self.txt_motor).pack(side="left")
-        self.btn_motor = ttk.Button(
-            linha_m, text="Atualizar motor", command=self._atualizar_motor
-        )
-        self.btn_motor.pack(side="right")
-        ttk.Button(
-            linha_m, text="Abrir pasta", command=self._abrir_pasta_motor
-        ).pack(side="right", padx=(0, 6))
-
-        linha_c = ttk.Frame(mot)
-        linha_c.pack(fill="x", padx=10, pady=(0, 4))
+        # ---------------- Acesso (discreto; só aparece se precisar) --------
+        acesso = ttk.Frame(self)
+        acesso.pack(fill="x", padx=12, pady=(0, 2))
         ttk.Checkbutton(
-            linha_c, text="Usar cookies do navegador",
+            acesso, text="Usar cookies do navegador",
             variable=self.usar_cookies, command=self._toggle_cookies,
         ).pack(side="left")
         self.combo_nav = ttk.Combobox(
-            linha_c, textvariable=self.navegador, values=NAVEGADORES,
+            acesso, textvariable=self.navegador, values=NAVEGADORES,
             state="disabled", width=12,
         )
-        self.combo_nav.pack(side="left", padx=(8, 0))
-
+        self.combo_nav.pack(side="left", padx=(8, 8))
         ttk.Label(
-            mot,
-            text="Se der erro 403 (acesso negado) ou pedido de verificação, "
-                 "atualize o motor e, se persistir, marque os cookies do "
-                 "navegador em que você está logado no site.",
-            foreground="#8b949e", font=("", 9), wraplength=660, justify="left",
-        ).pack(anchor="w", padx=10, pady=(0, 8))
+            acesso, text="marque se der erro ao baixar (site exige login)",
+            foreground="#8b949e", font=("", 9),
+        ).pack(side="left")
 
         # ---------------- Ações ----------------
         acoes = ttk.Frame(self)
@@ -565,73 +630,41 @@ class App(tk.Tk):
                 "converter em MP3 e remover metadados podem falhar."
             )
 
-    # ----- Motor --------------------------------------------------------
+    # ----- Motor (roda em segundo plano; não aparece para o usuário) ----
     def _preparar_motor(self, forcar=False):
         """Garante o yt-dlp e o motor de JavaScript exigido pelo YouTube."""
         try:
             v = None if forcar else versao_motor()
             if not v:
-                self.fila.put(("motor", "Motor: baixando…"))
-                self.fila.put(("status", "Baixando o motor de download…"))
+                self.fila.put(("status", "Preparando o programa (primeira vez)…"))
                 v = baixar_motor()
                 self.fila.put(("log", f"Motor de download instalado: {v}"))
 
             js = localizar_js()
             if not js:
-                self.fila.put(("motor", f"Motor: yt-dlp {v} · JS: baixando…"))
                 self.fila.put((
                     "status",
-                    "Baixando o motor de JavaScript (o YouTube exige)…",
-                ))
-                self.fila.put((
-                    "log",
-                    "O YouTube passou a exigir um motor de JavaScript. "
-                    "Baixando o Deno (cerca de 40 MB, uma vez só)…",
+                    "Preparando o programa (primeira vez)…",
                 ))
                 baixar_js()
-                js = localizar_js()
+                localizar_js()
                 self.fila.put(("log", "Motor de JavaScript instalado."))
 
-            self.fila.put((
-                "motor",
-                f"Motor: yt-dlp {v} · JS: {js[0] if js else 'faltando'}"
-            ))
             self.fila.put(("status", "Pronto."))
         except Exception as e:
-            self.fila.put(("motor", "Motor: incompleto"))
             self.fila.put(("log", f"ERRO ao preparar o motor: {e}"))
 
-    def _abrir_pasta_motor(self):
-        """Mostra no Finder/Explorer onde o motor está guardado."""
-        pasta = pasta_do_usuario()
+    def _abrir_pasta(self, caminho):
+        """Abre a pasta no Finder (Mac), Explorer (Windows) ou equivalente."""
         try:
             if sys.platform == "darwin":
-                subprocess.Popen(["open", pasta])
+                subprocess.Popen(["open", caminho])
             elif os.name == "nt":
-                os.startfile(pasta)  # noqa: S606
+                os.startfile(caminho)  # noqa: S606
             else:
-                subprocess.Popen(["xdg-open", pasta])
+                subprocess.Popen(["xdg-open", caminho])
         except Exception as e:
-            messagebox.showinfo(APP_NAME, f"A pasta do motor é:\n{pasta}\n\n{e}")
-
-    def _atualizar_motor(self):
-        if self.thread and self.thread.is_alive():
-            messagebox.showinfo(APP_NAME, "Aguarde a tarefa em andamento terminar.")
-            return
-        self.btn_motor.config(state="disabled")
-
-        def tarefa():
-            try:
-                self.fila.put(("status", "Atualizando o motor…"))
-                self._preparar_motor(forcar=True)
-                self.fila.put(("ok", "Motor atualizado."))
-            except Exception as e:
-                self.fila.put(("erro", f"Não consegui atualizar o motor: {e}"))
-            finally:
-                self.fila.put(("motor_ok", None))
-
-        self.thread = threading.Thread(target=tarefa, daemon=True)
-        self.thread.start()
+            messagebox.showinfo(APP_NAME, f"A pasta é:\n{caminho}\n\n{e}")
 
     # ----- Limpeza de arquivos já existentes ----------------------------
     def _limpar_existentes(self):
@@ -688,6 +721,23 @@ class App(tk.Tk):
             )
             return
 
+        corte_inicio = self.tempo_inicio.get().strip()
+        corte_fim = self.tempo_fim.get().strip()
+        if not tempo_valido(corte_inicio) or not tempo_valido(corte_fim):
+            messagebox.showwarning(
+                APP_NAME,
+                "Tempo de corte inválido. Use hh:mm:ss, mm:ss ou apenas "
+                "segundos (ex.: 1:23:45, 12:30 ou 90).",
+            )
+            return
+        if (corte_inicio or corte_fim) and find_ffmpeg_exe() is None:
+            messagebox.showwarning(
+                APP_NAME,
+                "O ffmpeg não foi encontrado, então não dá para cortar o "
+                "vídeo. Apague os campos de corte ou instale o ffmpeg.",
+            )
+            return
+
         self.cancelar_flag.clear()
         self.btn_baixar.config(state="disabled")
         self.btn_cancelar.config(state="normal")
@@ -701,6 +751,8 @@ class App(tk.Tk):
             "nome_saida": nome_saida_seguro(self.nome_saida.get()),
             "format": QUALIDADES.get(self.qualidade.get(), "bv*+ba/b"),
             "somente_audio": self.somente_audio.get(),
+            "corte_inicio": corte_inicio,
+            "corte_fim": corte_fim,
             "playlist": self.baixar_playlist.get(),
             "remover_metadados": self.remover_metadados.get(),
             "cookies": self.navegador.get() if self.usar_cookies.get() else None,
@@ -761,6 +813,11 @@ class App(tk.Tk):
         else:
             cmd += ["-f", opc["format"], "--merge-output-format", "mp4"]
 
+        # O corte por tempo NÃO usa --download-sections do yt-dlp: testado na
+        # prática, esse recurso baixa o vídeo do YouTube errado (sai maior
+        # do que devia, ignorando o início pedido). O corte é aplicado
+        # depois, no arquivo já baixado (ver _rodar/cortar_video).
+
         if opc["remover_metadados"]:
             # Não carimba no arquivo a data de publicação (isso é metadado).
             cmd += ["--no-mtime", "--no-write-info-json", "--no-write-thumbnail"]
@@ -798,13 +855,21 @@ class App(tk.Tk):
                         self.fila.put(("log", "Motor de JavaScript instalado."))
                     except Exception as e:
                         self.fila.put(("log", f"Falha ao instalar o JS: {e}"))
+                try:
+                    baixar_motor()
+                    self.fila.put(("log", "Motor de download atualizado."))
+                except Exception as e:
+                    self.fila.put(("log", f"Não consegui atualizar o motor: {e}"))
                 opc = dict(opc, teimar=True)
                 codigo, saida = self._rodar(opc)
 
             if self.cancelar_flag.is_set():
                 self.fila.put(("status", "Cancelado pelo usuário."))
             elif codigo == 0:
-                self.fila.put(("ok", "Download concluído com sucesso!"))
+                self.fila.put((
+                    "download_ok",
+                    ("Download concluído com sucesso!", opc["destino"]),
+                ))
             else:
                 self.fila.put(("erro", self._mensagem_erro(saida)))
         except Exception as e:
@@ -834,6 +899,16 @@ class App(tk.Tk):
             elif linha.startswith(MARCA_ARQ):
                 caminho = linha[len(MARCA_ARQ):].strip()
                 self.fila.put(("log", f"Baixado: {os.path.basename(caminho)}"))
+                corte_ini = opc.get("corte_inicio") or ""
+                corte_fim = opc.get("corte_fim") or ""
+                if corte_ini or corte_fim:
+                    self.fila.put(("status", "Cortando o trecho pedido…"))
+                    try:
+                        self.fila.put((
+                            "log", cortar_video(caminho, ffmpeg, corte_ini, corte_fim)
+                        ))
+                    except Exception as e:
+                        self.fila.put(("log", f"ERRO ao cortar o vídeo: {e}"))
                 if opc["remover_metadados"]:
                     self.fila.put(("status", "Removendo metadados…"))
                     try:
@@ -877,8 +952,8 @@ class App(tk.Tk):
         s = saida.lower()
         if "javascript runtime" in s or "n challenge" in s:
             base += (
-                "\n\nFalta o motor de JavaScript que o YouTube exige. Clique "
-                "em \"Atualizar motor\" e tente de novo."
+                "\n\nFalta o motor de JavaScript que o YouTube exige. Feche "
+                "e abra o programa de novo para tentar instalar mais uma vez."
             )
         elif "403" in s or "forbidden" in s or "sign in to confirm" in s \
                 or "not a bot" in s:
@@ -911,13 +986,19 @@ class App(tk.Tk):
                     self._set_status(valor)
                 elif tipo == "log":
                     self._logar(valor)
-                elif tipo == "motor":
-                    self.txt_motor.set(valor)
-                elif tipo == "motor_ok":
-                    self.btn_motor.config(state="normal")
                 elif tipo == "ok":
                     self._set_status(valor)
                     self._logar(valor)
+                elif tipo == "download_ok":
+                    msg, pasta = valor
+                    self._set_status(msg)
+                    self._logar(msg)
+                    if messagebox.askyesno(
+                        APP_NAME,
+                        "Download concluído!\n\n"
+                        "Quer abrir a pasta onde o arquivo foi salvo?",
+                    ):
+                        self._abrir_pasta(pasta)
                 elif tipo == "erro":
                     self._set_status("Erro.")
                     self._logar("ERRO: " + valor)
@@ -925,7 +1006,6 @@ class App(tk.Tk):
                 elif tipo == "fim":
                     self.btn_baixar.config(state="normal")
                     self.btn_cancelar.config(state="disabled")
-                    self.btn_motor.config(state="normal")
         except queue.Empty:
             pass
         self.after(100, self._processar_fila)

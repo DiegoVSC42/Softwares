@@ -45,7 +45,7 @@ except ImportError:  # pragma: no cover
 
 
 APP_NAME = "Instagram Coletor"
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 
 NAVEGADORES = [
     "Chrome",
@@ -445,6 +445,13 @@ class App(tk.Tk):
     # -- construcao da interface -------------------------------------------
     def _montar_ui(self):
         pad = {"padx": 10, "pady": 6}
+
+        # Rodapé (empacotado primeiro, side="bottom", para garantir que
+        # fique no fundo de verdade, abaixo de tudo o mais).
+        ttk.Label(
+            self, text=f"{APP_NAME} • v{VERSION}",
+            foreground="#8b949e", font=("Segoe UI", 8), anchor="e",
+        ).pack(side="bottom", fill="x", padx=10, pady=(0, 4))
 
         topo = ttk.Frame(self)
         topo.pack(fill="x", **pad)

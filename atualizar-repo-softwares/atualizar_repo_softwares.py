@@ -22,6 +22,7 @@ import tkinter as tk
 from pathlib import Path
 from tkinter import filedialog, scrolledtext
 
+VERSION = "1.1.0"
 REPO_URL = "https://github.com/DiegoVSC42/Softwares.git"
 CONFIG_PATH = Path.home() / ".atualizar_repo_softwares.json"
 
@@ -78,6 +79,13 @@ class App(tk.Tk):
     # ------------------------------------------------------------------
     def _montar_widgets(self):
         pad = {"padx": 12, "pady": 6}
+
+        # Rodapé (empacotado primeiro, side="bottom", para garantir que
+        # fique no fundo de verdade, abaixo de tudo o mais).
+        tk.Label(
+            self, text=f"Atualizar Softwares • v{VERSION}",
+            fg="#8b949e", font=("Segoe UI", 8), anchor="e",
+        ).pack(side="bottom", fill="x", padx=12, pady=(0, 4))
 
         topo = tk.Frame(self)
         topo.pack(fill="x", **pad)

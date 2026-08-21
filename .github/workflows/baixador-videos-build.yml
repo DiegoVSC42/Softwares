@@ -36,7 +36,7 @@ jobs:
           Copy-Item $exe.FullName -Destination ffmpeg.exe
 
       - name: Empacotar com PyInstaller
-        run: pyinstaller --onefile --windowed --noconfirm --name BaixadorDeVideos --add-binary "ffmpeg.exe;." baixador_videos.py
+        run: pyinstaller --onefile --windowed --icon icon.ico --noconfirm --name BaixadorDeVideos --add-binary "ffmpeg.exe;." baixador_videos.py
 
       - uses: actions/upload-artifact@v4
         with:
@@ -67,7 +67,7 @@ jobs:
           chmod +x ffmpeg
 
       - name: Empacotar com PyInstaller
-        run: pyinstaller --onefile --windowed --noconfirm --name BaixadorDeVideos --add-binary "ffmpeg:." baixador_videos.py
+        run: pyinstaller --onefile --windowed --icon icon.icns --noconfirm --name BaixadorDeVideos --add-binary "ffmpeg:." baixador_videos.py
 
       - name: Compactar .app com ditto
         run: |
@@ -89,6 +89,14 @@ jobs:
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v4
+
+      - name: Ler versao do programa
+        id: versao
+        run: |
+          V=$(grep -m1 '^APP_VERSION' baixador_videos.py | cut -d'"' -f2)
+          echo "v=${V:-0.0.0}" >> "$GITHUB_OUTPUT"
+
       - name: Baixar artefatos (exe e zip)
         uses: actions/download-artifact@v4
         with:
@@ -98,7 +106,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: baixador-videos
-          name: "Baixador de Videos"
+          name: "Baixador de Videos v${{ steps.versao.outputs.v }}"
+          body: "Versao ${{ steps.versao.outputs.v }}. Os nomes dos arquivos e o link de download nao mudam."
           files: |
             artefatos/**/*.exe
             artefatos/**/*.zip

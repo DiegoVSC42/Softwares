@@ -1,0 +1,109 @@
+name: Build comparador-planilhas
+
+on:
+  push:
+    paths:
+      - 'comparador-planilhas/**'
+      - '.github/workflows/comparador-planilhas-build.yml'
+  workflow_dispatch:
+
+jobs:
+  # ----------------------------------------------------------------------
+  # Windows: gera o .exe
+  # ----------------------------------------------------------------------
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: comparador-planilhas
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Empacotar com PyInstaller
+        run: >
+          pyinstaller --onefile --windowed --icon icon.ico --noconfirm
+          --name ComparadorPlanilhas
+          comparador_planilhas.py
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: comparador-planilhas/dist/ComparadorPlanilhas.exe
+
+  # ----------------------------------------------------------------------
+  # Mac: gera o .app e compacta em .zip com ditto
+  # ----------------------------------------------------------------------
+  mac:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: comparador-planilhas
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Empacotar com PyInstaller
+        run: >
+          pyinstaller --onefile --windowed --icon icon.icns --noconfirm
+          --name ComparadorPlanilhas
+          comparador_planilhas.py
+
+      - name: Compactar .app com ditto
+        run: ditto -c -k --sequesterRsrc --keepParent dist/ComparadorPlanilhas.app ComparadorPlanilhas-mac.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mac-build
+          path: comparador-planilhas/ComparadorPlanilhas-mac.zip
+
+  # ----------------------------------------------------------------------
+  # Release: publica o .exe (Windows) e o .zip (Mac) no GitHub, com link
+  # de download fixo em: releases/download/comparador-planilhas/<arquivo>
+  # ----------------------------------------------------------------------
+  release:
+    needs: [ windows, mac ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ler versao do programa
+        id: versao
+        run: |
+          V=$(grep -m1 -E '^(APP_)?VERSION' comparador-planilhas/comparador_planilhas.py | cut -d'"' -f2)
+          echo "v=${V:-0.0.0}" >> "$GITHUB_OUTPUT"
+
+      - name: Baixar artefatos (exe e zip)
+        uses: actions/download-artifact@v4
+        with:
+          path: artefatos
+
+      - name: Publicar exe e zip no Release do GitHub
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: comparador-planilhas
+          name: "Comparador de Planilhas v${{ steps.versao.outputs.v }}"
+          body: "Versao ${{ steps.versao.outputs.v }}. Os nomes dos arquivos e o link de download nao mudam."
+          files: |
+            artefatos/**/*.exe
+            artefatos/**/*.zip

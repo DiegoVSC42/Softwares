@@ -37,6 +37,8 @@ import motor_comparacao as mcomp
 import motor_copia as mcopia
 import relatorio
 
+VERSION = "1.1.0"
+
 
 class App(tk.Tk):
     def __init__(self):
@@ -155,6 +157,12 @@ class App(tk.Tk):
                   foreground="#57606a").pack(fill="x", padx=10)
         self.barra_arquivo = ttk.Progressbar(self, mode="determinate")
         self.barra_arquivo.pack(fill="x", padx=10, pady=(0, 4))
+
+        # --- Rodapé ---
+        ttk.Label(
+            self, text=f"Gerenciador de Pastas • v{VERSION}",
+            foreground="#8b949e", font=("Segoe UI", 8), anchor="e",
+        ).pack(side="bottom", fill="x", padx=10, pady=(0, 4))
 
         self.txt = tk.Text(self, height=12, wrap="word", state="disabled",
                            font=("Consolas", 10))

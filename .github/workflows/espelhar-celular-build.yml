@@ -1,0 +1,70 @@
+name: espelhar-celular-build
+
+on:
+  push:
+    paths:
+      - "espelhar-celular/**"
+      - ".github/workflows/espelhar-celular-build.yml"
+  workflow_dispatch:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: espelhar-celular
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pyinstaller
+      - run: pyinstaller --noconfirm --onefile --windowed --icon icon.ico --name EspelharCelular espelhar_celular.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: EspelharCelular-windows
+          path: espelhar-celular/dist/EspelharCelular.exe
+
+  mac:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: espelhar-celular
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pyinstaller
+      - run: pyinstaller --noconfirm --onefile --windowed --icon icon.icns --name EspelharCelular espelhar_celular.py
+      - run: ditto -c -k --sequesterRsrc --keepParent dist/EspelharCelular.app dist/EspelharCelular-mac.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: EspelharCelular-mac
+          path: espelhar-celular/dist/EspelharCelular-mac.zip
+
+  release:
+    needs: [windows, mac]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ler versao do programa
+        id: versao
+        run: |
+          V=$(grep -m1 -E '^(APP_)?VERSION' espelhar-celular/espelhar_celular.py | cut -d'"' -f2)
+          echo "v=${V:-0.0.0}" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: artefatos
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: espelhar-celular
+          name: "Espelhar Celular v${{ steps.versao.outputs.v }}"
+          body: "Versao ${{ steps.versao.outputs.v }}. Os nomes dos arquivos e o link de download nao mudam."
+          files: |
+            artefatos/**/*.exe
+            artefatos/**/*.zip
