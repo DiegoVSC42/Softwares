@@ -5,7 +5,9 @@ remoção de todos os metadados do arquivo.
 
 ## O que ele faz
 
-- Baixa vídeo por link, com escolha de qualidade (melhor, 1080p, 720p, 480p, 360p).
+- Baixa vídeo por link do YouTube, Instagram, TikTok, **Google Drive** e
+  centenas de outros sites, com escolha de qualidade (melhor, 1080p, 720p,
+  480p, 360p).
 - Deixa escolher o nome do arquivo de saída (opcional). Vazio, usa o título do
   vídeo. Em playlist, cada item sai numerado ("Nome - 1", "Nome - 2"…).
 - Baixa somente o áudio em MP3.
@@ -81,6 +83,26 @@ Para descobrir qual é o seu: menu **Apple > Sobre Este Mac**. Se aparecer
 "Chip: Apple M1" (ou M2, M3, M4...), é o primeiro. Se aparecer "Processador:
 Intel...", é o segundo.
 
+### Se o Mac bloquear ao abrir o programa baixado do Release
+
+Isso é diferente do aviso de `abrir-baixador-videos.command` (que roda a
+partir do código e não tem esse problema). Quando o arquivo `.zip` é baixado
+direto do link do GitHub, o Mac marca o programa como "baixado da internet" e
+o Gatekeeper bloqueia, porque o programa não tem certificado pago de
+desenvolvedor Apple. Não é erro, é o comportamento normal do Mac para
+qualquer programa baixado assim. Para liberar:
+
+1. Se aparecer a mensagem "não pôde verificar a presença de software
+   malicioso" (ou "de desenvolvedor não identificado"), clique em **OK**.
+2. Abra **Ajustes do Sistema > Privacidade e Segurança**.
+3. Role até o fim da página. Vai ter uma linha avisando que o programa foi
+   bloqueado, com um botão **Abrir Mesmo Assim**. Clique nele e confirme com
+   sua senha ou Touch ID.
+4. Abra o programa de novo (duplo clique). Na segunda confirmação, mais
+   simples, clique em **Abrir**.
+
+Isso só precisa ser feito uma vez por computador.
+
 ## O erro 403 do YouTube, e por que ele acontecia
 
 O YouTube passou a exigir duas coisas que o motor sozinho não resolvia:
@@ -103,6 +125,23 @@ novo sozinho, por outro caminho, uma vez):
    o Safari exige Acesso Total ao Disco para o programa.
 2. Se continuar, feche e abra o programa de novo.
 
+## Baixar do Google Drive
+
+Cole o link do jeito que o Drive dá ao clicar em "Compartilhar" (por exemplo
+`https://drive.google.com/file/d/ID_DO_ARQUIVO/view`). Para funcionar, o
+arquivo precisa estar compartilhado como **"Qualquer pessoa com o link"**
+(função Visualizador já basta).
+
+Dois erros são do próprio Google, não do programa:
+
+- **Cota de download excedida** (muita gente baixou o mesmo arquivo no dia):
+  o Drive bloqueia por até 24 horas. Tente mais tarde ou marque **Usar
+  cookies do navegador** logado na conta dona do arquivo — a cota do dono é
+  bem maior.
+- **Arquivo sem permissão pública**: confira o compartilhamento no Drive, ou
+  marque **Usar cookies do navegador** com o navegador logado numa conta que
+  tem acesso.
+
 ## Publicar uma nova versão
 
 - No Mac: clique duas vezes em `publicar-baixador-videos.command`.
@@ -117,6 +156,10 @@ https://github.com/DiegoVSC42/Softwares/releases/tag/baixador-videos
 
 ## Versão
 
+- v1.8.0 — suporte a links do Google Drive (o motor de download já suportava
+  nativamente; agora o programa avisa de forma clara quando o Drive nega o
+  acesso por cota diária excedida ou por o arquivo não estar compartilhado
+  publicamente).
 - v1.7.0 — passa a gerar também um executável para Mac com chip Intel
   (`BaixadorDeVideos-mac-intel.zip`), além do Mac com chip Apple e do
   Windows.

@@ -41,7 +41,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 
 APP_NAME = "Baixador de Vídeos"
-APP_VERSION = "1.7.0"
+APP_VERSION = "1.8.0"
 
 YTDLP_BASE = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/"
 DENO_BASE = "https://github.com/denoland/deno/releases/latest/download/"
@@ -468,6 +468,12 @@ class App(tk.Tk):
         ttk.Label(topo, text="URL do vídeo ou playlist:").pack(anchor="w")
         self.url_entry = ttk.Entry(topo)
         self.url_entry.pack(fill="x", pady=(2, 0))
+        ttk.Label(
+            topo,
+            text="YouTube, Instagram, TikTok, Google Drive (link \"Qualquer "
+                 "pessoa com o link\") e centenas de outros sites.",
+            foreground="#8b949e", font=("", 9),
+        ).pack(anchor="w", pady=(2, 0))
 
         # ---------------- Opções do download ----------------
         opc = ttk.LabelFrame(self, text="Opções do download")
@@ -842,8 +848,11 @@ class App(tk.Tk):
             codigo, saida = self._rodar(opc)
 
             # 403 e afins: tenta de novo por outro caminho, uma vez só.
+            # Erro de cota/permissão do Google Drive não é bloqueio de robô
+            # — tentar de novo por outro caminho não resolve, só perde tempo.
             if codigo != 0 and not self.cancelar_flag.is_set() \
-                    and self._parece_bloqueio(saida):
+                    and self._parece_bloqueio(saida) \
+                    and not self._parece_erro_drive(opc["url"], saida):
                 self.fila.put((
                     "log",
                     "O site recusou o download. Tentando de novo por outro "
@@ -871,7 +880,7 @@ class App(tk.Tk):
                     ("Download concluído com sucesso!", opc["destino"]),
                 ))
             else:
-                self.fila.put(("erro", self._mensagem_erro(saida)))
+                self.fila.put(("erro", self._mensagem_erro(saida, opc["url"])))
         except Exception as e:
             self.fila.put(("erro", str(e)))
         finally:
@@ -946,11 +955,43 @@ class App(tk.Tk):
         ))
 
     @staticmethod
-    def _mensagem_erro(saida: str) -> str:
+    def _parece_erro_drive(url: str, saida: str) -> bool:
+        """True se o erro veio de um link do Google Drive (não é bloqueio de
+        robô: é cota de download excedida ou o arquivo não está
+        compartilhado publicamente — tentar de novo não resolve)."""
+        if "drive.google.com" not in url.lower():
+            return False
+        s = saida.lower()
+        return any(t in s for t in (
+            "429", "too many requests", "404", "not found",
+            "confirmation code", "permission", "access",
+        ))
+
+    @staticmethod
+    def _mensagem_erro(saida: str, url: str = "") -> str:
         erros = [l for l in saida.splitlines() if l.startswith("ERROR")]
         base = erros[-1] if erros else "O download falhou."
         s = saida.lower()
-        if "javascript runtime" in s or "n challenge" in s:
+        if App._parece_erro_drive(url, saida):
+            if "429" in s or "too many requests" in s:
+                base += (
+                    "\n\nO Google Drive tem uma cota diária de downloads "
+                    "para arquivos com link público, e ela parece ter "
+                    "estourado (muita gente baixando esse mesmo arquivo). "
+                    "Tente de novo mais tarde ou marque \"Usar cookies do "
+                    "navegador\" logado na conta dona do arquivo — a cota "
+                    "do dono é bem maior."
+                )
+            else:
+                base += (
+                    "\n\nNão consegui acessar esse arquivo do Google "
+                    "Drive. Confira se ele está compartilhado como "
+                    "\"Qualquer pessoa com o link\" (Visualizador). Se for "
+                    "um arquivo restrito a contas específicas, marque "
+                    "\"Usar cookies do navegador\" com o navegador em que "
+                    "você está logado na conta que tem acesso."
+                )
+        elif "javascript runtime" in s or "n challenge" in s:
             base += (
                 "\n\nFalta o motor de JavaScript que o YouTube exige. Feche "
                 "e abra o programa de novo para tentar instalar mais uma vez."
