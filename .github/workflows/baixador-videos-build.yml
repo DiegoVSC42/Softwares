@@ -44,7 +44,8 @@ jobs:
           path: baixador-videos/dist/BaixadorDeVideos.exe
 
   # ----------------------------------------------------------------------
-  # Mac: gera o .app, ffmpeg embutido, e compacta em .zip com ditto
+  # Mac Apple Silicon (M1 em diante): gera o .app, ffmpeg arm64 embutido,
+  # e compacta em .zip com ditto
   # ----------------------------------------------------------------------
   mac:
     runs-on: macos-latest
@@ -60,9 +61,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyinstaller
 
-      - name: Baixar ffmpeg (Mac)
+      - name: Baixar ffmpeg (Mac Apple Silicon)
         run: |
-          curl -L "https://evermeet.cx/ffmpeg/getrelease/zip" -o ffmpeg.zip
+          curl -fL "https://www.osxexperts.net/ffmpeg711arm.zip" -o ffmpeg.zip || curl -fL "https://evermeet.cx/ffmpeg/getrelease/zip" -o ffmpeg.zip
           unzip -o ffmpeg.zip
           chmod +x ffmpeg
 
@@ -80,11 +81,49 @@ jobs:
           path: baixador-videos/dist/BaixadorDeVideos-mac.zip
 
   # ----------------------------------------------------------------------
-  # Release: publica o .exe (Windows) e o .zip (Mac) com link fixo em
-  # releases/download/baixador-videos/<arquivo>
+  # Mac Intel: mesmo .app, buildado num runner Intel de verdade, com
+  # ffmpeg x86_64 embutido, compactado com sufixo proprio (-mac-intel.zip)
+  # ----------------------------------------------------------------------
+  mac-intel:
+    runs-on: macos-15-intel
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
+
+      - name: Baixar ffmpeg (Mac Intel)
+        run: |
+          curl -fL "https://evermeet.cx/ffmpeg/getrelease/zip" -o ffmpeg.zip
+          unzip -o ffmpeg.zip
+          chmod +x ffmpeg
+
+      - name: Empacotar com PyInstaller
+        run: pyinstaller --onefile --windowed --icon icon.icns --noconfirm --name BaixadorDeVideos --add-binary "ffmpeg:." baixador_videos.py
+
+      - name: Compactar .app com ditto
+        run: |
+          cd dist
+          mv BaixadorDeVideos.app BaixadorDeVideos-intel.app
+          ditto -c -k --sequesterRsrc --keepParent BaixadorDeVideos-intel.app BaixadorDeVideos-mac-intel.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mac-intel-build
+          path: baixador-videos/dist/BaixadorDeVideos-mac-intel.zip
+
+  # ----------------------------------------------------------------------
+  # Release: publica o .exe (Windows) e os dois .zip (Mac Apple Silicon e
+  # Mac Intel) com link fixo em releases/download/baixador-videos/<arquivo>
   # ----------------------------------------------------------------------
   release:
-    needs: [ windows, mac ]
+    needs: [ windows, mac, mac-intel ]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -97,12 +136,12 @@ jobs:
           V=$(grep -m1 '^APP_VERSION' baixador_videos.py | cut -d'"' -f2)
           echo "v=${V:-0.0.0}" >> "$GITHUB_OUTPUT"
 
-      - name: Baixar artefatos (exe e zip)
+      - name: Baixar artefatos (exe e zips)
         uses: actions/download-artifact@v4
         with:
           path: artefatos
 
-      - name: Publicar exe e zip no Release do GitHub
+      - name: Publicar exe e zips no Release do GitHub
         uses: softprops/action-gh-release@v2
         with:
           tag_name: baixador-videos

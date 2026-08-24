@@ -41,7 +41,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 
 APP_NAME = "Baixador de Vídeos"
-APP_VERSION = "1.6.0"
+APP_VERSION = "1.7.0"
 
 YTDLP_BASE = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/"
 DENO_BASE = "https://github.com/denoland/deno/releases/latest/download/"

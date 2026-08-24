@@ -3,20 +3,23 @@
 Coleção de ferramentas simples para Windows e Mac. Cada programa tem um download
 direto abaixo. Não precisa instalar nada, é só baixar e abrir.
 
-| Software | Para que serve | Windows | Mac |
-|---|---|---|---|
-| Atualizar Softwares | Manter atualizada, nesta máquina, a cópia de todos os softwares deste repositório | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/atualizar-repo-softwares/AtualizarSoftwares.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/atualizar-repo-softwares/AtualizarSoftwares-mac.zip) |
-| Baixador de Vídeos | Baixar vídeos e playlists (ou só o áudio), sem metadados | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos-mac.zip) |
-| Comparador de Planilhas | Comparar duas planilhas e gerar uma terceira (juntar, cruzar ou remover linhas) | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/comparador-planilhas/ComparadorPlanilhas.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/comparador-planilhas/ComparadorPlanilhas-mac.zip) |
-| Cronômetro de Tempo de Resposta | Medir o tempo de resposta em ligações | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/cronometro-resposta-telefone/CronometroResposta.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/cronometro-resposta-telefone/CronometroResposta-mac.zip) |
-| Dividir e Juntar Áudio | Quebrar um áudio longo em partes e juntar tudo depois | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/dividir-juntar-audio/DividirJuntarAudio.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/dividir-juntar-audio/DividirJuntarAudio-mac.zip) |
-| Extrair Áudio de Vídeo | Tirar o áudio de vários vídeos de uma vez | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/extrair-audio/ExtrairAudio.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/extrair-audio/ExtrairAudio-mac.zip) |
-| Gerenciador de Pastas | Comparar pastas e copiar só o que falta | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/foldermanager/FolderManagerWIN.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/foldermanager/FolderManagerMAC-mac.zip) |
-| Instagram Coletor | Baixar posts do Instagram e gerar planilha com os dados | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/instagram-coletor/InstagramColetor.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/instagram-coletor/InstagramColetor-mac.zip) |
-| Renomeador de Vídeos por Data | Renomear vídeos em ordem de data | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/renomeador-videos-por-data/renomeador_videos.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/renomeador-videos-por-data/Renomeador-mac.zip) |
-| Separar Canais de WAV | Separar uma gravação em duas vozes | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/separar-canais-wav/SepararCanaisWAV.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/separar-canais-wav/SepararCanaisWAV-mac.zip) |
+| Software | Para que serve | Windows | Mac (chip Apple) | Mac (Intel) |
+|---|---|---|---|---|
+| Atualizar Softwares | Manter atualizada, nesta máquina, a cópia de todos os softwares deste repositório | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/atualizar-repo-softwares/AtualizarSoftwares.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/atualizar-repo-softwares/AtualizarSoftwares-mac.zip) | — |
+| Baixador de Vídeos | Baixar vídeos e playlists (ou só o áudio), sem metadados | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos-mac.zip) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos-mac-intel.zip) |
+| Comparador de Planilhas | Comparar duas planilhas e gerar uma terceira (juntar, cruzar ou remover linhas) | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/comparador-planilhas/ComparadorPlanilhas.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/comparador-planilhas/ComparadorPlanilhas-mac.zip) | — |
+| Cronômetro de Tempo de Resposta | Medir o tempo de resposta em ligações | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/cronometro-resposta-telefone/CronometroResposta.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/cronometro-resposta-telefone/CronometroResposta-mac.zip) | — |
+| Dividir e Juntar Áudio | Quebrar um áudio longo em partes e juntar tudo depois | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/dividir-juntar-audio/DividirJuntarAudio.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/dividir-juntar-audio/DividirJuntarAudio-mac.zip) | — |
+| Extrair Áudio de Vídeo | Tirar o áudio de vários vídeos de uma vez | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/extrair-audio/ExtrairAudio.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/extrair-audio/ExtrairAudio-mac.zip) | — |
+| Gerenciador de Pastas | Comparar pastas e copiar só o que falta | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/foldermanager/FolderManagerWIN.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/foldermanager/FolderManagerMAC-mac.zip) | — |
+| Instagram Coletor | Baixar posts do Instagram e gerar planilha com os dados | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/instagram-coletor/InstagramColetor.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/instagram-coletor/InstagramColetor-mac.zip) | — |
+| Renomeador de Vídeos por Data | Renomear vídeos em ordem de data | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/renomeador-videos-por-data/renomeador_videos.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/renomeador-videos-por-data/Renomeador-mac.zip) | — |
+| Separar Canais de WAV | Separar uma gravação em duas vozes | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/separar-canais-wav/SepararCanaisWAV.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/separar-canais-wav/SepararCanaisWAV-mac.zip) | — |
 
 > No Mac, baixe o `.zip`, descompacte e abra o programa que estiver dentro dele.
+> A coluna "Mac (Intel)" ainda está sendo preenchida software por software; por
+> enquanto só o Baixador de Vídeos tem esse link. Quem tem Mac Intel e usa um
+> software sem esse link ainda, avisar para priorizarmos.
 
 ---
 
@@ -43,7 +46,10 @@ Mantém atualizada, nesta máquina, a cópia local de todos os softwares já pub
 Baixa vídeos, playlists ou só o áudio a partir de um link, com a opção de apagar todas as informações escondidas dentro do arquivo (título original, autor, canal, capa, data).
 
 - **Windows:** <https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos.exe>
-- **Mac:** <https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos-mac.zip>
+- **Mac (Apple Silicon):** <https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos-mac.zip>
+- **Mac (Intel):** <https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos-mac-intel.zip>
+
+Para saber qual Mac é o seu: menu Apple (canto superior esquerdo) > Sobre Este Mac. Se aparecer "Chip: Apple M1" (ou M2, M3, M4...), baixe o primeiro link. Se aparecer "Processador: Intel...", baixe o segundo.
 
 **Nota (como usar):**
 

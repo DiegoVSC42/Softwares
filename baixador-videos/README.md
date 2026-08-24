@@ -70,6 +70,17 @@ Onde ele fica:
 1. Clique duas vezes no `BaixadorDeVideos.exe` (pasta `D:\Softwares\Windows`).
 2. O restante é igual ao Mac.
 
+### Qual arquivo do Mac baixar
+
+Agora existem dois arquivos para Mac, um para cada tipo de chip:
+
+- **`BaixadorDeVideos-mac.zip`** — Mac com chip Apple (M1, M2, M3, M4...).
+- **`BaixadorDeVideos-mac-intel.zip`** — Mac mais antigo, com processador Intel.
+
+Para descobrir qual é o seu: menu **Apple > Sobre Este Mac**. Se aparecer
+"Chip: Apple M1" (ou M2, M3, M4...), é o primeiro. Se aparecer "Processador:
+Intel...", é o segundo.
+
 ## O erro 403 do YouTube, e por que ele acontecia
 
 O YouTube passou a exigir duas coisas que o motor sozinho não resolvia:
@@ -98,13 +109,17 @@ novo sozinho, por outro caminho, uma vez):
 - No Windows: clique duas vezes em `baixador-videos.bat`.
 
 Cada um gera o executável da própria máquina, envia o código para o GitHub,
-espera a nuvem montar o executável do outro sistema e baixa o resultado.
+espera a nuvem montar os executáveis dos outros sistemas (incluindo o Mac
+Intel, que só pode ser montado na nuvem) e baixa o resultado.
 
 Link de download fixo:
 https://github.com/DiegoVSC42/Softwares/releases/tag/baixador-videos
 
 ## Versão
 
+- v1.7.0 — passa a gerar também um executável para Mac com chip Intel
+  (`BaixadorDeVideos-mac-intel.zip`), além do Mac com chip Apple e do
+  Windows.
 - v1.6.0 — tira da tela a seção técnica do motor de download (ele continua
   se instalando e se atualizando sozinho, só que em segundo plano); ao
   terminar o download, pergunta se quer abrir a pasta de destino.
