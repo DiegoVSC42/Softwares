@@ -11,6 +11,7 @@ direto abaixo. Não precisa instalar nada, é só baixar e abrir.
 | Cronômetro de Tempo de Resposta | Medir o tempo de resposta em ligações | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/cronometro-resposta-telefone/CronometroResposta.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/cronometro-resposta-telefone/CronometroResposta-mac.zip) | — |
 | Dividir e Juntar Áudio | Quebrar um áudio longo em partes e juntar tudo depois | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/dividir-juntar-audio/DividirJuntarAudio.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/dividir-juntar-audio/DividirJuntarAudio-mac.zip) | — |
 | Extrair Áudio de Vídeo | Tirar o áudio de vários vídeos de uma vez | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/extrair-audio/ExtrairAudio.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/extrair-audio/ExtrairAudio-mac.zip) | — |
+| Extrair Quadros de Vídeo | Tirar fotos de dentro de um vídeo, já cortadas na proporção que você escolher | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/extrair-quadros-video/ExtrairQuadros.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/extrair-quadros-video/ExtrairQuadros-mac.zip) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/extrair-quadros-video/ExtrairQuadros-mac-intel.zip) |
 | Gerenciador de Pastas | Comparar pastas e copiar só o que falta | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/foldermanager/FolderManagerWIN.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/foldermanager/FolderManagerMAC-mac.zip) | — |
 | Instagram Coletor | Baixar posts do Instagram e gerar planilha com os dados | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/instagram-coletor/InstagramColetor.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/instagram-coletor/InstagramColetor-mac.zip) | — |
 | Renomeador de Vídeos por Data | Renomear vídeos em ordem de data | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/renomeador-videos-por-data/renomeador_videos.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/renomeador-videos-por-data/Renomeador-mac.zip) | — |
@@ -133,6 +134,30 @@ Extrai o áudio de vários vídeos de uma vez.
 3. Escolha o formato do áudio e a qualidade.
 4. Selecione a pasta onde quer salvar.
 5. Clique em Extrair e acompanhe o progresso.
+
+## Extrair Quadros de Vídeo
+
+**Caso de uso:**
+
+Tira fotos (quadros) de dentro de um vídeo, já cortadas na proporção que você escolher (16:9, 9:16, quadrado, 4:5 e outras), definindo na tela exatamente a área que vai ser aproveitada.
+
+- **Windows:** <https://github.com/DiegoVSC42/Softwares/releases/download/extrair-quadros-video/ExtrairQuadros.exe>
+- **Mac (Apple Silicon):** <https://github.com/DiegoVSC42/Softwares/releases/download/extrair-quadros-video/ExtrairQuadros-mac.zip>
+- **Mac (Intel):** <https://github.com/DiegoVSC42/Softwares/releases/download/extrair-quadros-video/ExtrairQuadros-mac-intel.zip>
+
+Para saber qual Mac é o seu: menu Apple (canto superior esquerdo) > Sobre Este Mac. Se aparecer "Chip: Apple M1" (ou M2, M3, M4...), baixe o primeiro link. Se aparecer "Processador: Intel...", baixe o segundo.
+
+**Nota (como usar):**
+
+1. Abra o programa e clique em Escolher vídeo.
+2. Chegue no ponto que interessa do jeito que preferir: digite o tempo no campo Ir para e aperte Enter, arraste a barra de percorrer o vídeo (a imagem corre junto com a barra), ou use a barra de ajuste fino logo abaixo, que mostra a mesma posição dentro de um trecho curto (o tempo de cada ponta fica escrito ao lado dela), para acertar o quadro com precisão.
+3. Escolha a proporção que você quer: 16:9 para vídeo deitado, 9:16 para Reels, 1:1 para o feed, 4:5 para Instagram, entre outras.
+4. Arraste a moldura laranja sobre a imagem até enquadrar a área que você quer, e use a barra Tamanho da moldura para apertar ou abrir o enquadramento.
+5. Preencha o começo e o fim do trecho (aceita 1:30, 90, 1h05m), ou clique em usar a posição atual. Deixar em branco significa do início e até o fim.
+6. Escolha quantos quadros por segundo devem sair: 1 sai um por segundo, 0.5 sai um a cada dois segundos, e a opção todos sai o vídeo inteiro quadro a quadro.
+7. Escolha o formato (JPG para arquivo menor, PNG para qualidade máxima), a largura final da imagem (de 500 px até 4K, ou o tamanho do próprio recorte) e a pasta onde salvar.
+8. Clique em Extrair quadros e acompanhe a barra. Dá para cancelar a qualquer momento.
+9. No fim, clique em Abrir pasta para ver as imagens.
 
 ## Gerenciador de Pastas
 

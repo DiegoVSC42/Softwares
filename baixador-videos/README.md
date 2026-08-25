@@ -156,6 +156,12 @@ https://github.com/DiegoVSC42/Softwares/releases/tag/baixador-videos
 
 ## Versão
 
+- v1.8.1 — corrige uma falha em que, se o motor de download não terminasse
+  de se instalar na primeira execução (por exemplo, por falha de internet),
+  o programa tentava baixar mesmo assim e travava com um erro técnico cru
+  ("No such file or directory"). Agora o botão Baixar fica bloqueado até o
+  motor estar pronto, e qualquer falha na instalação aparece com uma
+  mensagem clara.
 - v1.8.0 — suporte a links do Google Drive (o motor de download já suportava
   nativamente; agora o programa avisa de forma clara quando o Drive nega o
   acesso por cota diária excedida ou por o arquivo não estar compartilhado

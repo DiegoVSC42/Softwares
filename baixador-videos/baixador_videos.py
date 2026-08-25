@@ -41,7 +41,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 
 APP_NAME = "Baixador de Vídeos"
-APP_VERSION = "1.8.0"
+APP_VERSION = "1.8.1"
 
 YTDLP_BASE = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/"
 DENO_BASE = "https://github.com/denoland/deno/releases/latest/download/"
@@ -451,6 +451,13 @@ class App(tk.Tk):
         self._verificar_ffmpeg()
         self.after(100, self._processar_fila)
         self.protocol("WM_DELETE_WINDOW", self._ao_fechar)
+
+        # Trava o botão até o motor de download estar pronto: clicar em
+        # "Baixar" antes disso (primeira execução, ainda instalando o
+        # yt-dlp) fazia o download tentar rodar um arquivo que ainda não
+        # existe no disco.
+        self.btn_baixar.config(state="disabled")
+        self._set_status("Preparando o programa (primeira vez)…")
         threading.Thread(target=self._preparar_motor, daemon=True).start()
 
     # ----- UI -----------------------------------------------------------
@@ -657,8 +664,10 @@ class App(tk.Tk):
                 self.fila.put(("log", "Motor de JavaScript instalado."))
 
             self.fila.put(("status", "Pronto."))
+            self.fila.put(("motor_ok", None))
         except Exception as e:
             self.fila.put(("log", f"ERRO ao preparar o motor: {e}"))
+            self.fila.put(("motor_erro", str(e)))
 
     def _abrir_pasta(self, caminho):
         """Abre a pasta no Finder (Mac), Explorer (Windows) ou equivalente."""
@@ -843,7 +852,16 @@ class App(tk.Tk):
         """Roda em thread separada. Comunica-se com a GUI via self.fila."""
         try:
             if not motor_instalado() or not localizar_js():
+                self.fila.put(("status", "Preparando o motor de download…"))
                 self._preparar_motor()
+
+            if not motor_instalado():
+                raise RuntimeError(
+                    "Não consegui preparar o motor de download (yt-dlp). "
+                    "Verifique sua conexão com a internet e clique em "
+                    "Baixar de novo. Se persistir, feche e abra o "
+                    "programa."
+                )
 
             codigo, saida = self._rodar(opc)
 
@@ -881,6 +899,12 @@ class App(tk.Tk):
                 ))
             else:
                 self.fila.put(("erro", self._mensagem_erro(saida, opc["url"])))
+        except FileNotFoundError:
+            self.fila.put((
+                "erro",
+                "O motor de download (yt-dlp) sumiu do disco no meio da "
+                "tarefa. Feche e abra o programa de novo para reinstalá-lo.",
+            ))
         except Exception as e:
             self.fila.put(("erro", str(e)))
         finally:
@@ -1047,6 +1071,20 @@ class App(tk.Tk):
                 elif tipo == "fim":
                     self.btn_baixar.config(state="normal")
                     self.btn_cancelar.config(state="disabled")
+                elif tipo == "motor_ok":
+                    self.btn_baixar.config(state="normal")
+                elif tipo == "motor_erro":
+                    self._set_status("Falha ao preparar o motor de download.")
+                    self._logar(
+                        "Não consegui preparar o motor de download na "
+                        "primeira execução. Verifique sua conexão com a "
+                        "internet; o programa tenta de novo automaticamente "
+                        "quando você clicar em Baixar."
+                    )
+                    # Libera o botão mesmo assim: o clique dispara uma nova
+                    # tentativa de instalar o motor (ver _worker), e se
+                    # falhar de novo o erro agora sai claro, não um crash.
+                    self.btn_baixar.config(state="normal")
         except queue.Empty:
             pass
         self.after(100, self._processar_fila)
