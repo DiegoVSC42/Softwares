@@ -30,6 +30,7 @@ embutido no executável e, depois, no sistema.
 
 import os
 import re
+import ssl
 import sys
 import stat
 import shutil
@@ -40,8 +41,15 @@ import urllib.request
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 
+# Import no nivel do modulo (nao dentro de funcao) de proposito: o
+# PyInstaller precisa "ver" este import estaticamente para empacotar
+# sozinho o arquivo de certificados do certifi (cacert.pem) dentro do
+# executavel. Sem isso, o app empacotado falha ao baixar o motor com
+# "CERTIFICATE_VERIFY_FAILED: unable to get local issuer certificate".
+import certifi
+
 APP_NAME = "Baixador de Vídeos"
-APP_VERSION = "1.8.1"
+APP_VERSION = "1.8.2"
 
 YTDLP_BASE = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/"
 DENO_BASE = "https://github.com/denoland/deno/releases/latest/download/"
@@ -162,6 +170,21 @@ def find_ffmpeg_exe():
     return exe if os.path.isfile(exe) else None
 
 
+def _contexto_ssl():
+    """Contexto SSL usando o pacote de certificados do certifi.
+
+    Sem isso, o programa empacotado (PyInstaller) pode falhar ao baixar o
+    motor com "CERTIFICATE_VERIFY_FAILED: unable to get local issuer
+    certificate": o Python embutido no executável não enxerga a mesma
+    cadeia de certificados raiz que o sistema operacional usa, mesmo com a
+    internet funcionando normalmente.
+    """
+    try:
+        return ssl.create_default_context(cafile=certifi.where())
+    except Exception:
+        return ssl.create_default_context()
+
+
 def _sem_janela():
     """Evita abrir janela preta de console no Windows."""
     if os.name == "nt":
@@ -199,7 +222,8 @@ def baixar_motor(aviso=None) -> str:
     req = urllib.request.Request(
         url_motor(), headers={"User-Agent": "BaixadorDeVideos"}
     )
-    with urllib.request.urlopen(req, timeout=180) as r, open(temp, "wb") as f:
+    with urllib.request.urlopen(req, timeout=180, context=_contexto_ssl()) as r, \
+            open(temp, "wb") as f:
         shutil.copyfileobj(r, f)
     os.chmod(temp, os.stat(temp).st_mode | stat.S_IEXEC | stat.S_IRUSR)
     shutil.move(temp, destino)
@@ -229,7 +253,7 @@ def baixar_js(aviso=None) -> str:
     )
     with tempfile.TemporaryDirectory() as tmp:
         zip_path = os.path.join(tmp, "deno.zip")
-        with urllib.request.urlopen(req, timeout=300) as r, \
+        with urllib.request.urlopen(req, timeout=300, context=_contexto_ssl()) as r, \
                 open(zip_path, "wb") as f:
             shutil.copyfileobj(r, f)
         with zipfile.ZipFile(zip_path) as z:

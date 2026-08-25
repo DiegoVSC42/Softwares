@@ -25,7 +25,7 @@ jobs:
       - name: Instalar dependencias
         run: |
           python -m pip install --upgrade pip
-          pip install pyinstaller
+          pip install pyinstaller -r requirements.txt
 
       - name: Baixar ffmpeg (Windows)
         shell: pwsh
@@ -36,7 +36,7 @@ jobs:
           Copy-Item $exe.FullName -Destination ffmpeg.exe
 
       - name: Empacotar com PyInstaller
-        run: pyinstaller --onefile --windowed --icon icon.ico --noconfirm --name BaixadorDeVideos --add-binary "ffmpeg.exe;." baixador_videos.py
+        run: pyinstaller --onefile --windowed --icon icon.ico --noconfirm --name BaixadorDeVideos --add-binary "ffmpeg.exe;." --hidden-import certifi baixador_videos.py
 
       - uses: actions/upload-artifact@v4
         with:
@@ -59,7 +59,7 @@ jobs:
       - name: Instalar dependencias
         run: |
           python -m pip install --upgrade pip
-          pip install pyinstaller
+          pip install pyinstaller -r requirements.txt
 
       - name: Baixar ffmpeg (Mac Apple Silicon)
         run: |
@@ -68,7 +68,9 @@ jobs:
           chmod +x ffmpeg
 
       - name: Empacotar com PyInstaller
-        run: pyinstaller --onefile --windowed --icon icon.icns --noconfirm --name BaixadorDeVideos --add-binary "ffmpeg:." baixador_videos.py
+        # Usa o .spec (nao os flags soltos) para o Info.plist do app sair
+        # com a versao certa (senao o Finder mostra "0.0.0" em Informacoes).
+        run: pyinstaller --noconfirm BaixadorDeVideos.spec
 
       - name: Compactar .app com ditto
         run: |
@@ -96,7 +98,7 @@ jobs:
       - name: Instalar dependencias
         run: |
           python -m pip install --upgrade pip
-          pip install pyinstaller
+          pip install pyinstaller -r requirements.txt
 
       - name: Baixar ffmpeg (Mac Intel)
         run: |
@@ -105,7 +107,9 @@ jobs:
           chmod +x ffmpeg
 
       - name: Empacotar com PyInstaller
-        run: pyinstaller --onefile --windowed --icon icon.icns --noconfirm --name BaixadorDeVideos --add-binary "ffmpeg:." baixador_videos.py
+        # Usa o .spec (nao os flags soltos) para o Info.plist do app sair
+        # com a versao certa (senao o Finder mostra "0.0.0" em Informacoes).
+        run: pyinstaller --noconfirm BaixadorDeVideos.spec
 
       - name: Compactar .app com ditto
         run: |

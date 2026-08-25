@@ -1,4 +1,9 @@
-# O programa nao tem dependencia de biblioteca Python.
-# O motor de download (yt-dlp) e um programa a parte, baixado e atualizado
-# pelo proprio Baixador de Videos, para nunca ficar velho e dar erro 403.
-# A interface usa Tkinter, que ja vem com o Python.
+# O programa nao tem dependencia de biblioteca Python para RODAR (Tkinter
+# ja vem com o Python, e o motor de download, yt-dlp, e um programa a
+# parte, baixado e atualizado pelo proprio Baixador de Videos).
+#
+# certifi e dependencia so do BUILD: garante que o executavel empacotado
+# (PyInstaller) carregue seus proprios certificados HTTPS. Sem isso, o app
+# empacotado pode falhar ao baixar o motor com "CERTIFICATE_VERIFY_FAILED:
+# unable to get local issuer certificate", mesmo com a internet normal.
+certifi

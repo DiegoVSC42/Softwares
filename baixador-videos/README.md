@@ -156,12 +156,19 @@ https://github.com/DiegoVSC42/Softwares/releases/tag/baixador-videos
 
 ## Versão
 
+- v1.8.2 — corrige a instalação do motor de download falhando com
+  "CERTIFICATE_VERIFY_FAILED: unable to get local issuer certificate". O
+  executável empacotado não enxergava a mesma cadeia de certificados que o
+  sistema operacional usa; agora ele carrega o próprio pacote de
+  certificados (certifi), embutido no programa.
 - v1.8.1 — corrige uma falha em que, se o motor de download não terminasse
   de se instalar na primeira execução (por exemplo, por falha de internet),
   o programa tentava baixar mesmo assim e travava com um erro técnico cru
   ("No such file or directory"). Agora o botão Baixar fica bloqueado até o
   motor estar pronto, e qualquer falha na instalação aparece com uma
-  mensagem clara.
+  mensagem clara. Corrige também o número de versão do aplicativo Mac: o
+  Finder mostrava sempre "0.0.0" em Informações porque o empacotador não
+  gravava a versão no aplicativo; agora sai certo (ex.: "1.8.1").
 - v1.8.0 — suporte a links do Google Drive (o motor de download já suportava
   nativamente; agora o programa avisa de forma clara quando o Drive nega o
   acesso por cota diária excedida ou por o arquivo não estar compartilhado
