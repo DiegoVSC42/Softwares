@@ -6,16 +6,14 @@ direto abaixo. Não precisa instalar nada, é só baixar e abrir.
 | Software | Para que serve | Windows | Mac (chip Apple) | Mac (Intel) |
 |---|---|---|---|---|
 | Atualizar Softwares | Manter atualizada, nesta máquina, a cópia de todos os softwares deste repositório | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/atualizar-repo-softwares/AtualizarSoftwares.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/atualizar-repo-softwares/AtualizarSoftwares-mac.zip) | — |
-| Baixador de Vídeos | Baixar vídeos e playlists (ou só o áudio), sem metadados | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos-mac.zip) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos-mac-intel.zip) |
+| Audio Studio | Cortar, dividir, juntar, tirar o áudio de um vídeo, unir vários áudios e separar vozes | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/estudio-audio/AudioStudio.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/estudio-audio/AudioStudio-mac.zip) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/estudio-audio/AudioStudio-mac-intel.zip) |
 | Comparador de Planilhas | Comparar duas planilhas e gerar uma terceira (juntar, cruzar ou remover linhas) | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/comparador-planilhas/ComparadorPlanilhas.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/comparador-planilhas/ComparadorPlanilhas-mac.zip) | — |
 | Cronômetro de Tempo de Resposta | Medir o tempo de resposta em ligações | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/cronometro-resposta-telefone/CronometroResposta.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/cronometro-resposta-telefone/CronometroResposta-mac.zip) | — |
-| Dividir e Juntar Áudio | Quebrar um áudio longo em partes e juntar tudo depois | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/dividir-juntar-audio/DividirJuntarAudio.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/dividir-juntar-audio/DividirJuntarAudio-mac.zip) | — |
-| Extrair Áudio de Vídeo | Tirar o áudio de vários vídeos de uma vez | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/extrair-audio/ExtrairAudio.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/extrair-audio/ExtrairAudio-mac.zip) | — |
-| Extrair Quadros de Vídeo | Tirar fotos de dentro de um vídeo, já cortadas na proporção que você escolher | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/extrair-quadros-video/ExtrairQuadros.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/extrair-quadros-video/ExtrairQuadros-mac.zip) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/extrair-quadros-video/ExtrairQuadros-mac-intel.zip) |
+| Video Studio | Baixar, cortar, dividir, tirar fotos de dentro do vídeo e tirar o áudio, tudo numa janela só | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/estudio-video/EstudioDeVideo.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/estudio-video/EstudioDeVideo-mac.zip) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/estudio-video/EstudioDeVideo-mac-intel.zip) |
+| Image Studio | Deixar foto mais leve, mudar tamanho e proporção, virar figurinha e capturar tela | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/estudio-imagem/ImageStudio.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/estudio-imagem/ImageStudio-mac.zip) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/estudio-imagem/ImageStudio-mac-intel.zip) |
 | Gerenciador de Pastas | Comparar pastas e copiar só o que falta | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/foldermanager/FolderManagerWIN.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/foldermanager/FolderManagerMAC-mac.zip) | — |
 | Instagram Coletor | Baixar posts do Instagram e gerar planilha com os dados | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/instagram-coletor/InstagramColetor.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/instagram-coletor/InstagramColetor-mac.zip) | — |
 | Renomeador de Vídeos por Data | Renomear vídeos em ordem de data | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/renomeador-videos-por-data/renomeador_videos.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/renomeador-videos-por-data/Renomeador-mac.zip) | — |
-| Separar Canais de WAV | Separar uma gravação em duas vozes | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/separar-canais-wav/SepararCanaisWAV.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/separar-canais-wav/SepararCanaisWAV-mac.zip) | — |
 
 > **Você só precisa baixar uma vez.** A partir desta versão, os programas se
 > atualizam sozinhos: ao abrir, cada um confere se saiu versão nova e pergunta
@@ -24,7 +22,7 @@ direto abaixo. Não precisa instalar nada, é só baixar e abrir.
 
 > No Mac, baixe o `.zip`, descompacte e abra o programa que estiver dentro dele.
 > A coluna "Mac (Intel)" ainda está sendo preenchida software por software; por
-> enquanto só o Baixador de Vídeos tem esse link. Quem tem Mac Intel e usa um
+> enquanto só os três Studios têm esse link. Quem tem Mac Intel e usa um
 > software sem esse link ainda, avisar para priorizarmos.
 
 ---
@@ -45,27 +43,29 @@ Mantém atualizada, nesta máquina, a cópia local de todos os softwares já pub
 3. Clique em Atualizar agora e acompanhe pelo log (dá para cancelar a qualquer momento).
 4. Da próxima vez, o programa já lembra a pasta escolhida.
 
-## Baixador de Vídeos
+## Audio Studio
 
 **Caso de uso:**
 
-Baixa vídeos, playlists ou só o áudio a partir de um link, com a opção de apagar todas as informações escondidas dentro do arquivo (título original, autor, canal, capa, data).
+Reúne numa janela só as tarefas de som: cortar e dividir, tirar o áudio de um vídeo, unir vários áudios num arquivo e separar uma gravação de duas vozes.
 
-- **Windows:** <https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos.exe>
-- **Mac (Apple Silicon):** <https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos-mac.zip>
-- **Mac (Intel):** <https://github.com/DiegoVSC42/Softwares/releases/download/baixador-videos/BaixadorDeVideos-mac-intel.zip>
+- **Windows:** <https://github.com/DiegoVSC42/Softwares/releases/download/estudio-audio/AudioStudio.exe>
+- **Mac (Apple Silicon):** <https://github.com/DiegoVSC42/Softwares/releases/download/estudio-audio/AudioStudio-mac.zip>
+- **Mac (Intel):** <https://github.com/DiegoVSC42/Softwares/releases/download/estudio-audio/AudioStudio-mac-intel.zip>
 
 Para saber qual Mac é o seu: menu Apple (canto superior esquerdo) > Sobre Este Mac. Se aparecer "Chip: Apple M1" (ou M2, M3, M4...), baixe o primeiro link. Se aparecer "Processador: Intel...", baixe o segundo.
 
 **Nota (como usar):**
 
-1. Abra o programa.
-2. Cole o link do vídeo ou da playlist no campo indicado.
-3. Escolha a qualidade do vídeo, ou marque a opção de baixar só o áudio.
-4. Deixe marcada a opção de remover todos os metadados (ela já vem marcada) para o arquivo sair limpo, sem título original, autor, canal, capa nem data.
-5. Selecione a pasta onde quer salvar.
-6. Clique em Baixar e acompanhe pela barra (dá para cancelar a qualquer momento).
-7. Para limpar arquivos que já estão no seu computador, clique em Limpar arquivos existentes e escolha os arquivos.
+1. Abra o programa. Ele tem quatro abas no topo (Cortar e dividir, Extrair áudio, Unir áudios e Separar canais).
+2. Na aba Cortar e dividir, escolha o arquivo. Ela faz três coisas: tirar um trecho pela minutagem, partir um arquivo longo em vários pedaços, e juntar os pedaços de volta na ordem certa.
+3. Ao dividir, marque a opção de cortar no silêncio mais próximo: assim nenhuma palavra fica partida no meio. As partes saem numeradas.
+4. Se você levou as partes para um serviço de fora e elas voltaram com o nome mudado, tudo bem: na parte de juntar, o programa acha cada pedaço pelo número e remonta na ordem.
+5. Na aba Extrair áudio, adicione vários vídeos de uma vez, ou cole um link do YouTube, Instagram, TikTok, Drive ou Dropbox, escolha o formato e clique em Extrair.
+6. Na aba Unir áudios, aponte a pasta com os áudios. A lista começa vazia e só mostra o que você escolher. Ele respeita a ordem humana dos nomes, então 10 vem depois de 9, e não depois de 1. Escolha a transição entre os blocos e clique em Unir.
+7. Na aba Separar canais, escolha um arquivo WAV gravado com uma voz de cada lado e clique em Separar. Saem dois arquivos, um por voz.
+8. Em todas as abas, os arquivos vão para a sua pasta de Downloads, a menos que você escolha outra.
+9. Este programa substitui dois programas antigos: Dividir e Juntar Áudio e Separar Canais de WAV. Se você tem algum deles instalado, pode apagar.
 
 ## Comparador de Planilhas
 
@@ -102,68 +102,6 @@ Mede o tempo que a outra pessoa leva para responder na ligação.
 4. Quando ouvir a voz da outra pessoa, aperte a tecla 2: o tempo fica registrado.
 5. O intervalo entre o 1 e o 2 é quanto a pessoa demorou para responder.
 
-## Dividir e Juntar Áudio
-
-**Caso de uso:**
-
-Quebra um áudio longo em partes menores e junta tudo de volta depois, sem perder pedaço nem trocar a ordem.
-
-- **Windows:** <https://github.com/DiegoVSC42/Softwares/releases/download/dividir-juntar-audio/DividirJuntarAudio.exe>
-- **Mac:** <https://github.com/DiegoVSC42/Softwares/releases/download/dividir-juntar-audio/DividirJuntarAudio-mac.zip>
-
-**Nota (como usar):**
-
-1. Abra o programa.
-2. Na aba Dividir, clique em Escolher áudio e selecione o arquivo.
-3. Diga em quantas partes quer dividir, ou de quantos minutos deve ser cada parte. A tela mostra na hora quantas partes vão sair.
-4. Escolha onde cortar: no tempo exato, ou procurando o silêncio mais próximo (assim nenhuma palavra fica partida no meio).
-5. Clique em Dividir. As partes saem numeradas (01, 02, 03...) numa pasta ao lado do arquivo original, junto com um arquivo de conferência.
-6. Leve as partes para o serviço que vai tratar o áudio e traga os arquivos tratados de volta para a mesma pasta.
-7. Na aba Juntar, clique em Carregar manifesto e aponte para o arquivo de conferência, depois para a pasta com as partes tratadas. O programa acha cada parte pelo número, mesmo que o serviço tenha mudado o nome.
-8. Leia os avisos na tela: ele diz se alguma parte voltou mais curta do que deveria.
-9. Clique em Juntar e salvar e escolha onde gravar o arquivo final.
-
-## Extrair Áudio de Vídeo
-
-**Caso de uso:**
-
-Extrai o áudio de vários vídeos de uma vez.
-
-- **Windows:** <https://github.com/DiegoVSC42/Softwares/releases/download/extrair-audio/ExtrairAudio.exe>
-- **Mac:** <https://github.com/DiegoVSC42/Softwares/releases/download/extrair-audio/ExtrairAudio-mac.zip>
-
-**Nota (como usar):**
-
-1. Abra o programa.
-2. Clique em Adicionar vídeos para escolher os arquivos, ou em Adicionar pasta para pegar todos de uma vez.
-3. Escolha o formato do áudio e a qualidade.
-4. Selecione a pasta onde quer salvar.
-5. Clique em Extrair e acompanhe o progresso.
-
-## Extrair Quadros de Vídeo
-
-**Caso de uso:**
-
-Tira fotos (quadros) de dentro de um vídeo, já cortadas na proporção que você escolher (16:9, 9:16, quadrado, 4:5 e outras), definindo na tela exatamente a área que vai ser aproveitada.
-
-- **Windows:** <https://github.com/DiegoVSC42/Softwares/releases/download/extrair-quadros-video/ExtrairQuadros.exe>
-- **Mac (Apple Silicon):** <https://github.com/DiegoVSC42/Softwares/releases/download/extrair-quadros-video/ExtrairQuadros-mac.zip>
-- **Mac (Intel):** <https://github.com/DiegoVSC42/Softwares/releases/download/extrair-quadros-video/ExtrairQuadros-mac-intel.zip>
-
-Para saber qual Mac é o seu: menu Apple (canto superior esquerdo) > Sobre Este Mac. Se aparecer "Chip: Apple M1" (ou M2, M3, M4...), baixe o primeiro link. Se aparecer "Processador: Intel...", baixe o segundo.
-
-**Nota (como usar):**
-
-1. Abra o programa e clique em Escolher vídeo.
-2. Chegue no ponto que interessa do jeito que preferir: digite o tempo no campo Ir para e aperte Enter, arraste a barra de percorrer o vídeo (a imagem corre junto com a barra), ou use a barra de ajuste fino logo abaixo, que mostra a mesma posição dentro de um trecho curto (o tempo de cada ponta fica escrito ao lado dela), para acertar o quadro com precisão.
-3. Escolha a proporção que você quer: 16:9 para vídeo deitado, 9:16 para Reels, 1:1 para o feed, 4:5 para Instagram, entre outras.
-4. Arraste a moldura laranja sobre a imagem até enquadrar a área que você quer, e use a barra Tamanho da moldura para apertar ou abrir o enquadramento.
-5. Preencha o começo e o fim do trecho (aceita 1:30, 90, 1h05m), ou clique em usar a posição atual. Deixar em branco significa do início e até o fim.
-6. Escolha quantos quadros por segundo devem sair: 1 sai um por segundo, 0.5 sai um a cada dois segundos, e a opção todos sai o vídeo inteiro quadro a quadro.
-7. Escolha o formato (JPG para arquivo menor, PNG para qualidade máxima), a largura final da imagem (de 500 px até 4K, ou o tamanho do próprio recorte) e a pasta onde salvar.
-8. Clique em Extrair quadros e acompanhe a barra. Dá para cancelar a qualquer momento.
-9. No fim, clique em Abrir pasta para ver as imagens.
-
 ## Gerenciador de Pastas
 
 **Caso de uso:**
@@ -180,6 +118,29 @@ Compara duas pastas e copia só os arquivos que faltam.
 3. Clique em Comparar para ver quais arquivos estão faltando no destino (nada é alterado).
 4. Clique em Copiar faltantes para copiar só o que ainda não existe lá.
 5. Se quiser um comprovante, clique em Gerar relatório e escolha o formato.
+
+## Image Studio
+
+**Caso de uso:**
+
+Reúne numa janela só as tarefas de imagem: deixar a foto mais leve, mudar tamanho e proporção em lote, virar figurinha e capturar sempre a mesma área da tela.
+
+- **Windows:** <https://github.com/DiegoVSC42/Softwares/releases/download/estudio-imagem/ImageStudio.exe>
+- **Mac (Apple Silicon):** <https://github.com/DiegoVSC42/Softwares/releases/download/estudio-imagem/ImageStudio-mac.zip>
+- **Mac (Intel):** <https://github.com/DiegoVSC42/Softwares/releases/download/estudio-imagem/ImageStudio-mac-intel.zip>
+
+Para saber qual Mac é o seu: menu Apple (canto superior esquerdo) > Sobre Este Mac. Se aparecer "Chip: Apple M1" (ou M2, M3, M4...), baixe o primeiro link. Se aparecer "Processador: Intel...", baixe o segundo.
+
+**Nota (como usar):**
+
+1. Abra o programa. Ele tem quatro abas no topo (Comprimir, Redimensionar, Figurinhas e PrintShot).
+2. Na aba Comprimir, adicione as fotos (ou cole um link), diga o peso máximo que cada uma pode ter (por exemplo 300 KB) e clique em Comprimir. Ele procura sozinho a maior qualidade que ainda respeita esse limite.
+3. Na aba Redimensionar, adicione as fotos e escolha a proporção de saída (feed, Stories, capa) e a largura.
+4. Ainda na aba Redimensionar, a prévia mostra dois quadros: como está e como vai ficar. A moldura laranja marca onde o corte vai cair, e você pode arrastá-la com o mouse ou mover pelas três barras. O ajuste fica guardado por foto, e o botão Aplicar a todas repete o mesmo enquadramento no lote inteiro.
+5. Na aba Figurinhas, escolha os PNGs. Clique num deles para ver a prévia, ajuste a margem e clique em Normalizar.
+6. Na aba PrintShot, clique em Selecionar área e marque na tela o pedaço que quer capturar. Depois é só clicar em Capturar tela quantas vezes precisar: cada captura sai numerada, sempre do mesmo tamanho.
+7. Em todas as abas, os arquivos vão para a sua pasta de Downloads, a menos que você escolha outra. As imagens originais nunca são alteradas.
+8. Este programa substitui três programas antigos: Comprimir Imagem, Normalizador de Figurinhas e PrintShot. Se você tem algum deles instalado, pode apagar.
 
 ## Instagram Coletor
 
@@ -217,24 +178,24 @@ Renomeia vários vídeos de uma vez e organiza por data.
 3. Confira a prévia dos novos nomes, já em ordem do mais antigo para o mais novo.
 4. Se estiver tudo certo, confirme para renomear (dá para cancelar a qualquer momento).
 
-## Separar Canais de WAV
+## Video Studio
 
 **Caso de uso:**
 
-Separa uma gravação em duas vozes, uma de cada lado.
+Reúne numa janela só as tarefas de vídeo do dia a dia: baixar de um link, cortar e dividir, tirar fotos de dentro do vídeo e separar o áudio.
 
-- **Windows:** <https://github.com/DiegoVSC42/Softwares/releases/download/separar-canais-wav/SepararCanaisWAV.exe>
-- **Mac:** <https://github.com/DiegoVSC42/Softwares/releases/download/separar-canais-wav/SepararCanaisWAV-mac.zip>
+- **Windows:** <https://github.com/DiegoVSC42/Softwares/releases/download/estudio-video/EstudioDeVideo.exe>
+- **Mac (Apple Silicon):** <https://github.com/DiegoVSC42/Softwares/releases/download/estudio-video/EstudioDeVideo-mac.zip>
+- **Mac (Intel):** <https://github.com/DiegoVSC42/Softwares/releases/download/estudio-video/EstudioDeVideo-mac-intel.zip>
+
+Para saber qual Mac é o seu: menu Apple (canto superior esquerdo) > Sobre Este Mac. Se aparecer "Chip: Apple M1" (ou M2, M3, M4...), baixe o primeiro link. Se aparecer "Processador: Intel...", baixe o segundo.
 
 **Nota (como usar):**
 
-1. Abra o programa.
-2. Escolha um arquivo de gravação ou uma pasta inteira.
-3. Selecione como quer o resultado: só a voz isolada, ou a mesma voz nos dois lados.
-4. Clique em Processar.
-5. O programa gera dois arquivos, um com a voz do lado esquerdo e outro com a do direito.
-
----
-
-Os links acima são fixos: cada nova versão atualiza o arquivo no mesmo endereço,
-sem precisar trocar o link.
+1. Abra o programa. Ele tem quatro abas no topo (Baixar, Cortar e dividir, Extrair quadros e Extrair áudio), e você troca de tarefa clicando na aba.
+2. Na aba Baixar, cole o link do vídeo ou da playlist, escolha a qualidade (ou marque a opção de baixar só o áudio), deixe marcada a opção de tirar as informações escondidas do arquivo (título original, autor, canal, capa, data), escolha a pasta e clique em Baixar.
+3. Na aba Cortar e dividir, escolha o arquivo de vídeo ou de áudio. Ela tem três partes: tirar um trecho pela minutagem (aceita 1:30, 90, 1h05m), partir o arquivo em várias partes, e juntar os pedaços de volta.
+4. Na aba Extrair quadros, escolha o vídeo, ande até o ponto que interessa, escolha a proporção da foto (16:9 para vídeo deitado, 9:16 para Reels, 1:1 para o feed, 4:5 para Instagram), arraste a moldura laranja sobre a imagem, diga quantas fotos por segundo devem sair e clique em Extrair quadros.
+5. Na aba Extrair áudio, adicione um ou vários vídeos de uma vez (ou uma pasta inteira, ou um link), escolha o formato e a qualidade e clique em Extrair.
+6. Em todas as abas, os arquivos vão para a sua pasta de Downloads, a menos que você escolha outra. Toda tarefa demorada mostra uma barra de progresso e pode ser cancelada no meio.
+7. Este programa substitui quatro programas antigos: Baixador de Vídeos, Cortar Áudio e Vídeo, Extrair Quadros de Vídeo e Extrair Áudio de Vídeo. Se você tem algum deles instalado, pode apagar.
