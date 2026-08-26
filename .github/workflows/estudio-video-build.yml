@@ -42,12 +42,12 @@ jobs:
         # Cada aba e importada por nome em tempo de execucao, entao precisa
         # ser declarada aqui uma por uma. O pacote `compartilhado` (as telas
         # que dois estudios usam) entra pelo mesmo motivo.
-        run: pyinstaller --onefile --windowed --icon icon.ico --noconfirm --name EstudioDeVideo --add-binary "ffmpeg.exe;." --add-binary "ffprobe.exe;." --add-data "icon.png;." --add-data "compartilhado;compartilhado" --hidden-import certifi --hidden-import atualizador --hidden-import tema --hidden-import pastas --hidden-import abas --hidden-import abas.baixar --hidden-import abas.cortar --hidden-import abas.quadros --hidden-import abas.audio --hidden-import compartilhado --hidden-import compartilhado.cortar_dividir --hidden-import compartilhado.extrair_audio --hidden-import compartilhado.motor_download estudio_video.py
+        run: pyinstaller --onefile --windowed --icon icon.ico --noconfirm --name VideoStudio --add-binary "ffmpeg.exe;." --add-binary "ffprobe.exe;." --add-data "icon.png;." --add-data "compartilhado;compartilhado" --hidden-import certifi --hidden-import atualizador --hidden-import tema --hidden-import pastas --hidden-import abas --hidden-import abas.baixar --hidden-import abas.cortar --hidden-import abas.quadros --hidden-import abas.audio --hidden-import compartilhado --hidden-import compartilhado.cortar_dividir --hidden-import compartilhado.extrair_audio --hidden-import compartilhado.motor_download estudio_video.py
 
       - uses: actions/upload-artifact@v4
         with:
           name: windows-build
-          path: estudio-video/dist/EstudioDeVideo.exe
+          path: estudio-video/dist/VideoStudio.exe
 
   # ----------------------------------------------------------------------
   # Mac Apple Silicon (M1 em diante): gera o .app, com ffmpeg e ffprobe
@@ -81,17 +81,17 @@ jobs:
       - name: Empacotar com PyInstaller
         # Usa o .spec (nao os flags soltos) para o Info.plist do app sair
         # com a versao certa (senao o Finder mostra "0.0.0" em Informacoes).
-        run: pyinstaller --noconfirm EstudioDeVideo.spec
+        run: pyinstaller --noconfirm VideoStudio.spec
 
       - name: Compactar .app com ditto
         run: |
           cd dist
-          ditto -c -k --sequesterRsrc --keepParent EstudioDeVideo.app EstudioDeVideo-mac.zip
+          ditto -c -k --sequesterRsrc --keepParent VideoStudio.app VideoStudio-mac.zip
 
       - uses: actions/upload-artifact@v4
         with:
           name: mac-build
-          path: estudio-video/dist/EstudioDeVideo-mac.zip
+          path: estudio-video/dist/VideoStudio-mac.zip
 
   # ----------------------------------------------------------------------
   # Mac Intel: mesmo .app, buildado num runner Intel de verdade, com
@@ -125,18 +125,18 @@ jobs:
       - name: Empacotar com PyInstaller
         # Usa o .spec (nao os flags soltos) para o Info.plist do app sair
         # com a versao certa (senao o Finder mostra "0.0.0" em Informacoes).
-        run: pyinstaller --noconfirm EstudioDeVideo.spec
+        run: pyinstaller --noconfirm VideoStudio.spec
 
       - name: Compactar .app com ditto
         run: |
           cd dist
-          mv EstudioDeVideo.app EstudioDeVideo-intel.app
-          ditto -c -k --sequesterRsrc --keepParent EstudioDeVideo-intel.app EstudioDeVideo-mac-intel.zip
+          mv VideoStudio.app VideoStudio-intel.app
+          ditto -c -k --sequesterRsrc --keepParent VideoStudio-intel.app VideoStudio-mac-intel.zip
 
       - uses: actions/upload-artifact@v4
         with:
           name: mac-intel-build
-          path: estudio-video/dist/EstudioDeVideo-mac-intel.zip
+          path: estudio-video/dist/VideoStudio-mac-intel.zip
 
   # ----------------------------------------------------------------------
   # Release: publica o .exe (Windows) e os dois .zip (Mac Apple Silicon e

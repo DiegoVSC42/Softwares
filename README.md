@@ -9,7 +9,7 @@ direto abaixo. Não precisa instalar nada, é só baixar e abrir.
 | Audio Studio | Cortar, dividir, juntar, tirar o áudio de um vídeo, unir vários áudios e separar vozes | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/estudio-audio/AudioStudio.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/estudio-audio/AudioStudio-mac.zip) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/estudio-audio/AudioStudio-mac-intel.zip) |
 | Comparador de Planilhas | Comparar duas planilhas e gerar uma terceira (juntar, cruzar ou remover linhas) | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/comparador-planilhas/ComparadorPlanilhas.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/comparador-planilhas/ComparadorPlanilhas-mac.zip) | — |
 | Cronômetro de Tempo de Resposta | Medir o tempo de resposta em ligações | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/cronometro-resposta-telefone/CronometroResposta.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/cronometro-resposta-telefone/CronometroResposta-mac.zip) | — |
-| Video Studio | Baixar, cortar, dividir, tirar fotos de dentro do vídeo e tirar o áudio, tudo numa janela só | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/estudio-video/EstudioDeVideo.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/estudio-video/EstudioDeVideo-mac.zip) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/estudio-video/EstudioDeVideo-mac-intel.zip) |
+| Video Studio | Baixar, cortar, dividir, tirar fotos de dentro do vídeo e tirar o áudio, tudo numa janela só | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/estudio-video/VideoStudio.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/estudio-video/VideoStudio-mac.zip) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/estudio-video/VideoStudio-mac-intel.zip) |
 | Image Studio | Deixar foto mais leve, mudar tamanho e proporção, virar figurinha e capturar tela | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/estudio-imagem/ImageStudio.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/estudio-imagem/ImageStudio-mac.zip) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/estudio-imagem/ImageStudio-mac-intel.zip) |
 | Gerenciador de Pastas | Comparar pastas e copiar só o que falta | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/foldermanager/FolderManagerWIN.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/foldermanager/FolderManagerMAC-mac.zip) | — |
 | Instagram Coletor | Baixar posts do Instagram e gerar planilha com os dados | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/instagram-coletor/InstagramColetor.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/instagram-coletor/InstagramColetor-mac.zip) | — |
@@ -184,9 +184,9 @@ Renomeia vários vídeos de uma vez e organiza por data.
 
 Reúne numa janela só as tarefas de vídeo do dia a dia: baixar de um link, cortar e dividir, tirar fotos de dentro do vídeo e separar o áudio.
 
-- **Windows:** <https://github.com/DiegoVSC42/Softwares/releases/download/estudio-video/EstudioDeVideo.exe>
-- **Mac (Apple Silicon):** <https://github.com/DiegoVSC42/Softwares/releases/download/estudio-video/EstudioDeVideo-mac.zip>
-- **Mac (Intel):** <https://github.com/DiegoVSC42/Softwares/releases/download/estudio-video/EstudioDeVideo-mac-intel.zip>
+- **Windows:** <https://github.com/DiegoVSC42/Softwares/releases/download/estudio-video/VideoStudio.exe>
+- **Mac (Apple Silicon):** <https://github.com/DiegoVSC42/Softwares/releases/download/estudio-video/VideoStudio-mac.zip>
+- **Mac (Intel):** <https://github.com/DiegoVSC42/Softwares/releases/download/estudio-video/VideoStudio-mac-intel.zip>
 
 Para saber qual Mac é o seu: menu Apple (canto superior esquerdo) > Sobre Este Mac. Se aparecer "Chip: Apple M1" (ou M2, M3, M4...), baixe o primeiro link. Se aparecer "Processador: Intel...", baixe o segundo.
 

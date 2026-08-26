@@ -88,7 +88,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='EstudioDeVideo',
+    name='VideoStudio',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -105,7 +105,7 @@ exe = EXE(
 )
 app = BUNDLE(
     exe,
-    name='EstudioDeVideo.app',
+    name='VideoStudio.app',
     icon='icon.icns',
     bundle_identifier=None,
     info_plist={

@@ -20,7 +20,7 @@ import tema
 import atualizador  # atualizacao automatica
 
 APP_NAME = "Video Studio"
-APP_VERSION = "1.4.0"
+APP_VERSION = "1.5.0"
 
 # Etiqueta de eventos usada para a roda do mouse (ver `_roda`).
 ROLA = "RolaEstudio"
