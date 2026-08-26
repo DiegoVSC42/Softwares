@@ -68,13 +68,16 @@ jobs:
           pip install pyinstaller certifi -r requirements.txt
 
       - name: Baixar ffmpeg e ffprobe (Mac Apple Silicon)
+        # Fonte: eugeneware/ffmpeg-static, hospedada no proprio GitHub.
+        # Antes usavamos evermeet.cx e osxexperts.net, e o build do Mac Intel
+        # quebrou na primeira publicacao: esses sites recusam conexao vinda de
+        # servidor de nuvem, entao o download falhava so aqui, nunca na
+        # maquina de casa. Baixando do GitHub, o runner nao e barrado.
         run: |
-          curl -fL "https://www.osxexperts.net/ffmpeg711arm.zip" -o ffmpeg.zip || curl -fL "https://evermeet.cx/ffmpeg/getrelease/zip" -o ffmpeg.zip
-          unzip -o ffmpeg.zip
-          curl -fL "https://www.osxexperts.net/ffprobe711arm.zip" -o ffprobe.zip || curl -fL "https://evermeet.cx/ffprobe/getrelease/zip" -o ffprobe.zip
-          unzip -o ffprobe.zip
+          curl -fL --retry 3 --retry-delay 5 "https://github.com/eugeneware/ffmpeg-static/releases/latest/download/ffmpeg-darwin-arm64" -o ffmpeg
+          curl -fL --retry 3 --retry-delay 5 "https://github.com/eugeneware/ffmpeg-static/releases/latest/download/ffprobe-darwin-arm64" -o ffprobe
           chmod +x ffmpeg ffprobe
-
+          ./ffmpeg -version | head -1
       - name: Empacotar com PyInstaller
         # Usa o .spec (nao os flags soltos) para o Info.plist do app sair
         # com a versao certa (senao o Finder mostra "0.0.0" em Informacoes).
@@ -109,13 +112,16 @@ jobs:
           pip install pyinstaller certifi -r requirements.txt
 
       - name: Baixar ffmpeg e ffprobe (Mac Intel)
+        # Fonte: eugeneware/ffmpeg-static, hospedada no proprio GitHub.
+        # Antes usavamos evermeet.cx e osxexperts.net, e o build do Mac Intel
+        # quebrou na primeira publicacao: esses sites recusam conexao vinda de
+        # servidor de nuvem, entao o download falhava so aqui, nunca na
+        # maquina de casa. Baixando do GitHub, o runner nao e barrado.
         run: |
-          curl -fL "https://evermeet.cx/ffmpeg/getrelease/zip" -o ffmpeg.zip
-          unzip -o ffmpeg.zip
-          curl -fL "https://evermeet.cx/ffprobe/getrelease/zip" -o ffprobe.zip
-          unzip -o ffprobe.zip
+          curl -fL --retry 3 --retry-delay 5 "https://github.com/eugeneware/ffmpeg-static/releases/latest/download/ffmpeg-darwin-x64" -o ffmpeg
+          curl -fL --retry 3 --retry-delay 5 "https://github.com/eugeneware/ffmpeg-static/releases/latest/download/ffprobe-darwin-x64" -o ffprobe
           chmod +x ffmpeg ffprobe
-
+          ./ffmpeg -version | head -1
       - name: Empacotar com PyInstaller
         # Usa o .spec (nao os flags soltos) para o Info.plist do app sair
         # com a versao certa (senao o Finder mostra "0.0.0" em Informacoes).
