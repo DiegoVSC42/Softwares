@@ -14,3 +14,4 @@ dist/
 !baixador-videos/*.spec
 !estudio-imagem/*.spec
 !estudio-video/*.spec
+!estudio-audio/*.spec

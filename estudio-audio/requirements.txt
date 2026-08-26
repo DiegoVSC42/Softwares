@@ -1,0 +1,13 @@
+# O Audio Studio precisa de:
+#   - Python 3 com Tkinter (o Python do site oficial ja vem com ele)
+#   - ffmpeg e ffprobe, o motor que le, corta, junta e converte som (vem
+#     embutido no executavel publicado; em desenvolvimento, o
+#     abrir-audio-studio.command baixa uma copia so para este programa)
+#   - numpy, usado pela aba Separar canais para ler as amostras do WAV
+#
+# certifi e dependencia so do BUILD: garante que o executavel empacotado
+# (PyInstaller) carregue seus proprios certificados HTTPS. Sem isso, o app
+# empacotado pode falhar ao conferir se saiu versao nova, com
+# "CERTIFICATE_VERIFY_FAILED", mesmo com a internet normal.
+numpy>=1.21.0
+certifi
