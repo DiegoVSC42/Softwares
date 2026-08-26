@@ -1,2 +1,6 @@
 openpyxl>=3.1
 pandas>=2.0
+
+# certifi: usado pela atualizacao automatica para validar o HTTPS
+# do GitHub dentro do executavel empacotado.
+certifi

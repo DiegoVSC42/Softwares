@@ -17,6 +17,11 @@ direto abaixo. Não precisa instalar nada, é só baixar e abrir.
 | Renomeador de Vídeos por Data | Renomear vídeos em ordem de data | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/renomeador-videos-por-data/renomeador_videos.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/renomeador-videos-por-data/Renomeador-mac.zip) | — |
 | Separar Canais de WAV | Separar uma gravação em duas vozes | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/separar-canais-wav/SepararCanaisWAV.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/separar-canais-wav/SepararCanaisWAV-mac.zip) | — |
 
+> **Você só precisa baixar uma vez.** A partir desta versão, os programas se
+> atualizam sozinhos: ao abrir, cada um confere se saiu versão nova e pergunta
+> se você quer atualizar. Clicando em Sim, ele baixa, se substitui e reabre já
+> atualizado. Não é preciso voltar aqui.
+
 > No Mac, baixe o `.zip`, descompacte e abra o programa que estiver dentro dele.
 > A coluna "Mac (Intel)" ainda está sendo preenchida software por software; por
 > enquanto só o Baixador de Vídeos tem esse link. Quem tem Mac Intel e usa um

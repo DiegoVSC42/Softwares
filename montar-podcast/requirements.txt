@@ -1,2 +1,6 @@
 # Sem dependencias externas: o programa usa so a biblioteca padrao do
 # Python (Tkinter) e o ffmpeg, que vem embutido no executavel publicado.
+
+# certifi: usado pela atualizacao automatica para validar o HTTPS
+# do GitHub dentro do executavel empacotado.
+certifi

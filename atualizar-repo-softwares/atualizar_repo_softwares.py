@@ -22,7 +22,9 @@ import tkinter as tk
 from pathlib import Path
 from tkinter import filedialog, scrolledtext
 
-VERSION = "1.1.0"
+import atualizador  # atualizacao automatica
+
+VERSION = "1.1.1"
 REPO_URL = "https://github.com/DiegoVSC42/Softwares.git"
 CONFIG_PATH = Path.home() / ".atualizar_repo_softwares.json"
 
@@ -249,4 +251,6 @@ class App(tk.Tk):
 
 
 if __name__ == "__main__":
-    App().mainloop()
+    app = App()
+    atualizador.iniciar(app, "atualizar-repo-softwares", VERSION, "Atualizar Softwares")
+    app.mainloop()

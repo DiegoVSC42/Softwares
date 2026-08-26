@@ -8,3 +8,7 @@ reportlab>=4.0
 
 # Apenas para gerar o executável (.exe). Não é preciso para rodar pelo Python.
 pyinstaller>=6.0
+
+# certifi: usado pela atualizacao automatica para validar o HTTPS
+# do GitHub dentro do executavel empacotado.
+certifi

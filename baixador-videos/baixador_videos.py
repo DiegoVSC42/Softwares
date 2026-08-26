@@ -48,8 +48,10 @@ from tkinter import ttk, filedialog, messagebox
 # "CERTIFICATE_VERIFY_FAILED: unable to get local issuer certificate".
 import certifi
 
+import atualizador  # atualizacao automatica
+
 APP_NAME = "Baixador de Vídeos"
-APP_VERSION = "1.8.2"
+APP_VERSION = "1.8.3"
 
 YTDLP_BASE = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/"
 DENO_BASE = "https://github.com/denoland/deno/releases/latest/download/"
@@ -1133,4 +1135,6 @@ class App(tk.Tk):
 
 
 if __name__ == "__main__":
-    App().mainloop()
+    app = App()
+    atualizador.iniciar(app, "baixador-videos", APP_VERSION, "Baixador de Videos")
+    app.mainloop()

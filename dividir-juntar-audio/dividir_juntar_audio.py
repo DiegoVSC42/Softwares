@@ -39,9 +39,11 @@ from tkinter import (
     Listbox, filedialog, messagebox, ttk, scrolledtext,
 )
 
+import atualizador  # atualizacao automatica
+
 
 APP_NAME = "Dividir e Juntar Audio"
-APP_VERSION = "1.1.0"
+APP_VERSION = "1.1.1"
 
 EXTENSOES_AUDIO = {
     ".mp3", ".wav", ".m4a", ".aac", ".flac", ".ogg", ".opus",
@@ -1136,6 +1138,7 @@ def main():
     raiz = Tk()
     app = Aplicativo(raiz)
     app._alternar_silencio()
+    atualizador.iniciar(raiz, "dividir-juntar-audio", APP_VERSION, "Dividir e Juntar Audio")
     raiz.mainloop()
 
 

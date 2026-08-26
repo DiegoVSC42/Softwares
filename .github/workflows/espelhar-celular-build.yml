@@ -18,7 +18,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install pyinstaller
+      - run: pip install pyinstaller certifi
       - run: pyinstaller --noconfirm --onefile --windowed --icon icon.ico --name EspelharCelular espelhar_celular.py
       - uses: actions/upload-artifact@v4
         with:
@@ -35,7 +35,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install pyinstaller
+      - run: pip install pyinstaller certifi
       - run: pyinstaller --noconfirm --onefile --windowed --icon icon.icns --name EspelharCelular espelhar_celular.py
       - run: ditto -c -k --sequesterRsrc --keepParent dist/EspelharCelular.app dist/EspelharCelular-mac.zip
       - uses: actions/upload-artifact@v4
@@ -60,6 +60,14 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           path: artefatos
+      - name: Gerar versao.json (usado pela atualizacao automatica)
+        run: |
+          EXE=$(cd artefatos && find . -name '*.exe' -printf '%f\n' | head -1)
+          INTEL=$(cd artefatos && find . -name '*-mac-intel.zip' -printf '%f\n' | head -1)
+          ARM=$(cd artefatos && find . -name '*.zip' ! -name '*-mac-intel.zip' -printf '%f\n' | head -1)
+          printf '{\n  "versao": "%s",\n  "windows": "%s",\n  "mac_arm": "%s",\n  "mac_intel": "%s",\n  "obrigatoria": false,\n  "notas": ""\n}\n' \
+            "${{ steps.versao.outputs.v }}" "$EXE" "$ARM" "$INTEL" > artefatos/versao.json
+          cat artefatos/versao.json
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: espelhar-celular
@@ -68,3 +76,4 @@ jobs:
           files: |
             artefatos/**/*.exe
             artefatos/**/*.zip
+            artefatos/versao.json

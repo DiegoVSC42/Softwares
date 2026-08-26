@@ -164,3 +164,13 @@ contar como iguais entre si.
 Ainda não configurada. Quando quiser enviar este software para o GitHub
 (para gerar o `.exe` do Windows e o `.app` do Mac automaticamente), é só
 pedir.
+
+## Atualização automática
+
+Ao abrir, o programa confere sozinho se existe versão nova publicada. Se
+existir, ele pergunta **"Atualizar agora?"**. Clicando em Sim, ele baixa a
+versão nova, se substitui e reabre já atualizado, sem você precisar entrar no
+GitHub nem trocar arquivo nenhum na mão. Clicando em Não, o programa abre
+normalmente e pergunta de novo na próxima vez.
+
+Sem internet, nada disso aparece e o programa funciona igual.

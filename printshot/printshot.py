@@ -20,7 +20,9 @@ from datetime import datetime
 
 from PIL import Image
 
-VERSION = "1.3.0"
+import atualizador  # atualizacao automatica
+
+VERSION = "1.3.1"
 APP_NAME = "PrintShot"
 IS_MAC = platform.system() == "Darwin"
 IS_WINDOWS = platform.system() == "Windows"
@@ -860,6 +862,7 @@ class ScreenCaptureApp:
 def main():
     root = tk.Tk()
     ScreenCaptureApp(root)
+    atualizador.iniciar(root, "printshot", VERSION, "PrintShot")
     root.mainloop()
 
 

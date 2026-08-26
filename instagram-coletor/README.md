@@ -75,3 +75,13 @@ https://www.python.org/downloads/macos/ e abra o programa de novo.
 Use apenas para conteúdo público ou próprio, respeitando os termos do Instagram
 e a legislação de dados. A ferramenta não burla privacidade: ela apenas acessa
 o que a conta logada já poderia ver no navegador.
+
+## Atualização automática
+
+Ao abrir, o programa confere sozinho se existe versão nova publicada. Se
+existir, ele pergunta **"Atualizar agora?"**. Clicando em Sim, ele baixa a
+versão nova, se substitui e reabre já atualizado, sem você precisar entrar no
+GitHub nem trocar arquivo nenhum na mão. Clicando em Não, o programa abre
+normalmente e pergunta de novo na próxima vez.
+
+Sem internet, nada disso aparece e o programa funciona igual.

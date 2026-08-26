@@ -25,6 +25,8 @@ from pathlib import Path
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
+import atualizador  # atualizacao automatica
+
 # ---------------------------------------------------------------------------
 # Dependencias externas
 # ---------------------------------------------------------------------------
@@ -45,7 +47,7 @@ except ImportError:  # pragma: no cover
 
 
 APP_NAME = "Instagram Coletor"
-VERSION = "1.1.0"
+VERSION = "1.1.1"
 
 NAVEGADORES = [
     "Chrome",
@@ -833,7 +835,9 @@ class App(tk.Tk):
 
 
 def main():
-    App().mainloop()
+    app = App()
+    atualizador.iniciar(app, "instagram-coletor", VERSION, "Instagram Coletor")
+    app.mainloop()
 
 
 if __name__ == "__main__":

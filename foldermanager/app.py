@@ -37,7 +37,9 @@ import motor_comparacao as mcomp
 import motor_copia as mcopia
 import relatorio
 
-VERSION = "1.1.0"
+import atualizador  # atualizacao automatica
+
+VERSION = "1.1.1"
 
 
 class App(tk.Tk):
@@ -744,6 +746,7 @@ def main():
         ttk.Style().theme_use("vista")
     except tk.TclError:
         pass
+    atualizador.iniciar(app, "foldermanager", VERSION, "Folder Manager")
     app.mainloop()
 
 

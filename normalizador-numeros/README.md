@@ -41,3 +41,13 @@ Nacional ((62) 99999-8888) e somente dígitos com DDD.
   ao GitHub e baixa o programa do Windows.
 - Windows: `normalizador-numeros.bat` gera o programa do Windows, envia ao
   GitHub e baixa o pacote do Mac.
+
+## Atualização automática
+
+Ao abrir, o programa confere sozinho se existe versão nova publicada. Se
+existir, ele pergunta **"Atualizar agora?"**. Clicando em Sim, ele baixa a
+versão nova, se substitui e reabre já atualizado, sem você precisar entrar no
+GitHub nem trocar arquivo nenhum na mão. Clicando em Não, o programa abre
+normalmente e pergunta de novo na próxima vez.
+
+Sem internet, nada disso aparece e o programa funciona igual.

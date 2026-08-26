@@ -27,7 +27,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pyinstaller
+          pip install pyinstaller certifi
 
       - name: Empacotar com PyInstaller
         run: >
@@ -59,7 +59,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pyinstaller
+          pip install pyinstaller certifi
 
       - name: Empacotar com PyInstaller
         run: >
@@ -98,6 +98,14 @@ jobs:
         with:
           path: artefatos
 
+      - name: Gerar versao.json (usado pela atualizacao automatica)
+        run: |
+          EXE=$(cd artefatos && find . -name '*.exe' -printf '%f\n' | head -1)
+          INTEL=$(cd artefatos && find . -name '*-mac-intel.zip' -printf '%f\n' | head -1)
+          ARM=$(cd artefatos && find . -name '*.zip' ! -name '*-mac-intel.zip' -printf '%f\n' | head -1)
+          printf '{\n  "versao": "%s",\n  "windows": "%s",\n  "mac_arm": "%s",\n  "mac_intel": "%s",\n  "obrigatoria": false,\n  "notas": ""\n}\n' \
+            "${{ steps.versao.outputs.v }}" "$EXE" "$ARM" "$INTEL" > artefatos/versao.json
+          cat artefatos/versao.json
       - name: Publicar exe e zip no Release do GitHub
         uses: softprops/action-gh-release@v2
         with:
@@ -107,3 +115,4 @@ jobs:
           files: |
             artefatos/**/*.exe
             artefatos/**/*.zip
+            artefatos/versao.json

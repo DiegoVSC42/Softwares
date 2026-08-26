@@ -34,8 +34,10 @@ from tkinter import ttk, filedialog, messagebox
 
 import pandas as pd
 
+import atualizador  # atualizacao automatica
+
 APP_TITLE = "Comparador de Planilhas"
-APP_VERSION = "1.1.0"
+APP_VERSION = "1.1.1"
 EXTENSOES = [
     ("Planilhas (CSV ou Excel)", "*.csv *.xlsx *.xlsm *.xls"),
     ("CSV", "*.csv"),
@@ -722,6 +724,7 @@ class ComparadorApp:
 def main():
     root = tk.Tk()
     app = ComparadorApp(root)
+    atualizador.iniciar(root, "comparador-planilhas", APP_VERSION, "Comparador de Planilhas")
     root.mainloop()
 
 

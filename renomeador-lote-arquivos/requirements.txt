@@ -1,0 +1,5 @@
+# Nenhuma dependência externa — usa apenas a biblioteca padrão do Python (tkinter).
+
+# certifi: usado pela atualizacao automatica para validar o HTTPS
+# do GitHub dentro do executavel empacotado.
+certifi

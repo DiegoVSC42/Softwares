@@ -34,9 +34,11 @@ from tkinter import (
     filedialog, messagebox, ttk,
 )
 
+import atualizador  # atualizacao automatica
+
 
 APP_NAME = "Montar Podcast"
-APP_VERSION = "1.1.0"
+APP_VERSION = "1.1.1"
 
 EXTENSOES_AUDIO = {
     ".mp3", ".wav", ".m4a", ".aac", ".flac", ".ogg", ".opus",
@@ -997,6 +999,7 @@ def main():
     raiz = Tk()
     janela = Janela(raiz)
     raiz.protocol("WM_DELETE_WINDOW", janela.ao_fechar)
+    atualizador.iniciar(raiz, "montar-podcast", APP_VERSION, "Montar Podcast")
     raiz.mainloop()
 
 

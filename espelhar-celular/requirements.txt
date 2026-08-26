@@ -1,0 +1,3 @@
+# certifi: usado pela atualizacao automatica para validar o HTTPS
+# do GitHub dentro do executavel empacotado.
+certifi

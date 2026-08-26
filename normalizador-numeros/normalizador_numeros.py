@@ -19,7 +19,9 @@ import threading
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
-APP_VERSION = "1.1.0"
+import atualizador  # atualizacao automatica
+
+APP_VERSION = "1.1.1"
 
 FORMATOS = {
     "WhatsApp (5562999998888)": "whatsapp",
@@ -328,6 +330,7 @@ class App:
 def main():
     root = tk.Tk()
     App(root)
+    atualizador.iniciar(root, "normalizador-numeros", APP_VERSION, "Normalizador de Numeros")
     root.mainloop()
 
 

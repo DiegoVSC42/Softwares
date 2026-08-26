@@ -1,0 +1,10 @@
+# O Extrair Quadros nao usa nenhuma biblioteca de fora.
+# Precisa apenas de:
+#   - Python 3 com Tkinter (o Python do site oficial ja vem com ele)
+#   - ffmpeg e ffprobe (vem embutidos no executavel publicado; em
+#     desenvolvimento, o abrir-extrair-quadros-video.command baixa uma copia
+#     so para este programa)
+
+# certifi: usado pela atualizacao automatica para validar o HTTPS
+# do GitHub dentro do executavel empacotado.
+certifi

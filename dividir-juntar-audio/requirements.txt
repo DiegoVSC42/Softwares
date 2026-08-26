@@ -2,3 +2,7 @@
 # A interface usa apenas a biblioteca padrao (Tkinter).
 # O processamento de audio e feito pelo ffmpeg, encontrado na maquina ou
 # baixado automaticamente pelo abrir-dividir-juntar-audio.command.
+
+# certifi: usado pela atualizacao automatica para validar o HTTPS
+# do GitHub dentro do executavel empacotado.
+certifi

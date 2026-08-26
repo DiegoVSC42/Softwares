@@ -19,7 +19,9 @@ import threading
 import tkinter as tk
 from tkinter import ttk, messagebox
 
-VERSION = "1.3.0"
+import atualizador  # atualizacao automatica
+
+VERSION = "1.3.1"
 APP_NAME = "Espelhar Celular"
 
 # Caminhos comuns do Homebrew/instalações no Mac e Windows
@@ -470,4 +472,5 @@ class App(tk.Tk):
 
 if __name__ == "__main__":
     app = App()
+    atualizador.iniciar(app, "espelhar-celular", VERSION, "Espelhar Celular")
     app.mainloop()

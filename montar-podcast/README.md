@@ -65,3 +65,13 @@ como uma gravação contínua em vez de uma colagem.
   de −1,5 dBTP, que é o padrão das plataformas de podcast.
 - A duração prevista bate com a real: a pausa soma tempo (0,8 s por emenda) e
   o crossfade tira (o tempo de sobreposição por emenda).
+
+## Atualização automática
+
+Ao abrir, o programa confere sozinho se existe versão nova publicada. Se
+existir, ele pergunta **"Atualizar agora?"**. Clicando em Sim, ele baixa a
+versão nova, se substitui e reabre já atualizado, sem você precisar entrar no
+GitHub nem trocar arquivo nenhum na mão. Clicando em Não, o programa abre
+normalmente e pergunta de novo na próxima vez.
+
+Sem internet, nada disso aparece e o programa funciona igual.
