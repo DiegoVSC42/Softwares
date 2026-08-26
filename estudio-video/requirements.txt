@@ -1,0 +1,14 @@
+# O Estudio de Video nao usa nenhuma biblioteca de fora para RODAR.
+# Precisa apenas de:
+#   - Python 3 com Tkinter (o Python do site oficial ja vem com ele)
+#   - ffmpeg e ffprobe (vem embutidos no executavel publicado; em
+#     desenvolvimento, o abrir-estudio-video.command baixa uma copia
+#     so para este programa)
+#   - yt-dlp, o motor de download, que a aba "Baixar" busca e atualiza
+#     sozinha na primeira vez
+#
+# certifi e dependencia so do BUILD: garante que o executavel empacotado
+# (PyInstaller) carregue seus proprios certificados HTTPS. Sem isso, o app
+# empacotado pode falhar ao baixar o motor com "CERTIFICATE_VERIFY_FAILED:
+# unable to get local issuer certificate", mesmo com a internet normal.
+certifi

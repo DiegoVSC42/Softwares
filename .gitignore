@@ -13,3 +13,4 @@ dist/
 .DS_Store
 !baixador-videos/*.spec
 !estudio-imagem/*.spec
+!estudio-video/*.spec

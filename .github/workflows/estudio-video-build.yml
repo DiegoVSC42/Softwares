@@ -1,0 +1,184 @@
+name: estudio-video-build
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: estudio-video
+
+jobs:
+  # ----------------------------------------------------------------------
+  # Windows: gera o .exe com ffmpeg e ffprobe embutidos
+  # ----------------------------------------------------------------------
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller certifi -r requirements.txt
+
+      - name: Baixar ffmpeg e ffprobe (Windows)
+        shell: pwsh
+        run: |
+          Invoke-WebRequest -Uri "https://github.com/GyanD/codexffmpeg/releases/download/7.1/ffmpeg-7.1-essentials_build.zip" -OutFile ffmpeg.zip
+          Expand-Archive ffmpeg.zip -DestinationPath ffmpeg_tmp
+          $exe = Get-ChildItem -Recurse ffmpeg_tmp -Filter ffmpeg.exe | Select-Object -First 1
+          Copy-Item $exe.FullName -Destination ffmpeg.exe
+          $probe = Get-ChildItem -Recurse ffmpeg_tmp -Filter ffprobe.exe | Select-Object -First 1
+          Copy-Item $probe.FullName -Destination ffprobe.exe
+
+      - name: Empacotar com PyInstaller
+        # O Windows nao tem Info.plist, entao continua com os flags soltos.
+        # Cada aba e importada por nome em tempo de execucao, entao precisa
+        # ser declarada aqui uma por uma. O pacote `compartilhado` (as telas
+        # que dois estudios usam) entra pelo mesmo motivo.
+        run: pyinstaller --onefile --windowed --icon icon.ico --noconfirm --name EstudioDeVideo --add-binary "ffmpeg.exe;." --add-binary "ffprobe.exe;." --add-data "icon.png;." --add-data "compartilhado;compartilhado" --hidden-import certifi --hidden-import atualizador --hidden-import tema --hidden-import pastas --hidden-import abas --hidden-import abas.baixar --hidden-import abas.cortar --hidden-import abas.quadros --hidden-import abas.audio --hidden-import compartilhado --hidden-import compartilhado.cortar_dividir --hidden-import compartilhado.extrair_audio --hidden-import compartilhado.motor_download estudio_video.py
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: estudio-video/dist/EstudioDeVideo.exe
+
+  # ----------------------------------------------------------------------
+  # Mac Apple Silicon (M1 em diante): gera o .app, com ffmpeg e ffprobe
+  # arm64 embutidos, e compacta em .zip com ditto
+  # ----------------------------------------------------------------------
+  mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller certifi -r requirements.txt
+
+      - name: Baixar ffmpeg e ffprobe (Mac Apple Silicon)
+        run: |
+          curl -fL "https://www.osxexperts.net/ffmpeg711arm.zip" -o ffmpeg.zip || curl -fL "https://evermeet.cx/ffmpeg/getrelease/zip" -o ffmpeg.zip
+          unzip -o ffmpeg.zip
+          curl -fL "https://www.osxexperts.net/ffprobe711arm.zip" -o ffprobe.zip || curl -fL "https://evermeet.cx/ffprobe/getrelease/zip" -o ffprobe.zip
+          unzip -o ffprobe.zip
+          chmod +x ffmpeg ffprobe
+
+      - name: Empacotar com PyInstaller
+        # Usa o .spec (nao os flags soltos) para o Info.plist do app sair
+        # com a versao certa (senao o Finder mostra "0.0.0" em Informacoes).
+        run: pyinstaller --noconfirm EstudioDeVideo.spec
+
+      - name: Compactar .app com ditto
+        run: |
+          cd dist
+          ditto -c -k --sequesterRsrc --keepParent EstudioDeVideo.app EstudioDeVideo-mac.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mac-build
+          path: estudio-video/dist/EstudioDeVideo-mac.zip
+
+  # ----------------------------------------------------------------------
+  # Mac Intel: mesmo .app, buildado num runner Intel de verdade, com
+  # ffmpeg e ffprobe x86_64 embutidos, e sufixo proprio (-mac-intel.zip)
+  # ----------------------------------------------------------------------
+  mac-intel:
+    runs-on: macos-15-intel
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller certifi -r requirements.txt
+
+      - name: Baixar ffmpeg e ffprobe (Mac Intel)
+        run: |
+          curl -fL "https://evermeet.cx/ffmpeg/getrelease/zip" -o ffmpeg.zip
+          unzip -o ffmpeg.zip
+          curl -fL "https://evermeet.cx/ffprobe/getrelease/zip" -o ffprobe.zip
+          unzip -o ffprobe.zip
+          chmod +x ffmpeg ffprobe
+
+      - name: Empacotar com PyInstaller
+        # Usa o .spec (nao os flags soltos) para o Info.plist do app sair
+        # com a versao certa (senao o Finder mostra "0.0.0" em Informacoes).
+        run: pyinstaller --noconfirm EstudioDeVideo.spec
+
+      - name: Compactar .app com ditto
+        run: |
+          cd dist
+          mv EstudioDeVideo.app EstudioDeVideo-intel.app
+          ditto -c -k --sequesterRsrc --keepParent EstudioDeVideo-intel.app EstudioDeVideo-mac-intel.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mac-intel-build
+          path: estudio-video/dist/EstudioDeVideo-mac-intel.zip
+
+  # ----------------------------------------------------------------------
+  # Release: publica o .exe (Windows) e os dois .zip (Mac Apple Silicon e
+  # Mac Intel) com link fixo em releases/download/estudio-video/<arquivo>,
+  # mais o versao.json que a atualizacao automatica le
+  # ----------------------------------------------------------------------
+  release:
+    needs: [ windows, mac, mac-intel ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    # Este job trabalha na raiz do repositorio, e nao na subpasta do
+    # software: o download dos artefatos cai em "artefatos/" ali, e nao
+    # dentro de estudio-video/. Sem esta linha, o defaults la de cima
+    # mandaria os comandos procurarem a pasta no lugar errado.
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ler versao do programa
+        id: versao
+        run: |
+          V=$(grep -m1 '^APP_VERSION' estudio-video/estudio_video.py | cut -d'"' -f2)
+          echo "v=${V:-0.0.0}" >> "$GITHUB_OUTPUT"
+
+      - name: Baixar artefatos (exe e zips)
+        uses: actions/download-artifact@v4
+        with:
+          path: artefatos
+
+      - name: Gerar versao.json (usado pela atualizacao automatica)
+        run: |
+          EXE=$(cd artefatos && find . -name '*.exe' -printf '%f\n' | head -1)
+          INTEL=$(cd artefatos && find . -name '*-mac-intel.zip' -printf '%f\n' | head -1)
+          ARM=$(cd artefatos && find . -name '*.zip' ! -name '*-mac-intel.zip' -printf '%f\n' | head -1)
+          printf '{\n  "versao": "%s",\n  "windows": "%s",\n  "mac_arm": "%s",\n  "mac_intel": "%s",\n  "obrigatoria": false,\n  "notas": ""\n}\n' \
+            "${{ steps.versao.outputs.v }}" "$EXE" "$ARM" "$INTEL" > artefatos/versao.json
+          cat artefatos/versao.json
+
+      - name: Publicar exe e zips no Release do GitHub
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: estudio-video
+          name: "Video Studio v${{ steps.versao.outputs.v }}"
+          body: "Versao ${{ steps.versao.outputs.v }}. Os nomes dos arquivos e o link de download nao mudam."
+          files: |
+            artefatos/**/*.exe
+            artefatos/**/*.zip
+            artefatos/versao.json
