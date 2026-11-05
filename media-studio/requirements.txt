@@ -1,0 +1,22 @@
+# O Media Studio junta as ferramentas de video, audio, imagem e transcricao
+# numa janela so. Depende de:
+#   - Python 3 com Tkinter (o Python do site oficial ja vem com ele)
+#   - ffmpeg e ffprobe (vem embutidos no executavel publicado; em
+#     desenvolvimento, o abrir-media-studio.command baixa uma copia)
+#   - yt-dlp, o motor de download, que a aba "Baixar" busca e atualiza
+#     sozinha na primeira vez
+#   - numpy, usado por Separar canais (audio) e Figurinhas (imagem)
+#   - Pillow, que abre, corta, redimensiona e grava as imagens
+#   - reportlab, que monta o PDF da aba "Salvar em PDF"
+#
+# certifi e dependencia so do BUILD: garante que o executavel empacotado
+# (PyInstaller) carregue seus proprios certificados HTTPS. Sem isso, o app
+# empacotado pode falhar ao baixar o motor ou ao conferir versao nova, com
+# "CERTIFICATE_VERIFY_FAILED", mesmo com a internet normal.
+numpy>=1.21.0
+Pillow>=10.0.0
+# A versao 5 do reportlab se diz compativel com o Python 3.9 (o que vem no
+# Mac), mas se recusa a abrir nele. Por isso a linha separada.
+reportlab>=4.0.0,<5; python_version < "3.10"
+reportlab>=4.0.0; python_version >= "3.10"
+certifi

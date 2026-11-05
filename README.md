@@ -13,6 +13,7 @@ direto abaixo. Não precisa instalar nada, é só baixar e abrir.
 | Image Studio | Deixar foto mais leve, mudar tamanho e proporção, virar figurinha e capturar tela | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/estudio-imagem/ImageStudio.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/estudio-imagem/ImageStudio-mac.zip) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/estudio-imagem/ImageStudio-mac-intel.zip) |
 | Gerenciador de Pastas | Comparar pastas e copiar só o que falta | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/foldermanager/FolderManagerWIN.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/foldermanager/FolderManagerMAC-mac.zip) | — |
 | Instagram Coletor | Baixar posts do Instagram e gerar planilha com os dados | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/instagram-coletor/InstagramColetor.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/instagram-coletor/InstagramColetor-mac.zip) | — |
+| Media Studio | Juntar numa janela só as ferramentas de vídeo, áudio, imagem e transcrição, e guardar páginas da internet em PDF | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/media-studio/MediaStudio.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/media-studio/MediaStudio-mac.zip) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/media-studio/MediaStudio-mac-intel.zip) |
 | Renomeador de Vídeos por Data | Renomear vídeos em ordem de data | [.exe](https://github.com/DiegoVSC42/Softwares/releases/download/renomeador-videos-por-data/renomeador_videos.exe) | [.zip](https://github.com/DiegoVSC42/Softwares/releases/download/renomeador-videos-por-data/Renomeador-mac.zip) | — |
 
 > **Você só precisa baixar uma vez.** A partir desta versão, os programas se
@@ -161,6 +162,28 @@ Baixa fotos, carrosséis, reels e stories do Instagram e monta uma planilha com 
 6. Marque o que quer: baixar as fotos e vídeos, gerar a planilha, ou os dois.
 7. Clique em Coletar e acompanhe pela barra (dá para cancelar a qualquer momento).
 8. Ao terminar, clique em Abrir pasta para ver os arquivos e a planilha.
+
+## Media Studio
+
+**Caso de uso:**
+
+Reúne numa janela só as ferramentas de vídeo, áudio, imagem e transcrição, e guarda páginas abertas da internet em PDF.
+
+- **Windows:** <https://github.com/DiegoVSC42/Softwares/releases/download/media-studio/MediaStudio.exe>
+- **Mac (Apple Silicon):** <https://github.com/DiegoVSC42/Softwares/releases/download/media-studio/MediaStudio-mac.zip>
+- **Mac (Intel):** <https://github.com/DiegoVSC42/Softwares/releases/download/media-studio/MediaStudio-mac-intel.zip>
+
+Para saber qual Mac é o seu: menu Apple (canto superior esquerdo) > Sobre Este Mac. Se aparecer "Chip: Apple M1" (ou M2, M3, M4...), baixe o primeiro link. Se aparecer "Processador: Intel...", baixe o segundo.
+
+**Nota (como usar):**
+
+1. Abra o programa. No topo aparecem as categorias Vídeo, Áudio, Imagem, Transcrição e Web.
+2. Clique numa categoria e depois na ferramenta que quer usar, nas abas logo abaixo.
+3. Siga o que a tela pede. O arquivo pronto vai para a pasta Downloads, e dá para trocar a pasta dentro de cada ferramenta.
+4. Em Web, a aba Salvar em PDF recebe um ou vários links, um por linha, e guarda cada página aberta em PDF. Conteúdo só para assinantes não é aberto.
+5. Quando sair versão nova, o programa avisa ao abrir. Clicando em Sim, ele baixa, se substitui e reabre sozinho.
+
+---
 
 ## Renomeador de Vídeos por Data
 
