@@ -7,6 +7,7 @@ audio, e gravam o resultado no mesmo formato da aba "Limpar transcricao".
 Onde as coisas ficam, e por que fora do aplicativo:
 
     ~/Library/Application Support/MediaStudio/Transcricao/
+        python/         so no app empacotado do Mac: o Python que monta o motor
         motor-mlx/      o Python do Whisper, com as bibliotecas (~650 MB)
         modelos/...     o "cerebro" do Whisper, baixado uma vez (~1,6 GB),
                         e os dois modelos que separam quem fala (~46 MB)
@@ -18,6 +19,8 @@ dali em diante, a transcricao roda com o computador desconectado.
 """
 
 import datetime
+import hashlib
+import http.client
 import json
 import os
 import platform
@@ -25,8 +28,10 @@ import re
 import shutil
 import subprocess
 import sys
+import tarfile
 import tempfile
 import threading
+import urllib.request
 
 from compartilhado import legenda
 from compartilhado import motor_download
@@ -54,6 +59,25 @@ MODULO = {"mlx": "mlx_whisper", "faster": "faster_whisper"}
 MODELO = {
     "mlx": "mlx-community/whisper-large-v3-turbo",
     "faster": "mobiuslabsgmbh/faster-whisper-large-v3-turbo",
+}
+
+# O app empacotado do Mac nao tem um Python solto para montar o motor, e o Mac
+# de quem usa pode nao ter nenhum. Por isso ele baixa este, autonomo, uma vez
+# so. A versao e fixa e cada arquivo e conferido pelo hash. As duas origens
+# servem o mesmo arquivo: a segunda cobre uma falha da primeira.
+PYTHON_ORIGENS = (
+    "https://releases.astral.sh/github/python-build-standalone/releases/"
+    "download/20260901/",
+    "https://github.com/astral-sh/python-build-standalone/releases/"
+    "download/20260901/",
+)
+PYTHON_NOME = ("cpython-3.13.15%%2B20260901-%s-apple-darwin-"
+               "install_only_stripped.tar.gz")
+PYTHON_HASH = {
+    "arm64": ("aarch64", "d3904bd6a072246e07aa0bdadee9a14e"
+                         "80521e42a943c0848059feb16a2816dc"),
+    "x86_64": ("x86_64", "f712a9143c8a5d248438ec7921a0b48d"
+                         "548bca4f1337d33c690d28c2d0504137"),
 }
 
 # Tamanhos aproximados, so para a barra de progresso e a conta de espaco.
@@ -173,6 +197,11 @@ def python_base():
     """
     if not getattr(sys, "frozen", False):
         return sys.executable
+    # No app empacotado do Mac nao se procura Python instalado: num Mac sem
+    # as ferramentas de programador, so tocar no /usr/bin/python3 abre uma
+    # janela do sistema pedindo para instala-las. `_baixar_python` resolve.
+    if sys.platform == "darwin":
+        return None
     candidatos = [
         "/opt/homebrew/bin/python3", "/usr/local/bin/python3",
         "/Library/Frameworks/Python.framework/Versions/Current/bin/python3",
@@ -406,6 +435,8 @@ def _instalar_motor(motor, execucao, avisar):
         # removido, por exemplo): recomeca do zero. O modelo nao e tocado.
         shutil.rmtree(pasta_motor(motor), ignore_errors=True)
         base = python_base()
+        if not base and sys.platform == "darwin":
+            base = _baixar_python(execucao, avisar)
         if not base:
             raise RuntimeError(
                 "Não encontrei um Python instalado neste computador para "
@@ -422,6 +453,72 @@ def _instalar_motor(motor, execucao, avisar):
     if not motor_pronto(motor):
         raise RuntimeError("O motor foi instalado, mas não abriu. "
                            "Tente preparar de novo.")
+
+
+def _baixar_python(execucao, avisar):
+    """Baixa o Python que monta o motor, uma vez so. Devolve o caminho dele."""
+    destino = os.path.join(pasta_base(), "python")
+    py = os.path.join(destino, "bin", "python3")
+    if _python_vivo(py):
+        return py
+    if platform.machine() not in PYTHON_HASH:
+        raise RuntimeError("Este computador não tem um Python que sirva para "
+                           "montar o motor.")
+    arquitetura, esperado = PYTHON_HASH[platform.machine()]
+    pasta = tempfile.mkdtemp(prefix="python-", dir=pasta_base())
+    try:
+        arquivo = os.path.join(pasta, "python.tar.gz")
+        _baixar_pacote_python(PYTHON_NOME % arquitetura, esperado, arquivo,
+                              execucao, avisar)
+        avisar("Preparando o Python...", None)
+        with tarfile.open(arquivo) as pacote:
+            pacote.extractall(pasta, filter="data")
+        shutil.rmtree(destino, ignore_errors=True)
+        os.replace(os.path.join(pasta, "python"), destino)
+    except (OSError, tarfile.TarError) as e:
+        raise RuntimeError("Não consegui preparar o Python. Tente de novo.\n\n"
+                           + str(e))
+    finally:
+        shutil.rmtree(pasta, ignore_errors=True)
+    if not _python_vivo(py):
+        raise RuntimeError("O Python foi baixado, mas não abriu. Tente "
+                           "preparar de novo.")
+    return py
+
+
+def _baixar_pacote_python(nome, esperado, destino, execucao, avisar):
+    """Grava o pacote em `destino`, conferido pelo hash, tentando as origens."""
+    ultimo = ""
+    for origem in PYTHON_ORIGENS:
+        try:
+            pedido = urllib.request.Request(
+                origem + nome, headers={"User-Agent": "MediaStudio"})
+            resumo = hashlib.sha256()
+            with urllib.request.urlopen(
+                    pedido, timeout=60,
+                    context=motor_download._contexto_ssl()) as resposta, \
+                    open(destino, "wb") as saida:
+                total = int(resposta.headers.get("Content-Length") or 0)
+                feito = 0
+                while True:
+                    execucao.conferir()
+                    pedaco = resposta.read(262144)
+                    if not pedaco:
+                        break
+                    saida.write(pedaco)
+                    resumo.update(pedaco)
+                    feito += len(pedaco)
+                    if total:
+                        avisar("Baixando o Python: %d de %d MB"
+                               % (feito / 1048576, total / 1048576),
+                               feito / total)
+            if resumo.hexdigest() == esperado:
+                return
+            ultimo = "o arquivo veio diferente do esperado"
+        except (OSError, http.client.HTTPException) as e:
+            ultimo = str(e)
+    raise RuntimeError("Não consegui baixar o Python. Confira a internet e "
+                       "tente de novo.\n\n" + ultimo)
 
 
 def _pip(py, grupos, rotulo, falha, execucao, avisar):

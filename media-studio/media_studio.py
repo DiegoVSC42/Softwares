@@ -34,7 +34,7 @@ import tema
 import atualizador  # atualizacao automatica
 
 APP_NAME = "Media Studio"
-APP_VERSION = "1.22.4"
+APP_VERSION = "1.22.5"
 APP_PASTA = "media-studio"  # nome da pasta no GitHub (tag do Release)
 
 # Etiqueta de eventos usada para a roda do mouse (ver `_roda`).

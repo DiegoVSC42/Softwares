@@ -3,7 +3,7 @@
 Video, áudio, imagem e transcrição numa janela só, sempre aberta, sem
 precisar procurar qual dos quatro programas tem a ferramenta que você quer.
 
-Versão atual: **v1.22.4**
+Versão atual: **v1.22.5**
 
 ## De onde ele vem
 
@@ -301,8 +301,8 @@ aba dos quatro usava continua existindo, com o mesmo comportamento.
 O aplicativo do `criar-media-studio-mac.command` usa o Python desta máquina e
 não roda em outro computador. Para outra pessoa, o arquivo certo é o
 `MediaStudio-mac.zip`, que leva tudo dentro e abre em Mac com macOS 12 ou mais
-novo. A transcrição é a exceção: ela precisa de um Python 3.10 ou mais novo
-instalado no Mac de quem usa.
+novo. A transcrição baixa sozinha o que precisa na primeira vez, sem nada
+instalado antes.
 
 1. Descompactar o `.zip` com clique duplo.
 2. Arrastar o Media Studio para a pasta Aplicativos. Sem isso, o programa abre,
